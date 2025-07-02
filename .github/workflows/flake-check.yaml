@@ -1,9 +1,7 @@
 name: flake-check
 on:
   push:
-    branches: ["main"]
   pull_request:
-    branches: ["main"]
 jobs:
   flake-check:
     runs-on: ubuntu-latest
@@ -11,12 +9,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
       - run: |
-          set -e
+          cd dev
+          git init
+          git add .
+          nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
+          rm -rf .git
+      - run: |
+          cd templates/default
+          git init
+          git add .
+          nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
+          rm -rf .git
+      - run: |
           nix flake check ./dev --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
-          ( 
-            cd templates/default
-            git init
-            git add .
-            nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
-            rm -rf .git
-          )
