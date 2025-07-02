@@ -9,16 +9,20 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
       - run: |
-          cd dev
+          pushd dev
           git init
           git add .
           nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
           rm -rf .git
+          popd
       - run: |
-          cd templates/default
+          mkdir $HOME/check-default
+          pushd $HOME/check-default
+          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA
           git init
           git add .
           nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
-          rm -rf .git
+          popd
+          rm -rf $HOME/check-default
       - run: |
           nix flake check ./dev --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA

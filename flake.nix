@@ -1,3 +1,3 @@
 {
-  outputs = inputs: import ./outputs.nix inputs;
+  outputs = _: import ./modules;
 }
