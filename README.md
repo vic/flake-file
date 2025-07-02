@@ -1,9 +1,8 @@
-# flake-file - Generate flake.nix from module options. 
+# flake-file - Generate flake.nix from module options.
 
 > A [flake-parts](https://flake.parts/) module that uses [mightyiam/files](https://github.com/mightyiam/files) to automatically generate your `flake.nix` file from module options.
 
 ![image](https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883)
-
 
 ## What?
 
