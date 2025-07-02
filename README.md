@@ -25,22 +25,22 @@ To get started quickly, create new flake based on our default template:
 
 ```shell
 nix flake init -t github:vic/flake-file
-git init # needed for mightyiam/files to find your repo root.
-git add . # needed for files to be seen by nix
-nix flake check # checks flake.nix is up to date.
-vim module.nix # add another input
-nix run ".#write-files" # regen files with mightyiam/files.
-cat flake.nix # flake.nix built from your options.
+git init                      # for mightyiam/files to find your repo root.
+git add .                     # for nix to see repo files.
+nix flake check               # checks flake.nix is up to date.
+vim module.nix                # add another input.
+nix run ".#write-files"       # regen files with mightyiam/files.
+cat flake.nix                 # flake.nix built from your options.
 ```
 
 ## Usage
 
-The following is a complete example from our [`template/default`](https://github.com/vic/flake-file/blob/main/templates/default)
+The following is a complete example from our [`templates/default`](https://github.com/vic/flake-file/blob/main/templates/default)
 
-> See also: A real-world example (dogfood flake used to test flake-file) [`dev/module.nix`](https://github.com/vic/flake-file/blob/main/dev/module.nix)
+> See also: A real-world example (dogfood flake used to test flake-file) [`dev/`](https://github.com/vic/flake-file/blob/main/dev)
 
 ```nix
-# See templates/default/module.nix
+# See templates/default
 { inputs, ... }: {
   imports = [
     inputs.files.flakeModules.default
@@ -103,7 +103,7 @@ moved to `outputs.nix`. Set this option only if you want to load another file, b
 ## TODO: Upcoming features
 
 - customize DO-NOT-EDIT header (or disable it)
-- option to not format. (currently uses nixfmt-rfc-style)
+- option to use another formatter. (currently uses nixfmt-rfc-style)
 - validate that target of follows are flake inputs.
 - flatten flake inputs.
 
