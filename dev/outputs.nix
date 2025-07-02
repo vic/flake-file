@@ -1,1 +1,1 @@
-inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./modules
+inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)
