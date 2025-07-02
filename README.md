@@ -21,23 +21,46 @@ A flake-parts module can [configure accross different module classes](https://vi
 
 ## Getting Started (try it now!)
 
-To get started quickly, create new flake based on our default template:
+To get started quickly, create new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic) template:
 
 ```shell
-nix flake init -t github:vic/flake-file
+nix flake init -t github:vic/flake-file#dendritic
 git init                      # for mightyiam/files to find your repo root.
 git add .                     # for nix to see repo files.
 nix flake check               # checks flake.nix is up to date.
-vim module.nix                # add another input.
+vim modules/default.nix       # add another input.
 nix run ".#write-files"       # regen files with mightyiam/files.
 cat flake.nix                 # flake.nix built from your options.
 ```
 
 ## Usage
 
-The following is a complete example from our [`templates/default`](https://github.com/vic/flake-file/blob/main/templates/default)
-
 > See also: A real-world example (dogfood flake used to test flake-file) [`dev/`](https://github.com/vic/flake-file/blob/main/dev)
+
+The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template.
+
+It imports all modules from [`flake-file.flakeModules.dendritic`](https://github.com/vic/flake-file/tree/main/modules/dendritic).
+That includes [`flake-parts`](https://flake.parts), [`import-tree`](https://github.com/vic/import-tree) and
+will automatically load all your `./modules` files.
+It also configures a basic [`treefmt-nix`](https://github.com/numtide/treefmt-nix) formatter.
+
+```nix
+{ inputs, ... }:
+{
+  # That's it! Importing this module will add dendritic-setup inputs to your flake.
+  imports = [ inputs.flake-file.flakeModules.dendritic ];
+}
+```
+
+### Templates
+
+#### `dendritic` template
+
+A template for dendritic setups.
+
+#### `default` template
+
+The default template is a more basic, explicit setup.
 
 ```nix
 # See templates/default
