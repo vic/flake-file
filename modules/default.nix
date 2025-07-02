@@ -9,7 +9,7 @@
     imports = [
       ./options.nix
       ./files.nix
-      ./dendritic
+      ./dendritic.nix
     ];
   };
   templates.default = {
