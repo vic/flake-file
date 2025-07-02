@@ -121,7 +121,7 @@ inputs: import ./outputs.nix inputs
 I (@vic) recommend using this default, because it
 makes your flake file _focused_ on definitions
 of inputs and nixConfig. All nix logic is
-moved to `outputs.nix`. Set this option only if you want to load another file, but not for having a huge nix code string in it.
+moved to `outputs.nix`. Set this option only if you want to [load another file](https://github.com/vic/flake-file/blob/main/modules/dendritic/import-tree.nix) or simple code, but not for having a huge nix code string in it.
 
 ## TODO: Upcoming features
 
