@@ -16,9 +16,18 @@ jobs:
           rm -rf .git
           popd
       - run: |
+          mkdir $HOME/check-dendritic
+          pushd $HOME/check-dendritic
+          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#dendritic
+          git init
+          git add .
+          nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
+          popd
+          rm -rf $HOME/check-dendritic
+      - run: |
           mkdir $HOME/check-default
           pushd $HOME/check-default
-          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA
+          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#default
           git init
           git add .
           nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
