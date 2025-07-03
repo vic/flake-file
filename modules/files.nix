@@ -59,7 +59,13 @@
           unformatted = lib.pipe flake [
             nixCode
             (lib.replaceString ''outputs = "outputs";'' ''outputs = ${flake-file.outputs};'')
-            (code: if nonEmpty flake-file.do-not-edit then flake-file.do-not-edit + "\n" + code else code)
+            (
+              code:
+              if nonEmpty flake-file.do-not-edit then
+                flake-file.do-not-edit + (if lib.hasSuffix "\n" flake-file.do-not-edit then "" else "\n") + code
+              else
+                code
+            )
           ];
 
           formatted = pkgs.stdenvNoCC.mkDerivation {

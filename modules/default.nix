@@ -1,18 +1,22 @@
-{
-  flakeModules.default = {
+let
+  default = {
     imports = [
       ./options.nix
       ./files.nix
       ./write-files.nix
     ];
   };
-  flakeModules.dendritic = {
+
+  dendritic = {
     imports = [
-      ./options.nix
-      ./files.nix
-      ./write-files.nix
+      default
       ./dendritic.nix
     ];
+  };
+in
+{
+  flakeModules = {
+    inherit default dendritic;
   };
   templates.default = {
     description = "default template";

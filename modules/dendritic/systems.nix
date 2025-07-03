@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
 
   flake-file.inputs = {
-    systems.url = "github:nix-systems/default";
+    systems.url = lib.mkDefault "github:nix-systems/default";
   };
 
-  systems = import inputs.systems;
+  systems = lib.mkDefault (import inputs.systems);
 
 }

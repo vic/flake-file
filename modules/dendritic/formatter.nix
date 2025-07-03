@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
 
   imports = [
@@ -6,10 +6,8 @@
   ];
 
   flake-file.inputs = {
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    treefmt-nix.follows = {
-      nixpkgs = "nixpkgs";
-    };
+    treefmt-nix.url = lib.mkDefault "github:numtide/treefmt-nix";
+    treefmt-nix.follows.nixpkgs = lib.mkDefault "nixpkgs";
   };
 
   perSystem =
@@ -23,7 +21,7 @@
           nixf-diagnose.enable = true;
           prettier.enable = true;
         };
-        settings.on-unmatched = "fatal";
+        settings.on-unmatched = lib.mkDefault "fatal";
         settings.global.excludes = [
           "LICENSE"
         ];

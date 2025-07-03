@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
 
   imports = [
@@ -7,7 +7,7 @@
   ];
 
   flake-file.inputs = {
-    flake-file.url = "github:vic/flake-file";
-    files.url = "github:mightyiam/files";
+    flake-file.url = lib.mkDefault "github:vic/flake-file";
+    files.url = lib.mkDefault "github:mightyiam/files";
   };
 }

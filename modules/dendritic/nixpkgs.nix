@@ -1,7 +1,8 @@
+{ lib, ... }:
 {
 
   flake-file.inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = lib.mkDefault "github:nixos/nixpkgs/nixpkgs-unstable";
   };
 
 }

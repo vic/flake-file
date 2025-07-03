@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
 
   imports = [
@@ -8,8 +8,8 @@
   flake.modules = { };
 
   flake-file.inputs = {
-    import-tree.url = "github:vic/import-tree";
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = lib.mkDefault "github:vic/import-tree";
+    flake-parts.url = lib.mkDefault "github:hercules-ci/flake-parts";
   };
 
   flake-file.outputs = ''
