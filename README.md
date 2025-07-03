@@ -15,6 +15,8 @@
 - Custom do-not-edit header.
 - todo. validate that target of follows are flake inputs.
 - todo. flatten flake inputs.
+- Provides basic and Dendritic flakeModules.
+- Provides basic and Dendritic templates for quickstart.
 
 </td><td>
 
