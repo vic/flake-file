@@ -31,6 +31,9 @@
 Now it is possible for any flake-parts module to
 configure input dependencies or nixConfig settings for its containing flake.
 
+> A real-world example is @vic's [vic/vix](https://github.com/search?q=repo%3Avic%2Fvix%20%22flake-file.inputs%22%20language%3ANix&type=code).
+> Our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) also dogfoods flake-file and is used to test this repo.
+
 ## Why?
 
 We configure almost anything and generate countless OS/home config files using nix module options, except (til this day) our very own flake.nix files.
@@ -54,9 +57,6 @@ cat flake.nix                 # flake.nix built from your options.
 ```
 
 ## Usage
-
-> A real-world example is @vic's [vic/vix](https://github.com/search?q=repo%3Avic%2Fvix%20%22flake-file.inputs%22%20language%3ANix&type=code).
-> And our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) dogfood flake used to test this repo.
 
 The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template.
 
