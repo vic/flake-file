@@ -1,27 +1,12 @@
 {
   "nodes": {
-    "files": {
-      "locked": {
-        "lastModified": 1750263550,
-        "narHash": "sha256-EW/QJ8i/13GgiynBb6zOMxhLU1uEkRqmzbIDEP23yVA=",
-        "owner": "mightyiam",
-        "repo": "files",
-        "rev": "5f4ef1fd1f9012354a9748be093e277675d10f07",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mightyiam",
-        "repo": "files",
-        "type": "github"
-      }
-    },
     "flake-file": {
       "locked": {
-        "lastModified": 1751483725,
-        "narHash": "sha256-H9hkG2gEf9b/+8aPbQ63LnIFgGF1u3R6vPNz+ggtntg=",
+        "lastModified": 1751568105,
+        "narHash": "sha256-QTfByD6UJLZog3PEU4dHjO89QUY4Jg4OgancpEwEdyo=",
         "owner": "vic",
         "repo": "flake-file",
-        "rev": "48bb34e5433af0d619963f0658bc88880671cd22",
+        "rev": "014242310ae3603545654a434112de181c703363",
         "type": "github"
       },
       "original": {
@@ -96,7 +81,6 @@
     },
     "root": {
       "inputs": {
-        "files": "files",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "import-tree": "import-tree",

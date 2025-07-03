@@ -1,27 +1,12 @@
 {
   "nodes": {
-    "files": {
-      "locked": {
-        "lastModified": 1750263550,
-        "narHash": "sha256-EW/QJ8i/13GgiynBb6zOMxhLU1uEkRqmzbIDEP23yVA=",
-        "owner": "mightyiam",
-        "repo": "files",
-        "rev": "5f4ef1fd1f9012354a9748be093e277675d10f07",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mightyiam",
-        "repo": "files",
-        "type": "github"
-      }
-    },
     "flake-file": {
       "locked": {
-        "lastModified": 1751454676,
-        "narHash": "sha256-nOREY9uZQ1ar+1S/LtPhPMx5cQIVJ3S18NqOLEEBOtI=",
+        "lastModified": 1751568105,
+        "narHash": "sha256-QTfByD6UJLZog3PEU4dHjO89QUY4Jg4OgancpEwEdyo=",
         "owner": "vic",
         "repo": "flake-file",
-        "rev": "813417d9723d3563d3ec0753a32d6a827e299c48",
+        "rev": "014242310ae3603545654a434112de181c703363",
         "type": "github"
       },
       "original": {
@@ -81,7 +66,6 @@
     },
     "root": {
       "inputs": {
-        "files": "files",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs",
