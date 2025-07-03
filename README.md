@@ -24,8 +24,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 - App for generator: `nix run .#write-flake`
 - Custom flake.nix formatter.
 - Custom do-not-edit header.
-- TODO: Validate target of follows are flake inputs.
-- TODO: Flatten flake inputs.
+- Automatic flake.lock [flattening](https://github.com/fzakaria/nix-auto-follow).
 - Basic and Dendritic flakeModules.
 - Basic and Dendritic flake templates.
 

@@ -6,7 +6,14 @@
     type = lib.types.submodule (
       { ... }:
       {
+        config.auto-follow.enable = lib.mkDefault true;
         options = {
+          auto-follow.enable = lib.mkEnableOption "Flatten the lock file using fzakaria/nix-auto-follow";
+          auto-follow.pkg = lib.mkOption {
+            description = "nix-auto-follow package. should take `-i` or `-c`.";
+            type = lib.types.nullOr lib.types.package;
+            default = null;
+          };
           do-not-edit = lib.mkOption {
             default = ''
               # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
