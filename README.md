@@ -55,7 +55,7 @@ cat flake.nix                 # flake.nix built from your options.
 
 ## Usage
 
-> A real-world example is @vic's [vic/vix](https://github.com/vic/vix/blob/main/modules/flake/dendritic.nix).
+> A real-world example is @vic's [vic/vix](https://github.com/search?q=repo%3Avic%2Fvix%20%22flake-file.inputs%22%20language%3ANix&type=code).
 > And our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) dogfood flake used to test this repo.
 
 The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template.
