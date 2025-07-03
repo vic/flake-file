@@ -35,7 +35,8 @@ cat flake.nix                 # flake.nix built from your options.
 
 ## Usage
 
-> See also: A real-world example (dogfood flake used to test flake-file) [`dev/`](https://github.com/vic/flake-file/blob/main/dev)
+> A real-world example is @vic's [vic/vix](https://github.com/vic/vix/blob/main/modules/flake/dendritic.nix).
+> And our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) dogfood flake used to test this repo.
 
 The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template.
 
