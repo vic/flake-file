@@ -7,7 +7,6 @@
 
   flake-file.inputs = {
     treefmt-nix.url = lib.mkDefault "github:numtide/treefmt-nix";
-    treefmt-nix.follows.nixpkgs = lib.mkDefault "nixpkgs";
   };
 
   perSystem =

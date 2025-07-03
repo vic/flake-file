@@ -6,7 +6,7 @@
 }:
 {
   config.perSystem =
-    { pkgs, ... }:
+    { pkgs, inputs', ... }:
     let
       flake-file = config.flake-file;
       nonEmpty = s: lib.isStringLike s && lib.stringLength s > 0;
@@ -78,48 +78,15 @@
         '';
       };
 
-      auto-follow =
-        let
-          src = pkgs.fetchFromGitHub {
-            owner = "fzakaria";
-            repo = "nix-auto-follow";
-            rev = "0200e8c";
-            hash = "sha256-uXK9+U22FI5WQJfLWFQXvq8v4VT14ms4N6Fj2I5boiU=";
-          };
-          pkg =
-            if flake-file.auto-follow.pkg == null then
-              pkgs.callPackage "${src}/derivation.nix" { }
-            else
-              flake-file.auto-follow.pkg;
-        in
-        pkg;
-
-      nothing = pkgs.writeShellApplication {
-        name = "nothing";
-        text = "true";
-      };
-
-      auto-follow-run =
-        if !flake-file.auto-follow.enable then
-          nothing
-        else
-          pkgs.writeShellApplication {
-            name = "auto-follow-run";
-            text = ''
-              if test "-i" == "''${1:-}"; then
-                nix flake lock
-              fi
-              if test -f flake.lock; then
-                ${lib.getExe auto-follow} "$@"
-              fi
-            '';
-          };
+      allfollow-run = (import ./allfollow.nix lib).runner { inherit pkgs inputs'; } (
+        flake-file ? inputs.allfollow
+      );
 
       write-flake = pkgs.writeShellApplication {
         name = "write-flake";
         text = ''
           cp ${formatted} flake.nix
-          ${lib.getExe auto-follow-run} -i
+          ${lib.getExe allfollow-run} apply flake.lock
         '';
       };
 
@@ -129,9 +96,8 @@
             nativeBuildInputs = [ pkgs.difftastic ];
           }
           ''
-            cd ${inputs.self}
-            difft --exit-code --display inline ${formatted} flake.nix
-            ${lib.getExe auto-follow-run} -c
+            difft --exit-code --display inline ${formatted} ${inputs.self}/flake.nix
+            ${lib.getExe allfollow-run} check ${inputs.self}/flake.lock
             touch $out
           '';
     in

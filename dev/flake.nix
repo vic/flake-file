@@ -2,6 +2,12 @@
 # Use `nix run .#write-flake` to regenerate it.
 {
   inputs = {
+    allfollow = {
+      url = "github:spikespaz/allfollow";
+    };
+    devshell = {
+      url = "github:numtide/devshell";
+    };
     flake-file = {
       url = "github:vic/flake-file";
     };
@@ -14,15 +20,18 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixpkgs-unstable";
     };
-    systems = {
-      url = "github:nix-systems/default";
-    };
-    treefmt-nix = {
+    rust-overlay = {
       inputs = {
         nixpkgs = {
           follows = "nixpkgs";
         };
       };
+      url = "github:oxalica/rust-overlay";
+    };
+    systems = {
+      url = "github:nix-systems/default";
+    };
+    treefmt-nix = {
       url = "github:numtide/treefmt-nix";
     };
   };
