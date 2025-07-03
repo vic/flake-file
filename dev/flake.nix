@@ -1,10 +1,7 @@
 # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
-# Use `nix run .#write-files` to regenerate it.
+# Use `nix run .#write-flake` to regenerate it.
 {
   inputs = {
-    files = {
-      url = "github:mightyiam/files";
-    };
     flake-file = {
       url = "github:vic/flake-file";
     };

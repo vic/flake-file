@@ -8,30 +8,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
-      - run: |
-          pushd dev
-          git init
-          git add .
-          nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
-          rm -rf .git
-          popd
-      - run: |
-          mkdir $HOME/check-dendritic
-          pushd $HOME/check-dendritic
-          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#dendritic
-          git init
-          git add .
-          nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
-          popd
-          rm -rf $HOME/check-dendritic
-      - run: |
-          mkdir $HOME/check-default
-          pushd $HOME/check-default
-          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#default
-          git init
-          git add .
-          nix flake check --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
-          popd
-          rm -rf $HOME/check-default
-      - run: |
-          nix flake check ./dev --print-build-logs --no-update-lock-file --override-input flake-file github:$GITHUB_REPOSITORY/$GITHUB_SHA
+      - run: nix run ./dev#fmt --override-input flake-file $PWD -- --ci
+      - run: nix run ./dev#regen --override-input flake-file $PWD -- --override-input flake-file $PWD

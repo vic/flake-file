@@ -5,25 +5,29 @@
   <a href="LICENSE"> <img src="https://img.shields.io/github/license/vic/flake-file" alt="License"/> </a>
 </p>
 
-# flake-file — Generate flake.nix from module options
+# flake-file — Generate flake.nix from flake-parts modules.
 
-**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options, using [flake-parts](https://flake.parts/) and [mightyiam/files](https://github.com/mightyiam/files). It makes your flake configuration modular and easy to update.
+**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options, using [flake-parts](https://flake.parts/).
+
+It makes your flake configuration modular and based on the Nix module system. This means you can use
+`lib.mkDefault` or anything you normally do on Nix modules, and have them reflected on flake schema values.
 
 <table><tr><td>
   
 ## Features
 
-- Inputs aggregated from all flake-parts modules.
+- Flake definition aggregated from all flake-parts modules.
+- Schema as [options](https://github.com/vic/flake-file/blob/main/modules/options.nix).
 - Simplified follows syntax.
 - Supports flake nixConfig.
 - `flake check` ensures files are up to date.
-- App for running generator: `nix run .#write-files`
+- App for generator: `nix run .#write-flake`
 - Custom flake.nix formatter.
 - Custom do-not-edit header.
-- TODO: Validate that target of follows are flake inputs.
+- TODO: Validate target of follows are flake inputs.
 - TODO: Flatten flake inputs.
-- Provides basic and Dendritic flakeModules.
-- Provides basic and Dendritic templates for quickstart.
+- Basic and Dendritic flakeModules.
+- Basic and Dendritic flake templates.
 
 </td><td>
 
@@ -73,12 +77,11 @@ To get started quickly, create a new flake based on our [dendritic](https://gith
 
 ```shell
 nix flake init -t github:vic/flake-file#dendritic
-git init                      # for mightyiam/files to find your repo root.
-git add .                     # for nix to see repo files.
 nix flake check               # checks flake.nix is up to date.
 vim modules/default.nix       # add another input.
-nix run ".#write-files"       # regenerate files with mightyiam/files.
+nix run ".#write-flake"       # regenerate flake
 cat flake.nix                 # flake.nix built from your options.
+nix flake check               # checks flake.nix is up to date.
 ```
 
 > See the [Migration Guide](#migration-guide) if moving from an existing flake.
@@ -102,7 +105,7 @@ The following is a complete example from our [`templates/dendritic`](https://git
 #### `flakeModules.default`
 
 - Defines `flake-file` options.
-- Exposes `packages.write-files`.
+- Exposes `packages.write-flake`.
 - Exposes flake checks for generated files.
 
 #### `flakeModules.dendritic`
@@ -128,13 +131,11 @@ A more basic, explicit setup.
 # See templates/default
 { inputs, ... }: {
   imports = [
-    inputs.files.flakeModules.default
     inputs.flake-file.flakeModules.default
   ];
 
   flake-file.inputs = {
     flake-file.url = "github:vic/flake-file";
-    files.url = "github:mightyiam/files";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     systems.url = "github:nix-systems/default";
@@ -144,7 +145,7 @@ A more basic, explicit setup.
 }
 ```
 
-Use `nix run .#write-files` to generate. (Tip: you can install it as a shell hook for your devshell.)
+Use `nix run .#write-flake` to generate. (Tip: you can install it as a shell hook for your devshell.)
 
 ---
 
@@ -218,7 +219,6 @@ This section outlines recommended steps for adopting `flake-file` in your own re
 2. **Add Inputs:** In your current `flake.nix`, add the following two inputs:
 
    ```nix
-   files.url = "github:mightyiam/files";
    flake-file.url = "github:vic/flake-file";
    ```
 
@@ -239,12 +239,10 @@ This section outlines recommended steps for adopting `flake-file` in your own re
    { inputs, ... }:
    {
      imports = [
-      inputs.files.flakeModules.default # files generator
       inputs.flake-file.flakeModules.default # flake-file options.
      ];
      flake-file = {
        inputs = {
-         files.url = "github:mightyiam/files";
          flake-file.url = "github:vic/flake-file";
          # ... all your other flake inputs here.
          #
@@ -261,10 +259,10 @@ This section outlines recommended steps for adopting `flake-file` in your own re
    ```
 
 5. **Backup:** Backup your flake.nix into flake.nix.bak before re-generating it.
-6. **Generate:** Execute `nix run .#write-files` to generate flake.nix from inputs.nix.
+6. **Generate:** Execute `nix run .#write-flake` to generate flake.nix from inputs.nix.
 7. **Verify:** Check flake.nix and if everything is ok, remove the backup file.
 
-You are done! Now you can move dependencies `flake-file.inputs.foo` from inputs.nix into any other imported module and `nix run .#write-files` will take it.
+You are done! Now you can move dependencies `flake-file.inputs.foo` from inputs.nix into any other imported module and `nix run .#write-flake` will take it.
 
 ---
 
