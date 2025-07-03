@@ -5,6 +5,8 @@
     inputs.flake-parts.flakeModules.modules
   ];
 
+  flake.modules = { };
+
   flake-file.inputs = {
     import-tree.url = "github:vic/import-tree";
     flake-parts.url = "github:hercules-ci/flake-parts";
