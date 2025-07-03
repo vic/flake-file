@@ -10,3 +10,4 @@ jobs:
       - uses: cachix/install-nix-action@v30
       - run: nix run ./dev#fmt --override-input flake-file $PWD -- --ci
       - run: nix run ./dev#regen --override-input flake-file $PWD -- --override-input flake-file $PWD
+      - run: test "0" -eq "$(git diff --shortstat | wc -l)" || (git diff ; exit 1)
