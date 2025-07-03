@@ -12,11 +12,26 @@
               # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
               # Use `nix run .#write-files` to regenerate it.
             '';
-            description = "comment header. it must start with #.";
+            description = "header comment";
             type = lib.types.str;
+            apply =
+              value:
+              lib.pipe value [
+                (s: if lib.hasPrefix "#" s then s else "# " + s)
+                (s: if lib.hasSuffix "\n" s then s else s + "\n")
+              ];
+            example = lib.literalExample ''
+              "DO-NOT-EDIT"
+            '';
           };
           formatter = lib.mkOption {
-            description = "Function from pkgs to flake.nix formatter. Takes flake.nix as first argument.";
+            description = ''
+              Formatter for flake.nix file.
+
+              It is a function fron pkgs to a shell command (string).
+
+              The command takes flake.nix as first argument.
+            '';
             type = lib.types.functionTo lib.types.str;
             default = pkgs: pkgs.lib.getExe pkgs.nixfmt-rfc-style;
             example = lib.literalExample ''
@@ -34,10 +49,17 @@
             type = lib.types.attrs;
           };
           outputs = lib.mkOption {
-            description = "nix code for outputs function";
+            description = ''
+              Nix code for outputs function.
+
+              We recommend this function code to be short, used only to import a file.
+            '';
             type = lib.types.str;
             default = ''
               inputs: import ./outputs.nix inputs
+            '';
+            example = lib.literalExample ''
+              inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./module
             '';
           };
           inputs = lib.mkOption {
@@ -45,20 +67,20 @@
             description = "Flake inputs";
             type = lib.types.lazyAttrsOf (
               lib.types.submodule (
-                { name, ... }:
+                { ... }:
                 {
                   options = {
                     url = lib.mkOption {
-                      description = "${name} url";
+                      description = "source url";
                       type = lib.types.str;
                     };
                     flake = lib.mkOption {
-                      description = "is ${name} a flake?";
+                      description = "is it a flake?";
                       type = lib.types.bool;
                       default = true;
                     };
                     follows = lib.mkOption {
-                      description = "${name} inputs follows";
+                      description = "input dependencies follows";
                       default = { };
                       type = lib.types.lazyAttrsOf lib.types.str; # TODO: type.oneOf flake.input.names
                     };
