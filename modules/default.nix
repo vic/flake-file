@@ -2,8 +2,7 @@ let
   default = {
     imports = [
       ./options.nix
-      ./files.nix
-      ./write-files.nix
+      ./write-flake.nix
     ];
   };
 

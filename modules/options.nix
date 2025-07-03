@@ -10,7 +10,7 @@
           do-not-edit = lib.mkOption {
             default = ''
               # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
-              # Use `nix run .#write-files` to regenerate it.
+              # Use `nix run .#write-flake` to regenerate it.
             '';
             description = "header comment";
             type = lib.types.str;
