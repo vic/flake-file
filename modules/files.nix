@@ -59,7 +59,7 @@
           unformatted = lib.pipe flake [
             nixCode
             (lib.replaceString ''outputs = "outputs";'' ''outputs = ${flake-file.outputs};'')
-            (code: "# DO-NOT-EDIT. This file was auto-generated.\n" + code)
+            (code: if nonEmpty flake-file.do-not-edit then flake-file.do-not-edit + "\n" + code else code)
           ];
 
           formatted = pkgs.stdenvNoCC.mkDerivation {
@@ -70,7 +70,7 @@
             phases = [ "format" ];
             format = ''
               cp $unformattedPath flake.nix
-              nixfmt --strict flake.nix
+              ${flake-file.formatter pkgs} flake.nix
               cp flake.nix $out
             '';
           };

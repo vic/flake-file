@@ -138,7 +138,10 @@ moved to `outputs.nix`. Set this option only if you want to [load another file](
 nix flake check ./dev --override-input flake-file .
 
 # fmt
-nix run ./dev#fmt --override-input flake-file .
+nix run ./dev#fmt
+
+# regenerate all flake.nix files on this repo.
+nix run ./dev#regen
 ```
 
 ---

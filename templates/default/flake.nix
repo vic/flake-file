@@ -1,4 +1,6 @@
-# DO-NOT-EDIT. This file was auto-generated.
+# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+# Use `nix run .#write-files` to regenerate it.
+
 {
   inputs = {
     files = {

@@ -7,6 +7,22 @@
       { ... }:
       {
         options = {
+          do-not-edit = lib.mkOption {
+            default = ''
+              # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+              # Use `nix run .#write-files` to regenerate it.
+            '';
+            description = "comment header. it must start with #.";
+            type = lib.types.str;
+          };
+          formatter = lib.mkOption {
+            description = "Function from pkgs to flake.nix formatter. Takes flake.nix as first argument.";
+            type = lib.types.functionTo lib.types.str;
+            default = pkgs: pkgs.lib.getExe pkgs.nixfmt-rfc-style;
+            example = lib.literalExample ''
+              pkgs: pkgs.lib.getExe pkgs.nixfmt-rfc-style
+            '';
+          };
           description = lib.mkOption {
             default = "";
             description = "Flake description";
