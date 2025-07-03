@@ -33,6 +33,7 @@ configure input dependencies or nixConfig settings for its containing flake.
 
 > A real-world example is @vic's [vic/vix](https://github.com/search?q=repo%3Avic%2Fvix%20%22flake-file.inputs%22%20language%3ANix&type=code).
 > Our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) also dogfoods flake-file and is used to test this repo.
+> [Search on github](https://github.com/search?q=%22flake-file.inputs+%3D%22+language%3ANix&type=code) for more flake-file examples.
 
 ## Why?
 
