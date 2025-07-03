@@ -3,12 +3,14 @@
     imports = [
       ./options.nix
       ./files.nix
+      ./write-files.nix
     ];
   };
   flakeModules.dendritic = {
     imports = [
       ./options.nix
       ./files.nix
+      ./write-files.nix
       ./dendritic.nix
     ];
   };

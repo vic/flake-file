@@ -141,11 +141,6 @@ A more basic, explicit setup.
   };
 
   systems = import inputs.systems;
-  perSystem =
-    { config, ... }:
-    {
-      packages.write-files = config.files.writer.drv;
-    };
 }
 ```
 
@@ -237,14 +232,16 @@ This section outlines recommended steps for adopting `flake-file` in your own re
    }
    ```
 
-4. **Create Module:** Copy your current flake.nix file as a flake-parts module (e.g., `inputs.nix`):
+4. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `inputs.nix`):
 
    ```nix
    # flake-file.nix -- copied from flake.nix and adapted as a flake-parts module.
    { inputs, ... }:
    {
-     # IMPORTANT: This module enables flake-file options.
-     imports = [ inputs.flake-file.flakeModules.default ];
+     imports = [
+      inputs.files.flakeModules.default # files generator
+      inputs.flake-file.flakeModules.default # flake-file options.
+     ];
      flake-file = {
        inputs = {
          files.url = "github:mightyiam/files";
