@@ -2,6 +2,18 @@
 
 > A [flake-parts](https://flake.parts/) module that uses [mightyiam/files](https://github.com/mightyiam/files) to automatically generate your `flake.nix` file from module options.
 
+## Features
+
+- Inputs aggregated from all flake-parts modules.
+- Simplified follows syntax.
+- Supports flake nixConfig.
+- `flake check` makes sure files are up to date.
+- App for running generator: `nix run .#write-files`
+- Custom flake.nix formatter.
+- Custom do-not-edit header.
+- todo. validate that target of follows are flake inputs.
+- todo. flatten flake inputs.
+
 ![image](https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883)
 
 ## What?
@@ -41,9 +53,6 @@ cat flake.nix                 # flake.nix built from your options.
 The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template.
 
 It imports all modules from [`flake-file.flakeModules.dendritic`](https://github.com/vic/flake-file/tree/main/modules/dendritic).
-That includes [`flake-parts`](https://flake.parts), [`import-tree`](https://github.com/vic/import-tree) and
-will automatically load all your `./modules` files.
-It also configures a basic [`treefmt-nix`](https://github.com/numtide/treefmt-nix) formatter.
 
 ```nix
 { inputs, ... }:
@@ -53,11 +62,28 @@ It also configures a basic [`treefmt-nix`](https://github.com/numtide/treefmt-ni
 }
 ```
 
+### Available flakeModules
+
+#### `flakeModules.default`
+
+- Defines `flake-file` options.
+- Exposes `packages.write-files`.
+- Exposes flake checks for generated files.
+
+#### `flakeModules.dendritic`
+
+- Includes flakeModules.default.
+- Adds `flake-parts` input.
+- Enables `flake.modules` option used in dendritic setups.
+- Adds `import-tree` input.
+- Sets `output` function to `import-tree ./modules`.
+- Setups `treefmt-nix` formatter with support for `nixfmt`, `deadnix` and `nixf-diagnose`.
+
 ### Templates
 
 #### `dendritic` template
 
-A template for dendritic setups.
+A template for dendritic setups, includes `flakeModules.dendritic`.
 
 #### `default` template
 
@@ -122,12 +148,7 @@ inputs: import ./outputs.nix inputs
 I (@vic) recommend using this default, because it
 makes your flake file _focused_ on definitions
 of inputs and nixConfig. All nix logic is
-moved to `outputs.nix`. Set this option only if you want to [load another file](https://github.com/vic/flake-file/blob/main/modules/dendritic/import-tree.nix) or simple code, but not for having a huge nix code string in it.
-
-## TODO: Upcoming features
-
-- validate that target of follows are flake inputs.
-- flatten flake inputs.
+moved to `outputs.nix`. Set this option only if you want to load another file with [a nix one-liner](https://github.com/vic/flake-file/blob/main/modules/dendritic/dendritic.nix), but not for having a huge nix code string in it.
 
 ## Development
 
