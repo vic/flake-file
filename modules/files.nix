@@ -47,7 +47,6 @@
             else if lib.isList x then
               lib.pipe x [
                 (lib.map nixCode)
-                (lib.map (c: "(${c})"))
                 (values: ''[ ${lib.concatStringsSep " " values} ]'')
               ]
             else if x == true then
