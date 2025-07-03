@@ -1,6 +1,13 @@
-# flake-file - Generate flake.nix from module options.
+<!-- Badges -->
+<p align="right">
+  <a href="https://nixos.org/"> <img src="https://img.shields.io/badge/Nix-Flake-informational?logo=nixos&logoColor=white" alt="Nix Flake"/> </a>
+  <a href="https://github.com/vic/flake-file/actions"> <img src="https://github.com/vic/flake-file/workflows/flake-check/badge.svg" alt="CI Status"/> </a>
+  <a href="LICENSE"> <img src="https://img.shields.io/github/license/vic/flake-file" alt="License"/> </a>
+</p>
 
-> A [flake-parts](https://flake.parts/) module that uses [mightyiam/files](https://github.com/mightyiam/files) to automatically generate your `flake.nix` file from module options.
+# flake-file — Generate flake.nix from module options
+
+**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options, using [flake-parts](https://flake.parts/) and [mightyiam/files](https://github.com/mightyiam/files). It makes your flake configuration modular and easy to update.
 
 <table><tr><td>
   
@@ -9,12 +16,12 @@
 - Inputs aggregated from all flake-parts modules.
 - Simplified follows syntax.
 - Supports flake nixConfig.
-- `flake check` makes sure files are up to date.
+- `flake check` ensures files are up to date.
 - App for running generator: `nix run .#write-files`
 - Custom flake.nix formatter.
 - Custom do-not-edit header.
-- todo. validate that target of follows are flake inputs.
-- todo. flatten flake inputs.
+- TODO: Validate that target of follows are flake inputs.
+- TODO: Flatten flake inputs.
 - Provides basic and Dendritic flakeModules.
 - Provides basic and Dendritic templates for quickstart.
 
@@ -24,28 +31,45 @@
 
 </td></tr></table>
 
-## What?
+---
 
-> Ever wanted your `flake.nix` file to be _dynamic_?
+## Table of Contents
 
-Now it is possible for any flake-parts module to
-configure input dependencies or nixConfig settings for its containing flake.
+- [Who?](#who-is-this-for)
+- [What?](#what-is-flake-file)
+- [Getting Started](#getting-started-try-it-now)
+- [Usage](#usage)
+- [Available Options](#available-options)
+- [About the Flake `output` function](#about-the-flake-output-function)
+- [Migration Guide](#migration-guide)
+- [Development](#development)
 
-> A real-world example is @vic's [vic/vix](https://github.com/vic/vix).
-> Our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) also dogfoods flake-file and is used to test this repo.
-> [Search on github](https://github.com/search?q=%22flake-file.inputs+%3D%22+language%3ANix&type=code) for more flake-file examples.
+---
 
-## Why?
+## Who is this for?
 
-We configure almost anything and generate countless OS/home config files using nix module options, except (til this day) our very own flake.nix files.
+- Nix users who want to keep their `flake.nix` modular and maintainable
+- Anyone using [flake-parts](https://flake.parts/) and looking to automate or simplify flake input management
+- Teams or individuals who want to share and reuse flake modules across projects
 
-### Features defined by [dendritic](https://github.com/mightyiam/dendritic) flake-parts modules can be self contained.
+---
 
-A flake-parts module can [configure accross different module classes](https://vic.github.io/dendrix/Dendritic.html) `nixos`/`darwin`/`homeManager`/etc _and NOW also_ the `inputs` these configurations depend on.
+## What is flake-file?
+
+flake-file lets you make your `flake.nix` dynamic and modular. Instead of maintaining a single, monolithic `flake.nix`, you define your flake inputs in separate modules _near_ to their input use. flake-file then automatically generates a clean, up-to-date `flake.nix` for you.
+
+- **Keep your flake modular:** Manage flake inputs just like the rest of your Nix configuration.
+- **Automatic updates:** Regenerate your `flake.nix` with a single command whenever your options change.
+- **Flake as dependency manifest:** Use `flake.nix` only for declaring dependencies, not for complex Nix code.
+- **Share and reuse modules:** Teams can collaborate and share flake modules across projects including their dependencies.
+
+> Real-world examples: [vic/vix](https://github.com/vic/vix) uses flake-file. Our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) directory also uses flake-file to test this repo. [More examples on GitHub](https://github.com/search?q=%22flake-file.inputs+%3D%22+language%3ANix&type=code).
+
+---
 
 ## Getting Started (try it now!)
 
-To get started quickly, create new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic) template:
+To get started quickly, create a new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic) template:
 
 ```shell
 nix flake init -t github:vic/flake-file#dendritic
@@ -53,15 +77,17 @@ git init                      # for mightyiam/files to find your repo root.
 git add .                     # for nix to see repo files.
 nix flake check               # checks flake.nix is up to date.
 vim modules/default.nix       # add another input.
-nix run ".#write-files"       # regen files with mightyiam/files.
+nix run ".#write-files"       # regenerate files with mightyiam/files.
 cat flake.nix                 # flake.nix built from your options.
 ```
 
+> See the [Migration Guide](#migration-guide) if moving from an existing flake.
+
+---
+
 ## Usage
 
-The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template.
-
-It imports all modules from [`flake-file.flakeModules.dendritic`](https://github.com/vic/flake-file/tree/main/modules/dendritic).
+The following is a complete example from our [`templates/dendritic`](https://github.com/vic/flake-file/blob/main/templates/dendritic) template. It imports all modules from [`flake-file.flakeModules.dendritic`](https://github.com/vic/flake-file/tree/main/modules/dendritic).
 
 ```nix
 { inputs, ... }:
@@ -86,7 +112,7 @@ It imports all modules from [`flake-file.flakeModules.dendritic`](https://github
 - Enables `flake.modules` option used in dendritic setups.
 - Adds `import-tree` input.
 - Sets `output` function to `import-tree ./modules`.
-- Setups `treefmt-nix` formatter with support for `nixfmt`, `deadnix` and `nixf-diagnose`.
+- Sets up `treefmt-nix` formatter with support for `nixfmt`, `deadnix`, and `nixf-diagnose`.
 
 ### Templates
 
@@ -96,7 +122,7 @@ A template for dendritic setups, includes `flakeModules.dendritic`.
 
 #### `default` template
 
-The default template is a more basic, explicit setup.
+A more basic, explicit setup.
 
 ```nix
 # See templates/default
@@ -107,7 +133,7 @@ The default template is a more basic, explicit setup.
   ];
 
   flake-file.inputs = {
-    flake-file.url = "path:github:vic/flake-file";
+    flake-file.url = "github:vic/flake-file";
     files.url = "github:mightyiam/files";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -123,30 +149,61 @@ The default template is a more basic, explicit setup.
 }
 ```
 
-And use `nix run .#write-files` to generate. (Tip: you can install it as a shell hook for your devshell)
+Use `nix run .#write-files` to generate. (Tip: you can install it as a shell hook for your devshell.)
 
-## Available options.
+---
 
-You already know them! Options are pretty much the flake schema. Except for `follows` (see bellow)
+## Available Options
+
+Options are similar to the flake schema, with a simplified `follows` syntax. See below for details.
+
+| Option                             | Description                       |
+| ---------------------------------- | --------------------------------- |
+| `flake-file.description`           | Sets the flake description        |
+| `flake-file.nixConfig`             | Attrset for flake-level nixConfig |
+| `flake-file.inputs.<name>.url`     | URL for a flake input             |
+| `flake-file.inputs.<name>.flake`   | Boolean, is input a flake?        |
+| `flake-file.inputs.<name>.follows` | Map of dependencies to follow     |
+
+Example:
 
 ```nix
-flake-file.description = "my awesome flake";
-
-flake-file.nixConfig = {}; # an attrset. currently not typed.
-
-flake-file.inputs.<name>.url = "github:foo/bar";
-flake-file.inputs.<name>.flake = false;
-
-# This is the only difference from real flake schema.
-# maps from `dependency-input` => `flake-input`.
-flake-file.inputs.<name>.follows = { "nixpkgs" = "my-nixpkgs"; }
+flake-file = {
+  description = "my awesome flake";
+  nixConfig = {}; # an attrset. currently not typed.
+  inputs.<name>.url = "github:foo/bar";
+  inputs.<name>.flake = false;
+  # This is the only difference from real flake schema.
+  # maps from `dependency-input` => `flake-input`.
+  inputs.<name>.follows.nixpkgs = "nixpkgs";
+};
 ```
+
+#### About the `follows` Syntax
+
+> **Note:** The `follows` syntax is improved for clarity.
+>
+> **Flake schema:**
+>
+> ```nix
+> foo.inputs.bar.follows = "baz";
+> ```
+>
+> **flake-file syntax:**
+>
+> ```nix
+> foo.follows.bar = "baz";
+> ```
+>
+> This change makes it easier to reason about and maintain input dependencies.
 
 See also, [options.nix](https://github.com/vic/flake-file/blob/main/modules/options.nix).
 
-## About the Flake `output` function.
+---
 
-The `flake-file.output` option is a literal nix expression. Because you cannot convert a nix function value into an string for including in the generated flake file.
+## About the Flake `output` function
+
+The `flake-file.output` option is a literal Nix expression. You cannot convert a Nix function value into a string for including in the generated flake file.
 
 It defaults to:
 
@@ -154,23 +211,85 @@ It defaults to:
 inputs: import ./outputs.nix inputs
 ```
 
-I (@vic) recommend using this default, because it
-makes your flake file _focused_ on definitions
-of inputs and nixConfig. All nix logic is
-moved to `outputs.nix`. Set this option only if you want to load another file with [a nix one-liner](https://github.com/vic/flake-file/blob/main/modules/dendritic/dendritic.nix), but not for having a huge nix code string in it.
+We recommend using this default, as it keeps your flake file focused on definitions of inputs and nixConfig. All Nix logic is moved to `outputs.nix`. Set this option only if you want to load another file with [a Nix one-liner](https://github.com/vic/flake-file/blob/main/modules/dendritic/dendritic.nix), but not for having a huge Nix code string in it.
+
+---
+
+## Migration Guide
+
+This section outlines recommended steps for adopting `flake-file` in your own repository.
+
+1. **Prerequisite:** Ensure you have already adopted [flake-parts](https://flake.parts).
+2. **Add Inputs:** In your current `flake.nix`, add the following two inputs:
+
+   ```nix
+   files.url = "github:mightyiam/files";
+   flake-file.url = "github:vic/flake-file";
+   ```
+
+3. **Move Outputs:** Copy the contents of your `outputs` function into a new file `outputs.nix`:
+
+   ```nix
+   # outputs.nix -- copied the `outputs` value in here.
+   inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+     imports = [ ./inputs.nix ]; # Add this for step 4.
+     # ... all your existing modules ...
+   }
+   ```
+
+4. **Create Module:** Copy your current flake.nix file as a flake-parts module (e.g., `inputs.nix`):
+
+   ```nix
+   # flake-file.nix -- copied from flake.nix and adapted as a flake-parts module.
+   { inputs, ... }:
+   {
+     # IMPORTANT: This module enables flake-file options.
+     imports = [ inputs.flake-file.flakeModules.default ];
+     flake-file = {
+       inputs = {
+         files.url = "github:mightyiam/files";
+         flake-file.url = "github:vic/flake-file";
+         # ... all your other flake inputs here.
+         #
+         # Update your dependencies follows from:
+         #   foo.inputs.bar.follows = "baz";
+         # into:
+         #   foo.follows.bar = "baz";
+         #
+       };
+       nixConfig = { }; # if you had any.
+       description = "Your flake description";
+     };
+   }
+   ```
+
+5. **Backup:** Backup your flake.nix into flake.nix.bak before re-generating it.
+6. **Generate:** Execute `nix run .#write-files` to generate flake.nix from inputs.nix.
+7. **Verify:** Check flake.nix and if everything is ok, remove the backup file.
+
+You are done! Now you can move dependencies `flake-file.inputs.foo` from inputs.nix into any other imported module and `nix run .#write-files` will take it.
+
+---
 
 ## Development
 
 ```nix
-# run tests
+# Run tests
 nix flake check ./dev --override-input flake-file .
 
-# fmt
+# Format
 nix run ./dev#fmt
 
-# regenerate all flake.nix files on this repo.
+# Regenerate all flake.nix files in this repo.
 nix run ./dev#regen
 ```
+
+---
+
+## Contributing & Support
+
+- Found a bug or have a feature request? [Open an issue](https://github.com/vic/flake-file/issues).
+- Contributions are welcome!
 
 ---
 
