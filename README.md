@@ -126,8 +126,6 @@ moved to `outputs.nix`. Set this option only if you want to [load another file](
 
 ## TODO: Upcoming features
 
-- customize DO-NOT-EDIT header (or disable it)
-- option to use another formatter. (currently uses nixfmt-rfc-style)
 - validate that target of follows are flake inputs.
 - flatten flake inputs.
 
