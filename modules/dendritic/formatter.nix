@@ -23,6 +23,9 @@
         settings.on-unmatched = lib.mkDefault "fatal";
         settings.global.excludes = [
           "LICENSE"
+          "flake.lock"
+          "**/flake.lock"
+          ".envrc"
         ];
       };
     };
