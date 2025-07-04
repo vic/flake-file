@@ -32,6 +32,8 @@ It makes your flake configuration modular and based on the Nix module system. Th
 
 ![image](https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883)
 
+> this cute ouroboros is puking itself out.
+
 </td></tr></table>
 
 ---
@@ -225,6 +227,7 @@ flake-file.inputs.allfollows.url = "github:spikespaz/allfollow";
 When `allfollows` is present in the `flake.nix` file,
 `nix run .#write-flake` will automatically use `allfollow` to
 flatten the `flake.lock` dependencies.
+Flake check will also make sure dependencies are flat.
 
 ---
 
