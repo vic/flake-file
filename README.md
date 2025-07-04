@@ -24,11 +24,11 @@ It makes your flake configuration modular and based on the Nix module system. Th
 - App for generator: `nix run .#write-flake`
 - Custom flake.nix formatter.
 - Custom do-not-edit header.
-- Automatic flake.lock [flattening](https://github.com/spikespaz/allfollow).
+- Automatic flake.lock [flattening](#automatic-flakelock-flattening).
 - Basic and Dendritic flakeModules.
 - Basic and Dendritic flake templates.
 
-</td><td>
+</td><td style="width: 20em">
 
 ![image](https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883)
 
@@ -44,6 +44,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 - [Usage](#usage)
 - [Available Options](#available-options)
 - [About the Flake `output` function](#about-the-flake-output-function)
+- [Automatic flake.lock flattening](#automatic-flakelock-flattening)
 - [Migration Guide](#migration-guide)
 - [Development](#development)
 
@@ -114,7 +115,10 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Enables `flake.modules` option used in dendritic setups.
 - Adds `import-tree` input.
 - Sets `output` function to `import-tree ./modules`.
-- Sets up `treefmt-nix` formatter with support for `nixfmt`, `deadnix`, and `nixf-diagnose`.
+- Adds `treefmt-nix` input.
+- Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
+- Adds `allfollows` input.
+- Enables flake.lock automatic flattening.
 
 ### Templates
 
@@ -207,6 +211,20 @@ inputs: import ./outputs.nix inputs
 ```
 
 We recommend using this default, as it keeps your flake file focused on definitions of inputs and nixConfig. All Nix logic is moved to `outputs.nix`. Set this option only if you want to load another file with [a Nix one-liner](https://github.com/vic/flake-file/blob/main/modules/dendritic/dendritic.nix), but not for having a huge Nix code string in it.
+
+---
+
+## Automatic flake.lock flattening
+
+Just add an [`allfollows`](https://github.com/spikespaz/allfollow) input:
+
+```nix
+flake-file.inputs.allfollows.url = "github:spikespaz/allfollow";
+```
+
+When `allfollows` is present in the `flake.nix` file,
+`nix run .#write-flake` will automatically use `allfollow` to
+flatten the `flake.lock` dependencies.
 
 ---
 
