@@ -119,7 +119,7 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Sets `output` function to `import-tree ./modules`.
 - Adds `treefmt-nix` input.
 - Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
-- Adds `allfollows` input.
+- Adds `allfollow` input.
 - Enables flake.lock automatic flattening.
 
 ### Templates
@@ -218,13 +218,13 @@ We recommend using this default, as it keeps your flake file focused on definiti
 
 ## Automatic flake.lock flattening
 
-Just add an [`allfollows`](https://github.com/spikespaz/allfollow) input:
+Just add an [`allfollow`](https://github.com/spikespaz/allfollow) input:
 
 ```nix
-flake-file.inputs.allfollows.url = "github:spikespaz/allfollow";
+flake-file.inputs.allfollow.url = "github:spikespaz/allfollow";
 ```
 
-When `allfollows` is present in the `flake.nix` file,
+When `allfollow` is present in the `flake.nix` file,
 `nix run .#write-flake` will automatically use `allfollow` to
 flatten the `flake.lock` dependencies.
 Flake check will also make sure dependencies are flat.
