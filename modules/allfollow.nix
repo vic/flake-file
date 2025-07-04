@@ -28,9 +28,8 @@ let
   };
 
   runner =
-    enabled:
     { pkgs, inputs', ... }:
-    if enabled then
+    if inputs' ? allfollow then
       pkgs.writeShellApplication {
         name = "allfollow-run";
         runtimeInputs = [
