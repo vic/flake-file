@@ -28,14 +28,10 @@ let
   };
 
   runner =
+    enabled:
     { pkgs, inputs', ... }:
-    let
-      nothing = pkgs.writeShellApplication {
-        name = "nothing";
-        text = "true";
-      };
-
-      app = pkgs.writeShellApplication {
+    if enabled then
+      pkgs.writeShellApplication {
         name = "allfollow-run";
         runtimeInputs = [
           pkgs.nix
@@ -56,10 +52,13 @@ let
             difft --exit-code --display inline pruned.json current.json
           fi
         '';
+      }
+    else
+      pkgs.writeShellApplication {
+        name = "nothing";
+        text = "true";
       };
 
-    in
-    enabled: if enabled then app else nothing;
 in
 {
   inherit add-allfollow-input runner;

@@ -78,9 +78,9 @@
         '';
       };
 
-      allfollow-run = (import ./allfollow.nix lib).runner { inherit pkgs inputs'; } (
-        flake-file ? inputs.allfollow
-      );
+      allfollow-run = (import ./allfollow.nix lib).runner (flake-file ? inputs.allfollow) {
+        inherit pkgs inputs';
+      };
 
       write-flake = pkgs.writeShellApplication {
         name = "write-flake";
