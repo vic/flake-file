@@ -11,7 +11,7 @@ let
       inputs: import ./outputs.nix inputs
     '';
     example = lib.literalExample ''
-      inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./module
+      inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./modules
     '';
   };
 
