@@ -44,5 +44,12 @@
           ${each} ${puke} --override-input flake-file "$PWD"
         '';
       };
+
+      packages.check = pkgs.writeShellApplication {
+        name = "check";
+        text = ''
+          ${each} nix flake check -L --override-input flake-file "$PWD"
+        '';
+      };
     };
 }

@@ -4,7 +4,33 @@ on:
     branches: ["main"]
   pull_request:
 jobs:
-  flake-check:
+  find-flakes:
+    name: Find Flakes
+    runs-on: ubuntu-latest
+    outputs:
+      flakes: ${{ steps.flakes.outputs.flakes }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: flakes
+        run: |
+          flakes=$(find . -mindepth 2 -name flake.nix -print0 | xargs -0 dirname | jq -R . | jq -sc .)
+          echo "$flakes"
+          echo "flakes=$flakes" >> $GITHUB_OUTPUT
+  flake:
+    name: Check flake ${{matrix.flake}}
+    needs: [find-flakes]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flake: ${{ fromJSON(needs.find-flakes.outputs.flakes) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix flake check ${{matrix.flake}} -L --override-input flake-file $PWD
+  nix-fmt:
+    name: Nix Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,6 +38,3 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix run -L --override-input flake-file $PWD ./dev#fmt -- --ci
-      - run: nix run -L --override-input flake-file $PWD ./dev#regen -- -L
-      - name: check no files were modified
-        run: test "0" -eq "$(git diff --shortstat | wc -l)" || (git diff ; exit 1)

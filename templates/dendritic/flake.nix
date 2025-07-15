@@ -23,6 +23,9 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixpkgs-unstable";
     };
+    nixpkgs-lib = {
+      follows = "nixpkgs";
+    };
     rust-overlay = {
       inputs = {
         nixpkgs = {

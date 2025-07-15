@@ -37,21 +37,18 @@ let
         name = "allfollow-run";
         runtimeInputs = [
           pkgs.nix
-          pkgs.difftastic
-          pkgs.jq
+          pkgs.delta
           inputs'.allfollow.packages.default
         ];
         text = ''
-          if [ "apply" == "''${1:-}" ]; then
+          set -e
+          if [ "apply" == "$1" ]; then
             nix flake lock
-            allfollow prune --pretty "''${2}" -o - | jq -S . > flake.lock.pruned
-            mv flake.lock.pruned "''${2}"
+            allfollow prune --pretty flake.lock --in-place
           fi
-          if [ "check" == "''${1:-}" ]; then
-            allfollow prune "''${2}" --pretty -o pruned.lock
-            allfollow count --json --pretty -o - pruned.lock | jq -S . > pruned.json
-            allfollow count --json --pretty -o - "''${2}" | jq -S . > current.json
-            difft --exit-code --display inline pruned.json current.json
+          if [ "check" == "$1" ]; then
+            allfollow prune --pretty "$2" -o pruned.lock
+            delta --paging never pruned.lock "$2"
           fi
         '';
       }

@@ -7,7 +7,7 @@
   ];
 
   perSystem =
-    { self', ... }:
+    { pkgs, self', ... }:
     {
       devshells.default.commands = [
         {
@@ -15,9 +15,21 @@
           package = self'.packages.regen;
         }
         {
+          help = "run a command on each sub flake";
+          package = self'.packages.each;
+        }
+        {
           name = "fmt";
           help = "format all files in repo";
           command = "nix run ./dev#fmt --override-input flake-file .";
+        }
+        {
+          name = "update";
+          help = "update all flakes and prune locks";
+          command = ''
+            ${pkgs.lib.getExe self'.packages.each} nix flake update
+            ${pkgs.lib.getExe self'.packages.each} nix run --inputs-from . allfollow -- prune --in-place --pretty
+          '';
         }
         {
           name = "check";
