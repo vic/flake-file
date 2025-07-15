@@ -261,15 +261,15 @@ You are done! Now you can move dependencies `flake-file.inputs.foo` from inputs.
 
 ## Development
 
-```nix
-# Run tests
-nix flake check ./dev --override-input flake-file .
+Use `nix develop ./dev` or with direnv: `use flake ./dev`.
 
-# Format
-nix run ./dev#fmt
+```shell
+[[general commands]]
 
-# Regenerate all flake.nix files in this repo.
-nix run ./dev#regen
+  check - run flake check
+  fmt   - format all files in repo
+  menu  - prints this menu
+  regen - regen all flake.nix on this repo
 ```
 
 ---
