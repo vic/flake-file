@@ -1,13 +1,15 @@
 name: flake-check
 on:
   push:
+    branches: ["main"]
   pull_request:
 jobs:
   flake-check:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
-      - run: nix run ./dev#fmt --override-input flake-file $PWD -- --ci
-      - run: nix run ./dev#regen --override-input flake-file $PWD -- --override-input flake-file $PWD
-      - run: test "0" -eq "$(git diff --shortstat | wc -l)" || (git diff ; exit 1)
+      - run: nix run -L --override-input flake-file $PWD ./dev#fmt -- --ci
+      - run: nix run -L --override-input flake-file $PWD ./dev#regen -- -L
+      - name: check no files were modified
+        run: test "0" -eq "$(git diff --shortstat | wc -l)" || (git diff ; exit 1)

@@ -18,7 +18,7 @@ let
   follows-option = lib.mkOption {
     description = "flake input path to follow";
     default = "";
-    type = lib.types.string;
+    type = lib.types.str;
   };
 
   inputs-follow-option = lib.mkOption {
