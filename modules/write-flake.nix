@@ -73,9 +73,9 @@
 
           inputsExpr = lib.mapAttrs (
             _name: input:
-            {
-              inherit (input) url;
-            }
+            { }
+            // (if !input ? url || input.url == "" then { } else { inherit (input) url; })
+            // (if !input ? follows || input.follows == "" then { } else { inherit (input) follows; })
             // (if !input ? flake || input.flake then { } else { flake = false; })
             // (
               if !input ? inputs || input.inputs == { } then
