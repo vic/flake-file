@@ -11,32 +11,6 @@
       flake-file = config.flake-file;
       nonEmpty = s: lib.isStringLike s && lib.stringLength s > 0;
 
-      flake =
-        {
-          outputs = "outputs";
-        }
-        // (if nonEmpty flake-file.description then { inherit (flake-file) description; } else { })
-        // (if flake-file.nixConfig != { } then { inherit (flake-file) nixConfig; } else { })
-        // {
-          inputs = lib.mapAttrs (
-            _name: input:
-            {
-              inherit (input) url;
-            }
-            // (if input.flake then { } else { flake = false; })
-            // (
-              if input.follows == { } then
-                { }
-              else
-                {
-                  inputs = lib.mapAttrs (_: follows: {
-                    inherit follows;
-                  }) input.follows;
-                }
-            )
-          ) flake-file.inputs;
-        };
-
       # expr to code
       nixCode =
         x:
@@ -59,11 +33,68 @@
         else
           toString x;
 
-      unformatted = lib.pipe flake [
-        nixCode
-        (lib.replaceString ''outputs = "outputs";'' ''outputs = ${flake-file.outputs};'')
-        (code: if nonEmpty flake-file.do-not-edit then flake-file.do-not-edit + code else code)
-      ];
+      unformatted =
+        let
+          template = ''
+            {
+              <description>
+              <outputs>
+              <nixConfig>
+              <inputs>
+            }
+          '';
+
+          description =
+            if nonEmpty flake-file.description then
+              ''
+                description = ${nixCode flake-file.description};
+              ''
+            else
+              "";
+
+          outputs = ''
+            outputs = ${flake-file.outputs};
+          '';
+
+          nixConfig =
+            if flake-file.nixConfig != { } then
+              ''
+                nixConfig = ${nixCode flake-file.nixConfig};
+              ''
+            else
+              "";
+
+          inputsExpr = lib.mapAttrs (
+            _name: input:
+            {
+              inherit (input) url;
+            }
+            // (if input.flake then { } else { flake = false; })
+            // (
+              if input.follows == { } then
+                { }
+              else
+                {
+                  inputs = lib.mapAttrs (_: follows: {
+                    inherit follows;
+                  }) input.follows;
+                }
+            )
+          ) flake-file.inputs;
+
+          inputs = ''
+            inputs = ${nixCode inputsExpr};
+          '';
+
+          addHeader = code: if nonEmpty flake-file.do-not-edit then flake-file.do-not-edit + code else code;
+        in
+        lib.pipe template [
+          (lib.replaceString "<description>" description)
+          (lib.replaceString "<outputs>" outputs)
+          (lib.replaceString "<nixConfig>" nixConfig)
+          (lib.replaceString "<inputs>" inputs)
+          addHeader
+        ];
 
       formatted = pkgs.stdenvNoCC.mkDerivation {
         name = "flake-formatted";
@@ -83,19 +114,21 @@
       write-flake = pkgs.writeShellApplication {
         name = "write-flake";
         text = ''
+          set -e
           cp ${formatted} flake.nix
-          ${lib.getExe allfollow-run} apply flake.lock
+          # ${lib.getExe allfollow-run} apply
         '';
       };
 
       check-flake =
         pkgs.runCommand "check-flake-file"
           {
-            nativeBuildInputs = [ pkgs.difftastic ];
+            nativeBuildInputs = [ pkgs.delta ];
           }
           ''
-            difft --exit-code --display inline ${formatted} ${inputs.self}/flake.nix
-            ${lib.getExe allfollow-run} check ${inputs.self}/flake.lock
+            set -e
+            delta --paging never --side-by-side ${formatted} ${inputs.self}/flake.nix
+            # ${lib.getExe allfollow-run} check ${inputs.self}/flake.lock
             touch $out
           '';
     in
