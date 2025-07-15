@@ -24,8 +24,9 @@
         settings.global.excludes = [
           "LICENSE"
           "flake.lock"
-          "**/flake.lock"
+          "*/flake.lock"
           ".envrc"
+          ".direnv/*"
         ];
       };
     };

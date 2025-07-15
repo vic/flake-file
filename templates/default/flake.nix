@@ -1,6 +1,9 @@
 # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
 # Use `nix run .#write-flake` to regenerate it.
 {
+
+  outputs = inputs: import ./outputs.nix inputs;
+
   inputs = {
     flake-file = {
       url = "github:vic/flake-file";
@@ -15,5 +18,5 @@
       url = "github:nix-systems/default";
     };
   };
-  outputs = inputs: import ./outputs.nix inputs;
+
 }
