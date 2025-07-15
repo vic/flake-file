@@ -64,20 +64,25 @@
             else
               "";
 
+          inputsFollow = lib.mapAttrs (
+            _: input:
+            { }
+            // (if !input ? follows || input.follows == { } then { } else { inherit (input) follows; })
+            // (if !input ? inputs || input.inputs == { } then { } else { inputs = inputsFollow input.inputs; })
+          );
+
           inputsExpr = lib.mapAttrs (
             _name: input:
             {
               inherit (input) url;
             }
-            // (if input.flake then { } else { flake = false; })
+            // (if !input ? flake || input.flake then { } else { flake = false; })
             // (
-              if input.follows == { } then
+              if !input ? inputs || input.inputs == { } then
                 { }
               else
                 {
-                  inputs = lib.mapAttrs (_: follows: {
-                    inherit follows;
-                  }) input.follows;
+                  inputs = inputsFollow input.inputs;
                 }
             )
           ) flake-file.inputs;
