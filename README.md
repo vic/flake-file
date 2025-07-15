@@ -68,7 +68,7 @@ flake-file lets you make your `flake.nix` dynamic and modular. Instead of mainta
 - **Flake as dependency manifest:** Use `flake.nix` only for declaring dependencies, not for complex Nix code.
 - **Share and reuse modules:** Teams can collaborate and share flake modules across projects including their dependencies.
 
-> Real-world examples: [vic/vix](https://github.com/vic/vix) uses flake-file. Our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) directory also uses flake-file to test this repo. [More examples on GitHub](https://github.com/search?q=%22flake-file.inputs+%3D%22+language%3ANix&type=code).
+> Real-world examples: [vic/vix](https://github.com/vic/vix) uses flake-file. Our [`dev/`](https://github.com/vic/flake-file/blob/main/dev) directory also uses flake-file to test this repo. [More examples on GitHub](https://github.com/search?q=%22vic%2Fflake-file%22+language%3ANix&type=code).
 
 ---
 
@@ -215,7 +215,7 @@ Flake check will also make sure dependencies are flat.
 This section outlines recommended steps for adopting `flake-file` in your own repository.
 
 1. **Prerequisite:** Ensure you have already adopted [flake-parts](https://flake.parts).
-2. **Add Inputs:** In your current `flake.nix`, add the following two inputs:
+2. **Add Inputs:** In your current `flake.nix`, add the following input:
 
    ```nix
    flake-file.url = "github:vic/flake-file";
@@ -232,6 +232,8 @@ This section outlines recommended steps for adopting `flake-file` in your own re
    ```
 
 4. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `inputs.nix`):
+
+   > Make sure you `git add` so that new files are visible to nix.
 
    ```nix
    # flake-file.nix -- copied from flake.nix and adapted as a flake-parts module.
