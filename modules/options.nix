@@ -15,17 +15,19 @@ let
     '';
   };
 
+  follows-option = lib.mkOption {
+    description = "flake input path to follow";
+    default = "";
+    type = lib.types.string;
+  };
+
   inputs-follow-option = lib.mkOption {
     description = "input dependencies";
     default = { };
     type = lib.types.lazyAttrsOf (
       lib.types.submodule {
         options = {
-          follows = lib.mkOption {
-            description = "flake input path to follow";
-            default = "";
-            type = lib.types.string;
-          };
+          follows = follows-option;
           inputs = inputs-follow-option;
         };
       }
@@ -43,6 +45,7 @@ let
         options = {
           url = lib.mkOption {
             description = "source url";
+            default = "";
             type = lib.types.str;
           };
           flake = lib.mkOption {
@@ -50,6 +53,7 @@ let
             type = lib.types.bool;
             default = true;
           };
+          follows = follows-option;
           inputs = inputs-follow-option;
         };
       }
