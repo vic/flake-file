@@ -10,8 +10,11 @@ let
     );
 
   new-input = url: follows: {
-    inherit url follows;
+    inherit url;
     flake = true;
+    inputs = lib.mapAttrs (_: follows: {
+      inherit follows;
+    }) follows;
   };
 
   add-allfollow-input = merge-missing {

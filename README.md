@@ -18,7 +18,6 @@ It makes your flake configuration modular and based on the Nix module system. Th
 
 - Flake definition aggregated from all flake-parts modules.
 - Schema as [options](https://github.com/vic/flake-file/blob/main/modules/options.nix).
-- Simplified follows syntax.
 - Supports flake nixConfig.
 - `flake check` ensures files are up to date.
 - App for generator: `nix run .#write-flake`
@@ -156,15 +155,15 @@ Use `nix run .#write-flake` to generate. (Tip: you can install it as a shell hoo
 
 ## Available Options
 
-Options are similar to the flake schema, with a simplified `follows` syntax. See below for details.
+Options are same attributes as flake schema. See below for details.
 
-| Option                             | Description                       |
-| ---------------------------------- | --------------------------------- |
-| `flake-file.description`           | Sets the flake description        |
-| `flake-file.nixConfig`             | Attrset for flake-level nixConfig |
-| `flake-file.inputs.<name>.url`     | URL for a flake input             |
-| `flake-file.inputs.<name>.flake`   | Boolean, is input a flake?        |
-| `flake-file.inputs.<name>.follows` | Map of dependencies to follow     |
+| Option                                          | Description                       |
+| ----------------------------------------------- | --------------------------------- |
+| `flake-file.description`                        | Sets the flake description        |
+| `flake-file.nixConfig`                          | Attrset for flake-level nixConfig |
+| `flake-file.inputs.<name>.url`                  | URL for a flake input             |
+| `flake-file.inputs.<name>.flake`                | Boolean, is input a flake?        |
+| `flake-file.inputs.<name>.inputs.<dep>.follows` | Tree of dependencies to follow    |
 
 Example:
 
@@ -174,29 +173,9 @@ flake-file = {
   nixConfig = {}; # an attrset. currently not typed.
   inputs.<name>.url = "github:foo/bar";
   inputs.<name>.flake = false;
-  # This is the only difference from real flake schema.
-  # maps from `dependency-input` => `flake-input`.
-  inputs.<name>.follows.nixpkgs = "nixpkgs";
+  inputs.<name>.inputs.nixpkgs.follows = "nixpkgs";
 };
 ```
-
-#### About the `follows` Syntax
-
-> **Note:** The `follows` syntax is improved for clarity.
->
-> **Flake schema:**
->
-> ```nix
-> foo.inputs.bar.follows = "baz";
-> ```
->
-> **flake-file syntax:**
->
-> ```nix
-> foo.follows.bar = "baz";
-> ```
->
-> This change makes it easier to reason about and maintain input dependencies.
 
 See also, [options.nix](https://github.com/vic/flake-file/blob/main/modules/options.nix).
 
@@ -265,12 +244,6 @@ This section outlines recommended steps for adopting `flake-file` in your own re
        inputs = {
          flake-file.url = "github:vic/flake-file";
          # ... all your other flake inputs here.
-         #
-         # Update your dependencies follows from:
-         #   foo.inputs.bar.follows = "baz";
-         # into:
-         #   foo.follows.bar = "baz";
-         #
        };
        nixConfig = { }; # if you had any.
        description = "Your flake description";
