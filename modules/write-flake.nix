@@ -121,7 +121,7 @@
         text = ''
           set -e
           cp ${formatted} flake.nix
-          # ${lib.getExe allfollow-run} apply
+          ${lib.getExe allfollow-run} apply
         '';
       };
 
@@ -132,8 +132,8 @@
           }
           ''
             set -e
-            delta --paging never --side-by-side ${formatted} ${inputs.self}/flake.nix
-            # ${lib.getExe allfollow-run} check ${inputs.self}/flake.lock
+            delta --paging never ${formatted} ${inputs.self}/flake.nix
+            ${lib.getExe allfollow-run} check ${inputs.self}/flake.lock
             touch $out
           '';
     in
