@@ -5,9 +5,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": [
-          "rust-overlay"
-        ],
+        "rust-overlay": "rust-overlay",
         "systems": [
           "systems"
         ]
@@ -23,26 +21,6 @@
       "original": {
         "owner": "spikespaz",
         "repo": "allfollow",
-        "type": "github"
-      }
-    },
-    "devshell": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1741473158,
-        "narHash": "sha256-kWNaq6wQUbUMlPgw8Y+9/9wP0F8SHkjy24/mN3UAppg=",
-        "owner": "numtide",
-        "repo": "devshell",
-        "rev": "7c9e793ebe66bcba8292989a68c0419b737a22a0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "devshell",
         "type": "github"
       }
     },
@@ -96,7 +74,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1752596105,
         "narHash": "sha256-lFNVsu/mHLq3q11MuGkMhUUoSXEdQjCHvpReaGP1S2k=",
@@ -115,22 +93,21 @@
     "root": {
       "inputs": {
         "allfollow": "allfollow",
-        "devshell": "devshell",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "import-tree": "import-tree",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_2",
         "nixpkgs-lib": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay_2",
         "systems": "systems_2",
         "treefmt-nix": "treefmt-nix"
       }
     },
-    "rust-overlay_2": {
+    "rust-overlay": {
       "inputs": {
         "nixpkgs": [
+          "allfollow",
           "nixpkgs"
         ]
       },

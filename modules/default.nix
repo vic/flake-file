@@ -6,9 +6,16 @@ let
     ];
   };
 
+  allfollow = {
+    imports = [
+      ./allfollow.nix
+    ];
+  };
+
   dendritic = {
     imports = [
       default
+      allfollow
       ./dendritic.nix
     ];
   };

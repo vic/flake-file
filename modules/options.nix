@@ -15,6 +15,31 @@ let
     '';
   };
 
+  prune-lock-option = lib.mkOption {
+    default = { };
+    type = lib.types.submodule {
+      options = {
+        enable = lib.mkEnableOption "Should we automatically prune flake.lock";
+        command = lib.mkOption {
+          description = ''
+            Function from pkgs to a command (string) used to prune flake.lock.
+
+            The command takes the flake.lock location as only argument
+            and is expected to produce a pruned version into stdout.
+
+            The output is expected to be deterministic.
+          '';
+          # TODO: https://github.com/NixOS/nixpkgs/pull/422286
+          example = lib.literalExample ''
+            pkgs: "''${pkgs.lib.getExe pkgs.allfollow} prune -o - --pretty"
+          '';
+          type = lib.types.functionTo lib.types.str;
+          default = _: "cat";
+        };
+      };
+    };
+  };
+
   follows-option = lib.mkOption {
     description = "flake input path to follow";
     default = "";
@@ -37,9 +62,6 @@ let
   inputs-option = lib.mkOption {
     default = { };
     description = "Flake inputs";
-    apply =
-      inputs:
-      if inputs ? allfollow then (import ./allfollow.nix lib).add-allfollow-input inputs else inputs;
     type = lib.types.lazyAttrsOf (
       lib.types.submodule {
         options = {
@@ -103,6 +125,7 @@ let
       {
         options = {
           do-not-edit = do-not-edit-option;
+          prune-lock = prune-lock-option;
           formatter = formatter-option;
           description = lib.mkOption {
             default = "";

@@ -6,7 +6,7 @@
 }:
 {
   config.perSystem =
-    { pkgs, inputs', ... }:
+    { pkgs, ... }:
     let
       flake-file = config.flake-file;
       nonEmpty = s: lib.isStringLike s && lib.stringLength s > 0;
@@ -103,7 +103,6 @@
 
       formatted = pkgs.stdenvNoCC.mkDerivation {
         name = "flake-formatted";
-        nativeBuildInputs = [ pkgs.nixfmt-rfc-style ];
         passAsFile = [ "unformatted" ];
         inherit unformatted;
         phases = [ "format" ];
@@ -114,14 +113,33 @@
         '';
       };
 
-      allfollow-run = (import ./allfollow.nix lib).runner { inherit pkgs inputs'; };
+      prune-lock =
+        let
+          cmd = flake-file.prune-lock.command pkgs;
+          app = pkgs.writeShellApplication {
+            name = "prune-lock";
+            text = ''
+              set -e
+              if [ "apply" == "$1" ]; then
+                nix flake lock
+                ${cmd} flake.lock > pruned.lock
+                mv pruned.lock flake.lock
+              fi
+              if [ "check" == "$1" ]; then
+                ${cmd} "$2" > pruned.lock
+                delta --paging never pruned.lock "$2"
+              fi
+            '';
+          };
+        in
+        if flake-file.prune-lock.enable then pkgs.lib.getExe app else "true";
 
       write-flake = pkgs.writeShellApplication {
         name = "write-flake";
         text = ''
           set -e
           cp ${formatted} flake.nix
-          ${lib.getExe allfollow-run} apply
+          ${prune-lock} apply
         '';
       };
 
@@ -133,7 +151,7 @@
           ''
             set -e
             delta --paging never ${formatted} ${inputs.self}/flake.nix
-            ${lib.getExe allfollow-run} check ${inputs.self}/flake.lock
+            ${prune-lock} check ${inputs.self}/flake.lock
             touch $out
           '';
     in

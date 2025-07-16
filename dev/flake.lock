@@ -5,9 +5,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": [
-          "rust-overlay"
-        ],
+        "rust-overlay": "rust-overlay",
         "systems": [
           "systems"
         ]
@@ -123,14 +121,14 @@
         "nixpkgs-lib": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay_2",
         "systems": "systems_2",
         "treefmt-nix": "treefmt-nix"
       }
     },
-    "rust-overlay_2": {
+    "rust-overlay": {
       "inputs": {
         "nixpkgs": [
+          "allfollow",
           "nixpkgs"
         ]
       },
