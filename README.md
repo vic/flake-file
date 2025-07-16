@@ -109,17 +109,20 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Exposes `packages.write-flake`.
 - Exposes flake checks for generated files.
 
+#### `flakeModules.allfollow`
+
+- Enables [automatic flake.lock flattening](#automatic-flakelock-flattening) using [spikespaz/allfollow](https://github.com/spikespaz/allfollow)
+
 #### `flakeModules.dendritic`
 
 - Includes flakeModules.default.
+- Includes flakeModules.allfollow.
 - Adds `flake-parts` input.
 - Enables `flake.modules` option used in dendritic setups.
 - Adds `import-tree` input.
 - Sets `output` function to `import-tree ./modules`.
 - Adds `treefmt-nix` input.
 - Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
-- Adds `allfollow` input.
-- Enables flake.lock automatic flattening.
 
 ### Templates
 
@@ -197,16 +200,27 @@ We recommend using this default, as it keeps your flake file focused on definiti
 
 ## Automatic flake.lock flattening
 
-Just add an [`allfollow`](https://github.com/spikespaz/allfollow) input:
+You can use the `prune-lock` [options](https://github.com/vic/flake-file/blob/main/modules/options.nix)
+to specify a command that `flake-file` will use whenever your flake.nix file is generated
+to flatten your flake.lock dependencies tree.
+
+When enabled, `flake check` will also make sure dependencies are flat.
 
 ```nix
-flake-file.inputs.allfollow.url = "github:spikespaz/allfollow";
+{
+  flake-file.prune-lock.enable = true;
+  flake-file.prune-lock.command = pkgs: "cat"; # does nothing! see options doc.
+}
 ```
 
-When `allfollow` is present in the `flake.nix` file,
-`nix run .#write-flake` will automatically use `allfollow` to
-flatten the `flake.lock` dependencies.
-Flake check will also make sure dependencies are flat.
+We also provide an [allfollow module](https://github.com/vic/flake-file/blob/main/modules/allfollow.nix) that enables this using [`spikespaz/allfollow`](https://github.com/spikespaz/allfollow).
+
+```nix
+{ inputs, ...}:
+{
+  imports = [ inputs.flake-file.flakeModules.allfollow ];
+}
+```
 
 ---
 

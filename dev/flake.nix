@@ -26,14 +26,6 @@
     nixpkgs-lib = {
       follows = "nixpkgs";
     };
-    rust-overlay = {
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-      url = "github:oxalica/rust-overlay";
-    };
     systems = {
       url = "github:nix-systems/default";
     };

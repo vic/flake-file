@@ -8,9 +8,6 @@
     allfollow = {
       url = "github:spikespaz/allfollow";
     };
-    devshell = {
-      url = "github:numtide/devshell";
-    };
     flake-file = {
       url = "github:vic/flake-file";
     };
@@ -25,14 +22,6 @@
     };
     nixpkgs-lib = {
       follows = "nixpkgs";
-    };
-    rust-overlay = {
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
-      url = "github:oxalica/rust-overlay";
     };
     systems = {
       url = "github:nix-systems/default";
