@@ -20,21 +20,18 @@ let
     type = lib.types.submodule {
       options = {
         enable = lib.mkEnableOption "Should we automatically prune flake.lock";
-        command = lib.mkOption {
+        program = lib.mkOption {
           description = ''
-            Function from pkgs to a command (string) used to prune flake.lock.
+            Function from pkgs to an exe derivation used to prune flake.lock.
 
-            The command takes the flake.lock location as only argument
-            and is expected to produce a pruned version into stdout.
+            The program takes the flake.lock location as first postional argument
+            and is expected to produce a pruned version into the second argument.
 
             The output is expected to be deterministic.
           '';
-          # TODO: https://github.com/NixOS/nixpkgs/pull/422286
-          example = lib.literalExample ''
-            pkgs: "''${pkgs.lib.getExe pkgs.allfollow} prune -o - --pretty"
-          '';
-          type = lib.types.functionTo lib.types.str;
-          default = _: "cat";
+          example = lib.literalExample (builtins.readFile ./prune-lock/_nothing.nix);
+          type = lib.types.functionTo lib.types.unspecified;
+          default = import ./prune-lock/_nothing.nix;
         };
       };
     };
