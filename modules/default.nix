@@ -22,7 +22,7 @@ let
 in
 {
   flakeModules = {
-    inherit default dendritic;
+    inherit default allfollow dendritic;
   };
   templates.default = {
     description = "default template";
