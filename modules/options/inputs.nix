@@ -44,4 +44,6 @@ let
   };
 
 in
-inputs-option
+{
+  options.flake-file.inputs = inputs-option;
+}
