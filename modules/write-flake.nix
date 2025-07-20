@@ -113,20 +113,20 @@
         '';
       };
 
-      prune-lock =
+      prune-lock-run =
         let
-          cmd = flake-file.prune-lock.command pkgs;
+          cmd = pkgs.lib.getExe (flake-file.prune-lock.program pkgs);
           app = pkgs.writeShellApplication {
             name = "prune-lock";
             text = ''
               set -e
               if [ "apply" == "$1" ]; then
                 nix flake lock
-                ${cmd} flake.lock > pruned.lock
+                ${cmd} flake.lock pruned.lock
                 mv pruned.lock flake.lock
               fi
               if [ "check" == "$1" ]; then
-                ${cmd} "$2" > pruned.lock
+                ${cmd} "$2" pruned.lock
                 delta --paging never pruned.lock "$2"
               fi
             '';
@@ -139,11 +139,18 @@
         text = ''
           set -e
           cp ${formatted} flake.nix
-          ${prune-lock} apply
+          ${prune-lock-run} apply
         '';
       };
 
-      check-flake =
+      prune-lock = pkgs.writeShellApplication {
+        name = "prune-lock";
+        text = ''
+          ${prune-lock-run} apply
+        '';
+      };
+
+      check-flake-file =
         pkgs.runCommand "check-flake-file"
           {
             nativeBuildInputs = [ pkgs.delta ];
@@ -151,13 +158,13 @@
           ''
             set -e
             delta --paging never ${formatted} ${inputs.self}/flake.nix
-            ${prune-lock} check ${inputs.self}/flake.lock
+            ${prune-lock-run} check ${inputs.self}/flake.lock
             touch $out
           '';
     in
     {
-      packages = { inherit write-flake; };
-      checks = { inherit check-flake; };
+      packages = { inherit write-flake prune-lock; };
+      checks = { inherit check-flake-file; };
     };
 
 }

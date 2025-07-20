@@ -8,7 +8,7 @@ let
 
   allfollow = {
     imports = [
-      ./allfollow.nix
+      ./prune-lock/allfollow.nix
     ];
   };
 
@@ -16,13 +16,17 @@ let
     imports = [
       default
       allfollow
-      ./dendritic.nix
+      ./dendritic
     ];
   };
 in
 {
   flakeModules = {
-    inherit default allfollow dendritic;
+    inherit
+      default
+      allfollow
+      dendritic
+      ;
   };
   templates.default = {
     description = "default template";
