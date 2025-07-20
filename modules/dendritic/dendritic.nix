@@ -3,12 +3,12 @@
 
   imports = [
     inputs.flake-parts.flakeModules.modules
+    inputs.flake-file.flakeModules.import-tree
   ];
 
   flake.modules = { };
 
   flake-file.inputs = {
-    import-tree.url = lib.mkDefault "github:vic/import-tree";
     flake-parts.url = lib.mkDefault "github:hercules-ci/flake-parts";
   };
 
