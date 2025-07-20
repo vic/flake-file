@@ -41,14 +41,14 @@
       packages.regen = pkgs.writeShellApplication {
         name = "regen";
         text = ''
-          ${each} ${puke} --override-input flake-file "$PWD"
+          ${each} ${puke} --accept-flake-config -L --override-input flake-file "$PWD"
         '';
       };
 
       packages.check = pkgs.writeShellApplication {
         name = "check";
         text = ''
-          ${each} nix flake check -L --override-input flake-file "$PWD"
+          ${each} nix flake check --accept-flake-config -L --override-input flake-file "$PWD"
         '';
       };
     };

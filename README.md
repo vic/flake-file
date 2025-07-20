@@ -114,34 +114,28 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 - Adds [import-tree](https://github.com/vic/import-tree)
 
-#### [`flakeModules.flake-parts-builder`](https://github.com/vic/flake-file/tree/main/modules/flake-parts-builder.nix)
+#### [`lib.flakeModules.flake-parts-builder`](https://github.com/vic/flake-file/tree/main/modules/flake-parts-builder/default.nix)
 
-- Includes `flakeModules.import-tree`
-- Uses import-tree to load all ./flake-parts/meta/\*.nix files and configure
-  your flake file with it.
-- Loads flake-parts modules from your ./flake-parts directory as generated
-  by the `flake-parts-builder add` command.
+- Includes flake-parts-builder's `_bootstrap.nix`.
+- Uses bootstrap to loadParts from ./flake-parts
+- Uses bootstrap to load ./flake-parts/\_meta as flake-file configs.
 
 #### [`flakeModules.allfollow`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/allfollow.nix)
 
 - Enables [automatic flake.lock flattening](#automatic-flakelock-flattening) using [spikespaz/allfollow](https://github.com/spikespaz/allfollow)
 
-#### `flakeModules.dendritic`
+#### [`flakeModules.dendritic`](https://github.com/vic/flake-file/tree/main/modules/dendritic/default.nix)
 
 - Includes flakeModules.default.
+- Includes flakeModules.import-tree.
 - Includes flakeModules.allfollow.
 - Adds `flake-parts` input.
 - Enables `flake.modules` option used in dendritic setups.
-- Adds `import-tree` input.
 - Sets `output` function to `import-tree ./modules`.
 - Adds `treefmt-nix` input.
 - Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
 
 ### Flake Templates
-
-#### `dendritic` template
-
-A template for dendritic setups, includes `flakeModules.dendritic`.
 
 #### `default` template
 
@@ -170,6 +164,14 @@ A more basic, explicit setup.
 
 > [!TIP]
 > You can use the `write-flake` app as part of a devshell or git hook.
+
+#### `dendritic` template
+
+A template for dendritic setups, includes `flakeModules.dendritic`.
+
+#### `parts` template
+
+A template that uses `lib.flakeModules.flake-parts-builder`.
 
 ---
 
@@ -218,7 +220,7 @@ We recommend using this default, as it keeps your flake file focused on definiti
 
 <a name="parts_templates"></a>
 
-## Supports flake-parts templates
+## Add flake-parts-builder templates
 
 Tired of endlessly repeating tiny flake-parts modules or copy-pasting
 snippets between your projects? No more!.
@@ -230,7 +232,9 @@ can be added or removed anytime not only at project initialization.
 
 ```nix
 { inputs, ... }: {
-  imports = [ inputs.flake-file.flakeModules.flake-parts-builder ];
+  imports = [
+    (inputs.flake-file.lib.flakeModules.flake-parts-builder ./flake-parts)
+  ];
 }
 ```
 
@@ -241,16 +245,8 @@ can be added or removed anytime not only at project initialization.
 > Only use `flake-parts-builder add` subcommand, since `init` will _overwrite_ the flake.nix file that is already being managed by flake-file.
 
 ```shell
-# You have to do nothing more than calling `add`.
-# Our module will add imports from the generated ./flake-parts/meta/*.nix
-# And also import the generated flake-parts modules.
-nix run github:vic/flake-parts-builder/write-meta -- add treefmt,devenv,+nixos,+nixvim,+home-manager,+github
-
+nix run github:vic/flake-parts-builder/write-meta -- add systems,treefmt $PWD
 ```
-
-> [!TIP]
-> You can add custom flake-parts templates sources using the `-I` option.
-> And see the available parts with the `list` subcommand.
 
 ## Hooks for write-flake and checks
 
