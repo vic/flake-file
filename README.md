@@ -28,9 +28,9 @@ It makes your flake configuration modular and based on the Nix module system. Th
 - Pick flakeModules for different feature sets.
 - [Dendritic](https://vic.github.io/dendrix/Dendritic.html) flake template.
 
-</td><td style="width: 20em">
+</td><td>
 
-![image](https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883)
+<image src="https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883" style="max-width: 20em;"/>
 
 > this cute ouroboros is puking itself out.
 
@@ -257,7 +257,7 @@ can be added or removed at any time, not only at project initialization.
 > Only use `flake-parts-builder add` subcommand, since `init` will _overwrite_ the flake.nix file that is already being managed by flake-file.
 
 ```shell
-nix run github:vic/flake-parts-builder/write-meta -- add systems,treefmt $PWD
+nix run github:vic/flake-parts-builder/write-meta -- add --write-meta --parts systems,treefmt $PWD
 ```
 
 ## Hooks for write-flake and checks
