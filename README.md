@@ -132,6 +132,10 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 - Enables [automatic flake.lock flattening](#automatic-flakelock-flattening) using [spikespaz/allfollow](https://github.com/spikespaz/allfollow)
 
+#### [`flakeModules.nix-auto-follow`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/nix-auto-follow.nix)
+
+- Enables [automatic flake.lock flattening](#automatic-flakelock-flattening) using [fzakaria/nix-auto-follow](https://github.com/fzakaria/nix-auto-follow)
+
 #### [`flakeModules.dendritic`](https://github.com/vic/flake-file/tree/main/modules/dendritic/default.nix)
 
 - Includes flakeModules.default.
@@ -270,12 +274,19 @@ You can use the `prune-lock` [options](https://github.com/vic/flake-file/blob/ma
 to specify a command that `flake-file` will use whenever your flake.nix file is generated
 to flatten your flake.lock dependency tree.
 
-We also provide a [`flakeModules.allfollow`](https://github.com/vic/flake-file/blob/main/modules/allfollow.nix) that enables this using [`spikespaz/allfollow`](https://github.com/spikespaz/allfollow).
+For flattening mechanisms we provide:
+
+- [`flakeModules.allfollow`](https://github.com/vic/flake-file/blob/main/modules/prune-lock/allfollow.nix) that enables this using [`spikespaz/allfollow`](https://github.com/spikespaz/allfollow)
+- [`flakeModules.nix-auto-follow`](https://github.com/vic/flake-file/blob/main/modules/prune-lock/nix-auto-follow.nix) that enables this using [`fzakaria/nix-auto-follow`](https://github.com/fzakaria/nix-auto-follow)
 
 ```nix
 { inputs, ... }:
 {
-  imports = [ inputs.flake-file.flakeModules.allfollow ];
+  imports = [
+    inputs.flake-file.flakeModules.allfollow
+    # or optionally
+    #inputs.flake-file.flakeModules.nix-auto-follow
+  ];
 }
 ```
 
