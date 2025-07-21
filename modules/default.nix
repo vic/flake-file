@@ -3,6 +3,7 @@ let
     inherit
       default
       allfollow
+      nix-auto-follow
       dendritic
       import-tree
       ;
@@ -14,6 +15,8 @@ let
   ];
 
   allfollow.imports = [ ./prune-lock/allfollow.nix ];
+
+  nix-auto-follow.imports = [ ./prune-lock/nix-auto-follow.nix ];
 
   import-tree.imports = [ ./import-tree.nix ];
 
