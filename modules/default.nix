@@ -5,7 +5,6 @@ let
       allfollow
       dendritic
       import-tree
-      flake-parts-builder
       ;
   };
 
@@ -20,7 +19,14 @@ let
 
   dendritic.imports = [ ./dendritic ];
 
-  flake-parts-builder.imports = [ ./flake-parts-builder.nix ];
+  lib.flakeModules.flake-parts-builder =
+    path:
+    { flake-parts-lib, ... }:
+    {
+      imports = [
+        (flake-parts-lib.importApply ./flake-parts-builder path)
+      ];
+    };
 
   templates.default = {
     description = "default template";
@@ -31,7 +37,12 @@ let
     description = "dendritic template";
     path = ./../templates/dendritic;
   };
+
+  templates.parts = {
+    description = "flake-parts-builder template";
+    path = ./../templates/parts;
+  };
 in
 {
-  inherit flakeModules templates;
+  inherit flakeModules templates lib;
 }
