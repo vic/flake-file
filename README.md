@@ -18,14 +18,14 @@ It makes your flake configuration modular and based on the Nix module system. Th
 
 - Flake definition aggregated from all flake-parts modules.
 - Schema as [options](https://github.com/vic/flake-file/blob/main/modules/options.nix).
-- Supports flake nixConfig.
+- Syntax for nixConfig and follows is the same as on flakes.
 - `flake check` ensures files are up to date.
 - App for generator: `nix run .#write-flake`
-- Custom flake.nix formatter.
 - Custom do-not-edit header.
 - Automatic flake.lock [flattening](#automatic-flakelock-flattening).
-- Basic and Dendritic flakeModules.
-- Basic and Dendritic flake templates.
+- Incrementally add [flake-parts-builder](#parts_templates) templates.
+- Pick flakeModules for different feature sets.
+- [Dendritic](https://vic.github.io/dendrix/Dendritic.html) flake template.
 
 </td><td style="width: 20em">
 
@@ -74,7 +74,7 @@ flake-file lets you make your `flake.nix` dynamic and modular. Instead of mainta
 
 ## Getting Started (try it now!)
 
-To get started quickly, create a new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic) template:
+To get started quickly, create a new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic/default.nix) template:
 
 ```shell
 nix flake init -t github:vic/flake-file#dendritic
@@ -85,6 +85,7 @@ cat flake.nix                 # flake.nix built from your options.
 nix flake check               # checks flake.nix is up to date.
 ```
 
+> [!TIP]
 > See the [Migration Guide](#migration-guide) if moving from an existing flake.
 
 ---
@@ -103,13 +104,25 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 ### Available flakeModules
 
-#### `flakeModules.default`
+#### [`flakeModules.default`](https://github.com/vic/flake-file/tree/main/modules/default.nix)
 
 - Defines `flake-file` options.
 - Exposes `packages.write-flake`.
 - Exposes flake checks for generated files.
 
-#### `flakeModules.allfollow`
+#### [`flakeModules.import-tree`](https://github.com/vic/flake-file/tree/main/modules/import-tree.nix)
+
+- Adds [import-tree](https://github.com/vic/import-tree)
+
+#### [`flakeModules.flake-parts-builder`](https://github.com/vic/flake-file/tree/main/modules/flake-parts-builder.nix)
+
+- Includes `flakeModules.import-tree`
+- Uses import-tree to load all ./flake-parts/meta/\*.nix files and configure
+  your flake file with it.
+- Loads flake-parts modules from your ./flake-parts directory as generated
+  by the `flake-parts-builder add` command.
+
+#### [`flakeModules.allfollow`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/allfollow.nix)
 
 - Enables [automatic flake.lock flattening](#automatic-flakelock-flattening) using [spikespaz/allfollow](https://github.com/spikespaz/allfollow)
 
@@ -124,7 +137,7 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Adds `treefmt-nix` input.
 - Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
 
-### Templates
+### Flake Templates
 
 #### `dendritic` template
 
@@ -152,7 +165,11 @@ A more basic, explicit setup.
 }
 ```
 
-Use `nix run .#write-flake` to generate. (Tip: you can install it as a shell hook for your devshell.)
+> [!IMPORTANT]
+> Use `nix run .#write-flake` to generate.
+
+> [!TIP]
+> You can use the `write-flake` app as part of a devshell or git hook.
 
 ---
 
@@ -180,7 +197,8 @@ flake-file = {
 };
 ```
 
-See also, [options.nix](https://github.com/vic/flake-file/blob/main/modules/options.nix).
+> [!TIP]
+> See also, [options.nix](https://github.com/vic/flake-file/blob/main/modules/options.nix).
 
 ---
 
@@ -198,22 +216,57 @@ We recommend using this default, as it keeps your flake file focused on definiti
 
 ---
 
+<a name="parts_templates"></a>
+
+## Supports flake-parts templates
+
+Tired of endlessly repeating tiny flake-parts modules or copy-pasting
+snippets between your projects? No more!.
+
+[flake-parts-builder](https://github.com/tsandrini/flake-parts-builder)
+lets you _incrementally_ add templated parts.
+This is much better than normal flake-templates, since flake-parts templates
+can be added or removed anytime not only at project initialization.
+
+```nix
+{ inputs, ... }: {
+  imports = [ inputs.flake-file.flakeModules.flake-parts-builder ];
+}
+```
+
+> [!IMPORTANT]
+> Use `github:vic/flake-parts-builder/write-meta` until [flake-parts-builder#60](https://github.com/tsandrini/flake-parts-builder/pull/60) gets merged. This branch will also writes each parts meta.nix file, so it can be used by flake-file to manage your flake.nix.
+
+> [!WARNING]
+> Only use `flake-parts-builder add` subcommand, since `init` will _overwrite_ the flake.nix file that is already being managed by flake-file.
+
+```shell
+# You have to do nothing more than calling `add`.
+# Our module will add imports from the generated ./flake-parts/meta/*.nix
+# And also import the generated flake-parts modules.
+nix run github:vic/flake-parts-builder/write-meta -- add treefmt,devenv,+nixos,+nixvim,+home-manager,+github
+
+```
+
+> [!TIP]
+> You can add custom flake-parts templates sources using the `-I` option.
+> And see the available parts with the `list` subcommand.
+
+## Hooks for write-flake and checks
+
+You can add custom commands to be run whenever your flake.nix has been
+written or checked.
+
+> [!TIP]
+> See `flake-file.write-hooks` and `flake-file.check-hooks` options.
+
 ## Automatic flake.lock flattening
 
 You can use the `prune-lock` [options](https://github.com/vic/flake-file/blob/main/modules/options.nix)
 to specify a command that `flake-file` will use whenever your flake.nix file is generated
 to flatten your flake.lock dependencies tree.
 
-When enabled, `flake check` will also make sure dependencies are flat.
-
-```nix
-{
-  flake-file.prune-lock.enable = true;
-  flake-file.prune-lock.command = pkgs: "cat"; # does nothing! see options doc.
-}
-```
-
-We also provide an [allfollow module](https://github.com/vic/flake-file/blob/main/modules/allfollow.nix) that enables this using [`spikespaz/allfollow`](https://github.com/spikespaz/allfollow).
+We also provide a [`flakeModules.allfollow`](https://github.com/vic/flake-file/blob/main/modules/allfollow.nix) that enables this using [`spikespaz/allfollow`](https://github.com/spikespaz/allfollow).
 
 ```nix
 { inputs, ...}:
@@ -247,6 +300,7 @@ This section outlines recommended steps for adopting `flake-file` in your own re
 
 4. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `inputs.nix`):
 
+   > [!IMPORTANT]
    > Make sure you `git add` so that new files are visible to nix.
 
    ```nix
