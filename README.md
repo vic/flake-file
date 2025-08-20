@@ -75,7 +75,7 @@ flake-file lets you make your `flake.nix` dynamic and modular. Instead of mainta
 
 ## Getting Started (try it now!)
 
-To get started quickly, create a new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic/default.nix) template:
+To get started quickly, create a new flake based on our [dendritic](https://github.com/vic/flake-file/tree/main/templates/dendritic) template:
 
 ```shell
 nix flake init -t github:vic/flake-file#dendritic
