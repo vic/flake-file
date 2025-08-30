@@ -79,6 +79,16 @@ let
     _name: input:
     { }
     // (if !input ? url || input.url == "" then { } else { inherit (input) url; })
+    // (if !input ? type || input.type == null then { } else { inherit (input) type; })
+    // (if !input ? owner || input.owner == "" then { } else { inherit (input) owner; })
+    // (if !input ? repo || input.repo == "" then { } else { inherit (input) repo; })
+    // (if !input ? path || input.path == "" then { } else { inherit (input) path; })
+    // (if !input ? id || input.id == "" then { } else { inherit (input) id; })
+    // (if !input ? dir || input.dir == "" then { } else { inherit (input) dir; })
+    // (if !input ? narHash || input.narHash == "" then { } else { inherit (input) narHash; })
+    // (if !input ? rev || input.rev == "" then { } else { inherit (input) rev; })
+    // (if !input ? ref || input.ref == "" then { } else { inherit (input) ref; })
+    // (if !input ? host || input.host == "" then { } else { inherit (input) host; })
     // (if !input ? follows || input.follows == "" then { } else { inherit (input) follows; })
     // (if !input ? flake || input.flake then { } else { flake = false; })
     // (
