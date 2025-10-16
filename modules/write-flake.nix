@@ -24,6 +24,18 @@ let
 
   nonEmpty = s: lib.isStringLike s && lib.stringLength s > 0;
 
+  isVoid = x: x == null || x == { } || x == [ ] || (!nonEmpty x);
+  mergeNonVoid =
+    from: name:
+    {
+      testVoid ? isVoid,
+      onVoid ? { },
+      nonVoid ? {
+        ${name} = from.${name};
+      },
+    }:
+    acc: acc // (if !from ? ${name} || testVoid from.${name} then onVoid else nonVoid);
+
   # expr to code
   nixCode =
     x:
@@ -70,35 +82,46 @@ let
 
   inputsFollow = lib.mapAttrs (
     _: input:
-    { }
-    // (if !input ? follows || input.follows == { } then { } else { inherit (input) follows; })
-    // (if !input ? inputs || input.inputs == { } then { } else { inputs = inputsFollow input.inputs; })
+    lib.pipe { } [
+      (mergeNonVoid input "follows" { })
+      (mergeNonVoid input "inputs" {
+        nonVoid = {
+          inputs = inputsFollow input.inputs;
+        };
+      })
+    ]
   );
 
   inputsExpr = lib.mapAttrs (
     _name: input:
-    { }
-    // (if !input ? url || input.url == "" then { } else { inherit (input) url; })
-    // (if !input ? type || input.type == null then { } else { inherit (input) type; })
-    // (if !input ? owner || input.owner == "" then { } else { inherit (input) owner; })
-    // (if !input ? repo || input.repo == "" then { } else { inherit (input) repo; })
-    // (if !input ? path || input.path == "" then { } else { inherit (input) path; })
-    // (if !input ? id || input.id == "" then { } else { inherit (input) id; })
-    // (if !input ? dir || input.dir == "" then { } else { inherit (input) dir; })
-    // (if !input ? narHash || input.narHash == "" then { } else { inherit (input) narHash; })
-    // (if !input ? rev || input.rev == "" then { } else { inherit (input) rev; })
-    // (if !input ? ref || input.ref == "" then { } else { inherit (input) ref; })
-    // (if !input ? host || input.host == "" then { } else { inherit (input) host; })
-    // (if !input ? follows || input.follows == "" then { } else { inherit (input) follows; })
-    // (if !input ? flake || input.flake then { } else { flake = false; })
-    // (
-      if !input ? inputs || input.inputs == { } then
-        { }
-      else
-        {
+    let
+      m = mergeNonVoid input;
+    in
+    lib.pipe { } [
+      (m "url" { })
+      (m "type" { })
+      (m "owner" { })
+      (m "repo" { })
+      (m "path" { })
+      (m "id" { })
+      (m "dir" { })
+      (m "narHash" { })
+      (m "rev" { })
+      (m "ref" { })
+      (m "host" { })
+      (m "follows" { })
+      (m "flake" {
+        testVoid = v: v;
+        nonVoid = {
+          flake = false;
+        };
+      })
+      (m "inputs" {
+        nonVoid = {
           inputs = inputsFollow input.inputs;
-        }
-    )
+        };
+      })
+    ]
   ) flake-file.inputs;
 
   flakeInputs = ''
