@@ -10,7 +10,7 @@ let
   };
 
   default.imports = [
-    ./options.nix
+    ./options
     ./write-flake.nix
   ];
 

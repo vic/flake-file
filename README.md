@@ -18,7 +18,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 ## Features
 
 - Flake definition aggregated from all flake-parts modules.
-- Schema as [options](https://github.com/vic/flake-file/blob/main/modules/options.nix).
+- Schema as [options](https://github.com/vic/flake-file/blob/main/modules/options/default.nix).
 - Syntax for nixConfig and follows is the same as in flakes.
 - `flake check` ensures files are up to date.
 - App for generator: `nix run .#write-flake`
@@ -212,7 +212,7 @@ flake-file = {
 ```
 
 > [!TIP]
-> See also, [options.nix](https://github.com/vic/flake-file/blob/main/modules/options.nix).
+> See also, [options.nix](https://github.com/vic/flake-file/blob/main/modules/options/default.nix).
 
 ---
 
