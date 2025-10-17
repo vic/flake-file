@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "flake-aspects": {
+      "locked": {
+        "lastModified": 1760660080,
+        "narHash": "sha256-DQoC7mZkWUGML5yZTfFoHBWsQquCtowwqcwbN5sCr7c=",
+        "owner": "vic",
+        "repo": "flake-aspects",
+        "rev": "071a69188e4f309c678da6afcc249994024817a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "flake-aspects",
+        "type": "github"
+      }
+    },
     "flake-file": {
       "locked": {
         "lastModified": 1760606237,
@@ -131,6 +146,7 @@
     },
     "root": {
       "inputs": {
+        "flake-aspects": "flake-aspects",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "import-tree": "import-tree",

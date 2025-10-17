@@ -8,6 +8,9 @@
     devshell = {
       url = "github:numtide/devshell";
     };
+    flake-aspects = {
+      url = "github:vic/flake-aspects";
+    };
     flake-file = {
       url = "github:vic/flake-file";
     };
