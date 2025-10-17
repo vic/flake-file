@@ -30,7 +30,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 
 </td><td>
 
-<image src="https://github.com/user-attachments/assets/f5af2174-c876-4b3b-97db-95fb2f436883" style="max-width: 20em;"/>
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/2c0b2208-2f65-4fb3-b9df-5cf78dcad0e7" />
 
 > this cute ouroboros is puking itself out.
 
