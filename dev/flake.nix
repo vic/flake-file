@@ -5,9 +5,6 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    allfollow = {
-      url = "github:spikespaz/allfollow";
-    };
     devshell = {
       url = "github:numtide/devshell";
     };
@@ -19,6 +16,9 @@
     };
     import-tree = {
       url = "github:vic/import-tree";
+    };
+    nix-auto-follow = {
+      url = "github:fzakaria/nix-auto-follow";
     };
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixpkgs-unstable";

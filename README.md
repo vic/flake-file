@@ -140,7 +140,7 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 - Includes flakeModules.default.
 - Includes flakeModules.import-tree.
-- Includes flakeModules.allfollow.
+- Includes flakeModules.nix-auto-follow.
 - Adds `flake-parts` input.
 - Enables `flake.modules` option used in dendritic setups.
 - Sets `output` function to `import-tree ./modules`.
@@ -283,9 +283,9 @@ For flattening mechanisms we provide:
 { inputs, ... }:
 {
   imports = [
-    inputs.flake-file.flakeModules.allfollow
+    inputs.flake-file.flakeModules.nix-auto-follow
     # or optionally
-    #inputs.flake-file.flakeModules.nix-auto-follow
+    #inputs.flake-file.flakeModules.allfollow
   ];
 }
 ```

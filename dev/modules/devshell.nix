@@ -27,8 +27,9 @@
           name = "update";
           help = "update all flakes and prune locks";
           command = ''
+            ${pkgs.lib.getExe self'.packages.each} nix run .#write-flake
             ${pkgs.lib.getExe self'.packages.each} nix flake update
-            ${pkgs.lib.getExe self'.packages.each} nix run --inputs-from . allfollow -- prune --in-place --pretty
+            ${pkgs.lib.getExe self'.packages.each} nix run .#write-flake
           '';
         }
         {
