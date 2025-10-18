@@ -308,18 +308,20 @@ This section outlines the recommended steps for adopting `flake-file` in your ow
    ```nix
    # outputs.nix -- copied the `outputs` value in here.
    inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-     imports = [ ./inputs.nix ]; # Add this for step 4.
-     # ... all your existing modules ...
+     imports = [
+       ./modules/tools/flake-file.nix # Add this for step 4.
+       # ... all your existing modules ...
+     ];
    }
    ```
 
-4. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `inputs.nix`):
+4. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `modules/tools/flake-file.nix`):
 
 > [!IMPORTANT]
 > Make sure you `git add` so that new files are visible to Nix.
 
 ```nix
-# flake-file.nix -- copied from flake.nix and adapted as a flake-parts module.
+# modules/tools/flake-file.nix
 { inputs, ... }:
 {
   imports = [
@@ -337,10 +339,10 @@ This section outlines the recommended steps for adopting `flake-file` in your ow
 ```
 
 5. **Backup:** Back up your flake.nix into flake.nix.bak before regenerating it.
-6. **Generate:** Execute `nix run .#write-flake` to generate flake.nix from inputs.nix.
+6. **Generate:** Execute `nix run .#write-flake` to generate flake.nix.
 7. **Verify:** Check flake.nix and if everything is okay, remove the backup file.
 
-You are done! Now you can move dependencies `flake-file.inputs.foo` from inputs.nix into any other imported module and `nix run .#write-flake` will handle it.
+You are done! Now you can move dependencies `flake-file.inputs.foo` from `modules/tools/flake-file.nix` into any other imported module and `nix run .#write-flake` will handle it.
 
 ---
 
