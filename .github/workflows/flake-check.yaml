@@ -4,31 +4,42 @@ on:
     branches: ["main"]
   pull_request:
 jobs:
-  find-flakes:
-    name: Find Flakes
+  find-templates:
+    name: Find templates
     runs-on: ubuntu-latest
     outputs:
-      flakes: ${{ steps.flakes.outputs.flakes }}
+      templates: ${{ steps.flakes.outputs.templates }}
     steps:
       - uses: actions/checkout@v4
-      - id: flakes
+      - id: templates
         run: |
-          flakes=$(find . -mindepth 2 -name flake.nix -print0 | xargs -0 dirname | jq -R . | jq -sc .)
-          echo "$flakes"
-          echo "flakes=$flakes" >> $GITHUB_OUTPUT
-  flake:
-    name: Check flake ${{matrix.flake}}
-    needs: [find-flakes]
+          templates=$(find templates -mindepth 2 -maxdepth 2  -name flake.nix -print0 | xargs -0 dirname | xargs -n 1 basename | jq -R | jq -sc)
+          echo "$templates"
+          echo "templates=$templates" >> $GITHUB_OUTPUT
+  template:
+    name: Check template ${{matrix.template}}
+    needs: [find-templates]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        flake: ${{ fromJSON(needs.find-flakes.outputs.flakes) }}
+        template: ${{ fromJSON(needs.find-flakes.outputs.templates) }}
+    steps:
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: |
+          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{template}}
+          sed -e "s#github:vic/flake-file#github:$GITHUB_REPOSITORY/$GITHUB_SHA#" -i flake.nix
+  dev:
+    name: Check flake dev
+    needs: [find-flakes]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix flake check ${{matrix.flake}} -L --override-input flake-file $PWD
+      - run: nix flake check dev -L --override-input flake-file $PWD
   nix-fmt:
     name: Nix Format
     runs-on: ubuntu-latest

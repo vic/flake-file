@@ -41,10 +41,10 @@ let
     pkgs:
     pkgs.writeShellApplication {
       name = "prune-lock-check";
-      runtimeInputs = [ pkgs.delta ];
+      runtimeInputs = [ pkgs.diffutils ];
       text = ''
         ${prune-cmd pkgs} "$1"/flake.lock pruned.lock
-        delta --paging never pruned.lock "$1"/flake.lock
+        diff -u pruned.lock "$1"/flake.lock
       '';
     };
 

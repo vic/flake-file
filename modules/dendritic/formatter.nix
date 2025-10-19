@@ -27,6 +27,7 @@
           "*/flake.lock"
           ".envrc"
           ".direnv/*"
+          "*/.gitignore"
         ];
       };
     };

@@ -176,11 +176,11 @@ in
         in
         pkgs.runCommand "check-flake-file"
           {
-            nativeBuildInputs = [ pkgs.delta ];
+            nativeBuildInputs = [ pkgs.diffutils ];
           }
           ''
             set -e
-            delta --paging never ${formatted pkgs} ${inputs.self}/flake.nix
+            diff -u ${formatted pkgs} ${inputs.self}/flake.nix
             ${hooks}
             touch $out
           '';
