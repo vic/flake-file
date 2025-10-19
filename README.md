@@ -79,9 +79,7 @@ To get started quickly, create a new flake based on our [dendritic](https://gith
 
 ```shell
 nix flake init -t github:vic/flake-file#dendritic
-nix flake check               # check that flake.nix is up to date
-vim modules/default.nix       # add another input
-nix run ".#write-flake"       # regenerate flake
+nix run ".#write-flake"       # regenerate flake.nix and flake.lock
 cat flake.nix                 # flake.nix built from your options
 nix flake check               # check that flake.nix is up to date
 ```
