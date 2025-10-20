@@ -1,9 +1,16 @@
 lib:
 let
 
-  isNonEmptyString = s: lib.isStringLike s && lib.stringLength s > 0;
+  isNonEmptyString = s: lib.isStringLike s && lib.stringLength (lib.trim s) > 0;
 
-  isEmpty = x: (x == null) || (x == { }) || (x == [ ]) || (!isNonEmptyString x);
+  isEmpty =
+    x:
+    (
+      (builtins.isNull x)
+      || (lib.isStringLike x && lib.stringLength (lib.trim x) == 0)
+      || (lib.isList x && lib.length x == 0)
+      || (lib.isAttrs x && x == { })
+    );
 
   mergeNonEmpty =
     from: name:
@@ -14,7 +21,7 @@ let
         ${name} = from.${name};
       },
     }:
-    acc: acc // (if !from ? ${name} || testEmpty from.${name} then onEmptyMerge else nonEmptyMerge);
+    acc: acc // (if (!from ? ${name}) || testEmpty from.${name} then onEmptyMerge else nonEmptyMerge);
 
   mergeNonEmptyAttrs =
     from: attrs:
@@ -25,7 +32,6 @@ let
     lib.pipe { } ops;
 
   nonEmptyInputs = input: {
-    testEmpty = v: builtins.trace v (v == { });
     nonEmptyMerge = {
       inputs = inputsFollow input.inputs;
     };
@@ -53,13 +59,13 @@ let
       rev = { };
       ref = { };
       host = { };
-      follow = { };
       flake = {
         testEmpty = v: v;
         nonEmptyMerge = {
           flake = false;
         };
       };
+      follows = { };
       inputs = nonEmptyInputs input;
     }
   );

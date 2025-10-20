@@ -9,5 +9,8 @@
     allowNetwork = true;
   };
 
-  flake.tests.testTruth = { expr = true; expected = true; };
+  flake.tests.testTruth = {
+    expr = true;
+    expected = true;
+  };
 }

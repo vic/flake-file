@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (import ./../dev/modules/_lib.nix lib) inputsExpr isNonEmptyString;
+  inherit (import ./../dev/modules/_lib lib) inputsExpr isNonEmptyString;
 
   flake-file = config.flake-file;
 
@@ -72,7 +72,8 @@ let
     inputs = ${nixCode (inputsExpr flake-file.inputs)};
   '';
 
-  addHeader = code: if isNonEmptyString flake-file.do-not-edit then flake-file.do-not-edit + code else code;
+  addHeader =
+    code: if isNonEmptyString flake-file.do-not-edit then flake-file.do-not-edit + code else code;
 
   formatted =
     pkgs:
