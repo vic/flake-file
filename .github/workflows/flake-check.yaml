@@ -39,7 +39,7 @@ jobs:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix flake check dev -L --override-input flake-file $PWD
+      - run: nix flake check ./dev -L --override-input flake-file $PWD
   nix-fmt:
     name: Nix Format
     runs-on: ubuntu-latest
