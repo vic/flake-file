@@ -40,7 +40,9 @@ jobs:
           nix run .#write-flake -L --show-trace
           if test -d ./modules; then cp ../forced.nix ./modules/; fi;
           if test -d ./flake-parts; then cp ../forced.nix ./flake-parts/; fi;
-          nix run .#write-flake -L --show-trace && nix run .#write-flake -L --show-trace
+          nix run .#write-flake -L --show-trace
+          nix flake metadata
+          nix run .#write-flake -L --show-trace
           nix flake check -L --show-trace
   dev:
     name: Check flake dev
