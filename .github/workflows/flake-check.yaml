@@ -30,7 +30,7 @@ jobs:
       - run: |
           set -uveo pipefail
           cat <<EOF | tee forced.nix
-          { lib, ... }: { flake-file.inputs.flake-file.src = lib.mkForce "github:$GITHUB_REPOSITORY/$GITHUB_SHA"; }
+          { lib, ... }: { flake-file.inputs.flake-file.url = lib.mkForce "github:$GITHUB_REPOSITORY/$GITHUB_SHA"; }
           EOF
           mkdir templated; cd templated
           nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{ matrix.template }}
