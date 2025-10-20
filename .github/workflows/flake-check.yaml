@@ -28,7 +28,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: |
-          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{template}}
+          nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{ matrix.template }}
           sed -e "s#github:vic/flake-file#github:$GITHUB_REPOSITORY/$GITHUB_SHA#" -i flake.nix
   dev:
     name: Check flake dev
