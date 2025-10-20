@@ -30,13 +30,17 @@ jobs:
       - run: |
           set -uveo pipefail
           cat <<EOF | tee forced.nix
-          { lib, ... }: { flake-file.inputs.flake-file.url = lib.mkForce "github:$GITHUB_REPOSITORY/$GITHUB_SHA"; }
+          { lib, ... }:
+          {
+            flake-file.inputs.flake-file.url = lib.mkForce "github:$GITHUB_REPOSITORY/$GITHUB_SHA";
+          }
           EOF
           mkdir templated; cd templated
           nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{ matrix.template }}
+          nix run .#write-flake -L --show-trace
           if test -d ./modules; then cp ../forced.nix ./modules/; fi;
           if test -d ./flake-parts; then cp ../forced.nix ./flake-parts/; fi;
-          nix run .#write-flake -L --show-trace
+          nix run .#write-flake -L --show-trace && nix run .#write-flake -L --show-trace
           nix flake check -L --show-trace
   dev:
     name: Check flake dev
