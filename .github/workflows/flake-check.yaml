@@ -28,11 +28,18 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: |
+          set -uveo pipefail
+          cat <<EOF | tee forced.nix
+          { lib, ... }: { flake-file.inputs.flake-file.src = lib.mkForce "github:$GITHUB_REPOSITORY/$GITHUB_SHA"; }
+          EOF
+          mkdir templated; cd templated
           nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{ matrix.template }}
-          sed -e "s#github:vic/flake-file#github:$GITHUB_REPOSITORY/$GITHUB_SHA#" -i flake.nix
+          if test -d ./modules; then cp ../forced.nix ./modules/; fi;
+          if test -d ./flake-parts; then cp ../forced.nix ./flake-parts/; fi;
+          nix run .#write-flake -L --show-trace
+          nix flake check -L --show-trace
   dev:
     name: Check flake dev
-    needs: [find-templates]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
