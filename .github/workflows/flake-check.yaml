@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        template: ${{ fromJSON(needs.find-flakes.outputs.templates) }}
+        template: ${{ fromJSON(needs.find-templates.outputs.templates) }}
     steps:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: DeterminateSystems/nix-installer-action@main
