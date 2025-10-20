@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (import ./_lib.nix lib) inputsExpr isNonEmptyString;
+  inherit (import ./../dev/modules/_lib.nix lib) inputsExpr isNonEmptyString;
 
   flake-file = config.flake-file;
 
