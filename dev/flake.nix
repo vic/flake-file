@@ -23,6 +23,9 @@
     nix-auto-follow = {
       url = "github:fzakaria/nix-auto-follow";
     };
+    nix-unit = {
+      url = "github:nix-community/nix-unit";
+    };
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixpkgs-unstable";
     };
