@@ -32,7 +32,7 @@ jobs:
           sed -e "s#github:vic/flake-file#github:$GITHUB_REPOSITORY/$GITHUB_SHA#" -i flake.nix
   dev:
     name: Check flake dev
-    needs: [find-flakes]
+    needs: [find-templates]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
