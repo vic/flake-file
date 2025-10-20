@@ -24,6 +24,11 @@
       url = "github:fzakaria/nix-auto-follow";
     };
     nix-unit = {
+      inputs = {
+        flake-parts = {
+          follows = "flake-parts";
+        };
+      };
       url = "github:nix-community/nix-unit";
     };
     nixpkgs = {
