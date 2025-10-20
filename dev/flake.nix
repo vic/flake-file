@@ -12,7 +12,7 @@
       url = "github:vic/flake-aspects";
     };
     flake-file = {
-      url = "github:vic/flake-file";
+      url = "path:..";
     };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
