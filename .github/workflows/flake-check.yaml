@@ -8,7 +8,7 @@ jobs:
     name: Find templates
     runs-on: ubuntu-latest
     outputs:
-      templates: ${{ steps.flakes.outputs.templates }}
+      templates: ${{ steps.templates.outputs.templates }}
     steps:
       - uses: actions/checkout@v4
       - id: templates
