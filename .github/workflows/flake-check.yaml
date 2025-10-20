@@ -40,7 +40,9 @@ jobs:
           nix run .#write-flake -L --show-trace
           if test -d ./modules; then cp ../forced.nix ./modules/; fi;
           if test -d ./flake-parts; then cp ../forced.nix ./flake-parts/; fi;
-          nix run .#write-flake -L --show-trace && nix run .#write-flake -L --show-trace
+          nix run .#write-flake -L --show-trace
+          nix flake metadata
+          nix run .#write-flake -L --show-trace
           nix flake check -L --show-trace
   dev:
     name: Check flake dev
@@ -50,7 +52,7 @@ jobs:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix flake check ./dev -L --override-input flake-file $PWD
+      - run: cd dev && nix flake check && nix flake metadata && nix flake check
   nix-fmt:
     name: Nix Format
     runs-on: ubuntu-latest
@@ -59,4 +61,4 @@ jobs:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix run -L --override-input flake-file $PWD ./dev#fmt -- --ci
+      - run: nix run -L ./dev#fmt -- --ci
