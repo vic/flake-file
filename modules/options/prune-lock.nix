@@ -31,7 +31,7 @@ let
     pkgs.writeShellApplication {
       name = "prune-lock";
       text = ''
-        nix flake lock
+        nix flake metadata > /dev/null
         ${prune-cmd pkgs} flake.lock pruned.lock
         mv pruned.lock flake.lock
       '';
