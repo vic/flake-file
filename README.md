@@ -141,6 +141,7 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Includes flakeModules.nix-auto-follow.
 - Enables [`flake-parts`](https://github.com/hercules-ci/flake-parts).
 - Enables [`flake-aspects`](https://github.com/vic/flake-aspects).
+- Enables [`den`](https://github.com/vic/den).
 - Sets `output` function to `import-tree ./modules`.
 - Adds `treefmt-nix` input.
 - Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
