@@ -9,6 +9,11 @@
       url = "github:vic/den";
     };
     devshell = {
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
       url = "github:numtide/devshell";
     };
     flake-aspects = {
@@ -18,12 +23,22 @@
       url = "path:..";
     };
     flake-parts = {
+      inputs = {
+        nixpkgs-lib = {
+          follows = "nixpkgs-lib";
+        };
+      };
       url = "github:hercules-ci/flake-parts";
     };
     import-tree = {
       url = "github:vic/import-tree";
     };
     nix-auto-follow = {
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
       url = "github:fzakaria/nix-auto-follow";
     };
     nix-unit = {
@@ -50,6 +65,11 @@
       url = "github:nix-systems/default";
     };
     treefmt-nix = {
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
       url = "github:numtide/treefmt-nix";
     };
   };
