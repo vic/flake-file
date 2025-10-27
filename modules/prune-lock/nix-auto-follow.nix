@@ -1,6 +1,10 @@
 { lib, inputs, ... }:
 {
-  flake-file.inputs.nix-auto-follow.url = lib.mkDefault "github:fzakaria/nix-auto-follow";
+  flake-file.inputs.nix-auto-follow = {
+    url = lib.mkDefault "github:fzakaria/nix-auto-follow";
+    inputs.nixpkgs.follows = lib.mkDefault "nixpkgs";
+  };
+
   flake-file.prune-lock.enable = lib.mkDefault (inputs ? nix-auto-follow);
   flake-file.prune-lock.program =
     pkgs:

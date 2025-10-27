@@ -10,6 +10,7 @@
 
   flake-file.inputs = {
     flake-parts.url = lib.mkDefault "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = lib.mkDefault "nixpkgs-lib";
     flake-aspects.url = lib.mkDefault "github:vic/flake-aspects";
     den.url = lib.mkDefault "github:vic/den";
   };

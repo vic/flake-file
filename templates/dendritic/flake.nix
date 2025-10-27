@@ -5,6 +5,9 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
+    den = {
+      url = "github:vic/den";
+    };
     flake-aspects = {
       url = "github:vic/flake-aspects";
     };
