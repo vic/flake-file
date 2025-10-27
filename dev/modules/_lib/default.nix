@@ -40,7 +40,9 @@ let
   inputsFollow = lib.mapAttrs (
     _: input:
     mergeNonEmptyAttrs input {
-      follows = { };
+      follows = {
+        testEmpty = v: v == null; # allow empty follows string
+      };
       inputs = nonEmptyInputs input;
     }
   );

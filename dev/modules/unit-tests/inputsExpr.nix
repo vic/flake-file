@@ -57,6 +57,17 @@ let
     };
   };
 
+  tests.inputsExpr."test on input with follows to empty" = {
+    expr = inputsExpr {
+      foo.url = "foo";
+      foo.inputs.bar.follows = "";
+    };
+    expected = {
+      foo.url = "foo";
+      foo.inputs.bar.follows = "";
+    };
+  };
+
 in
 {
   flake = { inherit tests; };
