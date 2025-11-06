@@ -52,6 +52,7 @@ let
     mergeNonEmptyAttrs input {
       url = { };
       type = { };
+      submodules = { };
       owner = { };
       repo = { };
       path = { };
