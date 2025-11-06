@@ -47,6 +47,11 @@ let
               ]
             );
           };
+          submodules = lib.mkOption {
+            description = "whether to checkout git submodules";
+            default = null;
+            type = lib.types.nullOr lib.types.bool;
+          };
           owner = lib.mkOption {
             description = "owner of the repository";
             default = "";
