@@ -103,7 +103,7 @@ The following is a complete example from our [`templates/dendritic`](https://git
   # That's it! Importing this module will add dendritic-setup inputs to your flake.
   imports = [ inputs.flake-file.flakeModules.dendritic ];
 
-  # Define flake attributes on any flake-pars module:
+  # Define flake attributes on any flake-parts module:
   flake-file = {
     description = "My Awesome Flake";
     inputs.nixpkgs.url = lib.mkDefault "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -146,9 +146,9 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Enables [`flake-parts`](https://github.com/hercules-ci/flake-parts).
 - Enables [`flake-aspects`](https://github.com/vic/flake-aspects).
 - Enables [`den`](https://github.com/vic/den).
-- Sets `output` function to `import-tree ./modules`.
+- Sets `outputs` to `inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)`.
 - Adds `treefmt-nix` input.
-- Enables formatters: `nixfmt`, `deadnix`, and `nixf-diagnose`.
+- Enables formatters: `nixfmt`, `deadnix`, `prettier` and `nixf-diagnose`.
 
 ### Flake Templates
 
@@ -194,20 +194,40 @@ A template that uses `lib.flakeModules.flake-parts-builder`.
 
 Options use the same attributes as the flake schema. See below for details.
 
-| Option                                          | Description                       |
-| ----------------------------------------------- | --------------------------------- |
-| `flake-file.description`                        | Sets the flake description        |
-| `flake-file.nixConfig`                          | Attrset for flake-level nixConfig |
-| `flake-file.inputs.<name>.url`                  | URL for a flake input             |
-| `flake-file.inputs.<name>.flake`                | Boolean, is input a flake?        |
-| `flake-file.inputs.<name>.inputs.<dep>.follows` | Tree of dependencies to follow    |
+| Option                                            | Description                                                 |
+| ------------------------------------------------- | ----------------------------------------------------------- |
+| `flake-file.description`                          | Sets the flake description                                  |
+| `flake-file.nixConfig`                            | Flake-level `nixConfig` (typed attrset)                     |
+| `flake-file.outputs`                              | Literal Nix code for `outputs` function                     |
+| `flake-file.formatter`                            | Function: `pkgs -> program` to format generated `flake.nix` |
+| `flake-file.do-not-edit`                          | Header comment added atop generated file                    |
+| `flake-file.inputs.<name>.url`                    | Source URL (e.g. `github:owner/repo`)                       |
+| `flake-file.inputs.<name>.type`                   | Reference type (`github`, `path`, etc.)                     |
+| `flake-file.inputs.<name>.owner`                  | Owner (for typed VCS refs)                                  |
+| `flake-file.inputs.<name>.repo`                   | Repo name                                                   |
+| `flake-file.inputs.<name>.path`                   | Local path reference                                        |
+| `flake-file.inputs.<name>.id`                     | Flake registry id                                           |
+| `flake-file.inputs.<name>.dir`                    | Subdirectory within repo/path                               |
+| `flake-file.inputs.<name>.narHash`                | NAR hash pin                                                |
+| `flake-file.inputs.<name>.rev`                    | Commit hash pin                                             |
+| `flake-file.inputs.<name>.ref`                    | Branch or tag pin                                           |
+| `flake-file.inputs.<name>.host`                   | Custom host for git forges                                  |
+| `flake-file.inputs.<name>.submodules`             | Whether to fetch git submodules                             |
+| `flake-file.inputs.<name>.flake`                  | Boolean: is it a flake? (default true)                      |
+| `flake-file.inputs.<name>.follows`                | Follow another input's value                                |
+| `flake-file.inputs.<name>.inputs.<dep>.follows`   | Nested input follow tree                                    |
+| `flake-file.inputs.<name>.inputs.<dep>.inputs...` | Recursively follow deeper deps                              |
+| `flake-file.write-hooks`                          | List of ordered hooks (by `index`) after writing            |
+| `flake-file.check-hooks`                          | List of ordered hooks (by `index`) during check             |
+| `flake-file.prune-lock.enable`                    | Enable automatic flake.lock pruning                         |
+| `flake-file.prune-lock.program`                   | Function building pruning executable                        |
 
 Example:
 
 ```nix
 flake-file = {
   description = "my awesome flake";
-  nixConfig = {}; # an attrset. currently not typed.
+  nixConfig = {}; # attrset (free-form, typed as attrs)
   inputs.<name>.url = "github:foo/bar";
   inputs.<name>.flake = false;
   inputs.<name>.inputs.nixpkgs.follows = "nixpkgs";
@@ -219,9 +239,9 @@ flake-file = {
 
 ---
 
-## About the Flake `output` function
+## About the Flake `outputs` function
 
-The `flake-file.output` option is a literal Nix expression. You cannot convert a Nix function value into a string for including in the generated flake file.
+The `flake-file.outputs` option is a literal Nix expression. You cannot convert a Nix function value into a string for including in the generated flake file.
 
 It defaults to:
 
@@ -273,7 +293,7 @@ written or checked.
 
 ## Automatic flake.lock flattening
 
-You can use the `prune-lock` [options](https://github.com/vic/flake-file/blob/main/modules/options.nix)
+You can use the `prune-lock` [options](https://github.com/vic/flake-file/blob/main/modules/options/prune-lock.nix)
 to specify a command that `flake-file` will use whenever your flake.nix file is generated
 to flatten your flake.lock dependency tree.
 
@@ -288,7 +308,7 @@ For flattening mechanisms we provide:
   imports = [
     inputs.flake-file.flakeModules.nix-auto-follow
     # or optionally
-    #inputs.flake-file.flakeModules.allfollow
+    # inputs.flake-file.flakeModules.allfollow
   ];
 }
 ```
