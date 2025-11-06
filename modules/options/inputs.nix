@@ -48,7 +48,7 @@ let
             );
           };
           submodules = lib.mkOption {
-            description = "whether to checkout git submodules";
+            description = "Whether to checkout git submodules";
             default = null;
             type = lib.types.nullOr lib.types.bool;
           };
