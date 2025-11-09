@@ -18,7 +18,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 `lib.mkDefault` or anything you normally do with Nix modules, and have them reflected in flake schema values.
 
 <table><tr><td>
-  
+
 ## Features
 
 - Flake definition aggregated from all flake-parts modules.
@@ -142,13 +142,10 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 - Includes flakeModules.default.
 - Includes flakeModules.import-tree.
-- Includes flakeModules.nix-auto-follow.
 - Enables [`flake-parts`](https://github.com/hercules-ci/flake-parts).
 - Enables [`flake-aspects`](https://github.com/vic/flake-aspects).
 - Enables [`den`](https://github.com/vic/den).
 - Sets `outputs` to `inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)`.
-- Adds `treefmt-nix` input.
-- Enables formatters: `nixfmt`, `deadnix`, `prettier` and `nixf-diagnose`.
 
 ### Flake Templates
 
