@@ -26,6 +26,24 @@ let
     addHeader
   ];
 
+  nixAttr =
+    name: value:
+    let
+      childIsAttr = builtins.isAttrs value;
+      childIsOne = builtins.length (builtins.attrNames value) == 1;
+      nested = lib.head (lib.mapAttrsToList nixAttr value);
+    in
+    if childIsAttr && childIsOne then
+      {
+        name = "${name}.${nested.name}";
+        value = nested.value;
+      }
+    else
+      {
+        inherit name;
+        value = value;
+      };
+
   # expr to code
   nixCode =
     x:
@@ -33,7 +51,8 @@ let
       lib.strings.escapeNixString x
     else if lib.isAttrs x then
       lib.pipe x [
-        (lib.mapAttrsToList (name: value: ''${name} = ${nixCode value}; ''))
+        (lib.mapAttrsToList nixAttr)
+        (map ({ name, value }: ''${name} = ${nixCode value}; ''))
         (values: ''{ ${lib.concatStringsSep " " values} }'')
       ]
     else if lib.isList x then
