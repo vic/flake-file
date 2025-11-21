@@ -25,7 +25,7 @@ jobs:
         template: ${{ fromJSON(needs.find-templates.outputs.templates) }}
     steps:
       - uses: wimpysworld/nothing-but-nix@main
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: cachix/install-nix-action@v31
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: |
           set -uveo pipefail
@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: cachix/install-nix-action@v31
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: cd dev && nix flake check && nix flake metadata && nix flake check
   nix-fmt:
@@ -59,6 +59,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: cachix/install-nix-action@v31
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix run -L ./dev#fmt -- --ci
