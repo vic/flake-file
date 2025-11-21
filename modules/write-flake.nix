@@ -144,7 +144,7 @@ in
           }
           ''
             set -e
-            diff -u ${formatted pkgs} ${inputs.self}/flake.nix
+            diff -u ${inputs.self}/flake.nix ${formatted pkgs}
             ${hooks}
             touch $out
           '';
