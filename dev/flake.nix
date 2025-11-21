@@ -5,12 +5,10 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    den.url = "github:vic/den";
     devshell = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:numtide/devshell";
     };
-    flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "path:..";
     flake-parts = {
       inputs.nixpkgs-lib.follows = "nixpkgs-lib";

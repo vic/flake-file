@@ -143,9 +143,9 @@ The following is a complete example from our [`templates/dendritic`](https://git
 - Includes flakeModules.default.
 - Includes flakeModules.import-tree.
 - Enables [`flake-parts`](https://github.com/hercules-ci/flake-parts).
-- Enables [`flake-aspects`](https://github.com/vic/flake-aspects).
-- Enables [`den`](https://github.com/vic/den).
 - Sets `outputs` to `inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)`.
+
+> Previously, this module included `flake-aspects` and `den` as dependencies. It now provides a pure flake-parts Dendritic setup. If you need the complete [den](https://github.com/vic/den) functionality, use den's `flakeModules.dendritic` instead.
 
 ### Flake Templates
 
