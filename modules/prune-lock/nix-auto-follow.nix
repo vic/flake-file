@@ -10,7 +10,7 @@
     pkgs:
     pkgs.writeShellApplication {
       name = "nix-auto-follow";
-      runtimeInputs = [ inputs.nix-auto-follow.packages.${pkgs.system}.default ];
+      runtimeInputs = [ inputs.nix-auto-follow.packages.${pkgs.stdenv.hostPlatform.system}.default ];
       text = ''
         auto-follow "$1" > "$2"
       '';
