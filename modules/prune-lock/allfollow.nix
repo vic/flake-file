@@ -6,7 +6,7 @@
     pkgs:
     pkgs.writeShellApplication {
       name = "allfollow";
-      runtimeInputs = [ inputs.allfollow.packages.${pkgs.system}.default ];
+      runtimeInputs = [ inputs.allfollow.packages.${pkgs.stdenv.hostPlatform.system}.default ];
       text = ''
         allfollow prune --pretty "$1" -o "$2"
       '';

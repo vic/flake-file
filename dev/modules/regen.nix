@@ -3,7 +3,7 @@
   perSystem =
     { pkgs, ... }:
     let
-      exe = name: pkgs.lib.getExe inputs.self.packages.${pkgs.system}.${name};
+      exe = name: pkgs.lib.getExe inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.${name};
       puke = exe "puke";
       oneach = exe "oneach";
       each = exe "each";
