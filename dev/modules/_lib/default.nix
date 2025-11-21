@@ -41,7 +41,7 @@ let
     _: input:
     mergeNonEmptyAttrs input {
       follows = {
-        testEmpty = v: v == null; # allow empty follows string
+        testEmpty = v: !builtins.isString v;
       };
       inputs = nonEmptyInputs input;
     }
@@ -68,7 +68,9 @@ let
           flake = false;
         };
       };
-      follows = { };
+      follows = {
+        testEmpty = x: !builtins.isString x;
+      };
       inputs = nonEmptyInputs input;
     }
   );
