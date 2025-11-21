@@ -1,4 +1,5 @@
 <!-- Badges -->
+
 <p align="right">
   <a href="https://github.com/sponsors/vic"><img src="https://img.shields.io/badge/sponsor-vic-white?logo=githubsponsors&logoColor=white&labelColor=%23FF0000" alt="Sponsor Vic"/>
   </a>
@@ -317,13 +318,14 @@ For flattening mechanisms we provide:
 This section outlines the recommended steps for adopting `flake-file` in your own repository.
 
 1. **Prerequisite:** Ensure you have already adopted [flake-parts](https://flake.parts).
-2. **Add Inputs:** In your current `flake.nix`, add the following input:
+
+1. **Add Inputs:** In your current `flake.nix`, add the following input:
 
    ```nix
    flake-file.url = "github:vic/flake-file";
    ```
 
-3. **Move Outputs:** Copy the contents of your `outputs` function into a file `./outputs.nix`:
+1. **Move Outputs:** Copy the contents of your `outputs` function into a file `./outputs.nix`:
 
    ```nix
    # outputs.nix -- this is the contents of your `outputs` function from the original flake.nix file.
@@ -336,7 +338,7 @@ This section outlines the recommended steps for adopting `flake-file` in your ow
    }
    ```
 
-4. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `modules/inputs.nix`):
+1. **Move Inputs:** Copy your current flake.nix file as a flake-parts module (e.g., `modules/inputs.nix`):
 
 > [!IMPORTANT]
 > Make sure you `git add` so that new files are visible to Nix.
@@ -360,8 +362,8 @@ This section outlines the recommended steps for adopting `flake-file` in your ow
 ```
 
 5. **Backup:** Back up your flake.nix into flake.nix.bak before regenerating it.
-6. **Generate:** Execute `nix run .#write-flake` to generate flake.nix.
-7. **Verify:** Check flake.nix and if everything is okay, remove the backup file.
+1. **Generate:** Execute `nix run .#write-flake` to generate flake.nix.
+1. **Verify:** Check flake.nix and if everything is okay, remove the backup file.
 
 You are done! Now you can split dependencies from `modules/inputs.nix` into other flake-part modules as you see fit:
 
@@ -399,4 +401,4 @@ Use `nix develop ./dev` or with direnv: `use flake ./dev`.
 
 ---
 
-Made with <3 by [@vic](https://x.com/oeiuwq)
+Made with \<3 by [@vic](https://x.com/oeiuwq)
