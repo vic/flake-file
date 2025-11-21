@@ -44,7 +44,7 @@ let
       runtimeInputs = [ pkgs.diffutils ];
       text = ''
         ${prune-cmd pkgs} "$1"/flake.lock pruned.lock
-        diff -u pruned.lock "$1"/flake.lock
+        diff -u "$1"/flake.lock pruned.lock
       '';
     };
 
