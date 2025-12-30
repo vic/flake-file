@@ -11,7 +11,7 @@
     flake-parts.inputs.nixpkgs-lib.follows = lib.mkDefault "nixpkgs-lib";
   };
 
-  flake-file.outputs = ''
+  flake-file.outputs = lib.mkDefault ''
     inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)
   '';
 
