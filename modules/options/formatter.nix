@@ -9,7 +9,7 @@
       The command takes flake.nix as first argument.
     '';
     type = lib.types.functionTo lib.types.unspecified;
-    default = pkgs: pkgs.nixfmt-rfc-style;
+    default = pkgs: pkgs.nixfmt;
     example = lib.literalExample ''
       pkgs: pkgs.nixfmt-rfc-style
     '';
