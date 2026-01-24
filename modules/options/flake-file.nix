@@ -13,7 +13,7 @@
         nixConfig = lib.mkOption {
           default = { };
           description = "nix config";
-          type = lib.types.attrs;
+          type = lib.types.attrsOf lib.types.anything;
         };
       };
     };
