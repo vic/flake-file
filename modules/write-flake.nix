@@ -1,5 +1,6 @@
 {
   lib,
+  options,
   config,
   inputs,
   ...
@@ -80,9 +81,16 @@ let
   '';
 
   nixConfig =
-    if flake-file.nixConfig != { } then
+    let
+      nixConfigOptions =
+        options.flake-file.valueMeta.configuration.options.nixConfig.valueMeta.configuration.options;
+      filteredConfig = lib.filterAttrs (
+        name: _: !(nixConfigOptions ? ${name}) || nixConfigOptions.${name}.isDefined
+      ) flake-file.nixConfig;
+    in
+    if filteredConfig != { } then
       ''
-        nixConfig = ${nixCode flake-file.nixConfig};
+        nixConfig = ${nixCode filteredConfig};
       ''
     else
       "";
