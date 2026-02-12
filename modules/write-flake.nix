@@ -53,13 +53,13 @@ let
     else if lib.isAttrs x then
       lib.pipe x [
         (lib.mapAttrsToList nixAttr)
-        (map ({ name, value }: ''${name} = ${nixCode value}; ''))
-        (values: ''{ ${lib.concatStringsSep " " values} }'')
+        (map ({ name, value }: "${name} = ${nixCode value}; "))
+        (values: "{ ${lib.concatStringsSep " " values} }")
       ]
     else if lib.isList x then
       lib.pipe x [
         (lib.map nixCode)
-        (values: ''[ ${lib.concatStringsSep " " values} ]'')
+        (values: "[ ${lib.concatStringsSep " " values} ]")
       ]
     else if x == true then
       "true"

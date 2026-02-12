@@ -6,7 +6,7 @@ let
   isEmpty =
     x:
     (
-      (builtins.isNull x)
+      (isNull x)
       || (lib.isStringLike x && lib.stringLength (lib.trim x) == 0)
       || (lib.isList x && lib.length x == 0)
       || (lib.isAttrs x && x == { })
