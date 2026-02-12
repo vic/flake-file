@@ -2,7 +2,7 @@
 {
 
   flake-file.inputs = {
-    nixpkgs.url = lib.mkDefault "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = lib.mkDefault "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     nixpkgs-lib.follows = lib.mkDefault "nixpkgs";
   };
 
