@@ -9,29 +9,32 @@
   <a href="LICENSE"> <img src="https://img.shields.io/github/license/vic/flake-file" alt="License"/> </a>
 </p>
 
-# flake-file — Generate flake.nix from flake-parts modules.
+# flake-file — Generate flake.nix or unflake.nix from inputs defined as module options.
 
 > `flake-file` and [vic](https://bsky.app/profile/oeiuwq.bsky.social)'s [dendritic libs](https://vic.github.io/dendrix/Dendritic-Ecosystem.html#vics-dendritic-libraries) made for you with Love++ and AI--. If you like my work, consider [sponsoring](https://github.com/sponsors/vic)
 
-**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options, using [flake-parts](https://flake.parts/).
+**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options. It works on both flakes and non-flakes environments.
 
 It makes your flake configuration modular and based on the Nix module system. This means you can use
 `lib.mkDefault` or anything you normally do with Nix modules, and have them reflected in flake schema values.
+
+> Despite the original flake-oriented name, it NOW also works on _stable Nix_, [_non flakes_](templates/unflake) environments.
 
 <table><tr><td>
 
 ## Features
 
-- Flake definition aggregated from all flake-parts modules.
+- Flake definition aggregated from Nix modules.
 - Schema as [options](https://github.com/vic/flake-file/blob/main/modules/options/default.nix).
 - Syntax for nixConfig and follows is the same as in flakes.
 - `flake check` ensures files are up to date.
-- App for generator: `nix run .#write-flake`
+- App for `flake.nix` generator: `nix run .#write-flake`
 - Custom do-not-edit header.
 - Automatic flake.lock [flattening](#automatic-flakelock-flattening).
 - Incrementally add [flake-parts-builder](#parts_templates) templates.
 - Pick flakeModules for different feature sets.
 - [Dendritic](https://vic.github.io/dendrix/Dendritic.html) flake template.
+- Works on stable Nix, [unflake](templates/unflake) environments.
 
 </td><td>
 
@@ -60,7 +63,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 ## Who is this for?
 
 - Nix users who want to keep their `flake.nix` modular and maintainable
-- Anyone using [flake-parts](https://flake.parts/) and looking to automate or simplify flake input management
+- Anyone using Nix modules and looking to automate or simplify flake input management
 - Teams or individuals who want to share and reuse flake modules across projects
 
 ---
@@ -148,9 +151,14 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 > Previously, this module included `flake-aspects` and `den` as dependencies. It now provides a pure flake-parts Dendritic setup. If you need the complete [den](https://github.com/vic/den) functionality, use den's `flakeModules.dendritic` instead.
 
+#### [`flakeModules.unflake`](https://github.com/vic/flake-file/tree/main/modules/unflake.nix)
+
+- Defines `flake-file` options.
+- Exposes `write-unflake` to generate `unflake.nix` or `npins`. See [templates/unflake](templates/unflake) for usage.
+
 ### Flake Templates
 
-#### `default` template
+#### [`default`](templates/default) template
 
 A more basic, explicit setup.
 
@@ -178,13 +186,17 @@ A more basic, explicit setup.
 > [!TIP]
 > You can use the `write-flake` app as part of a devshell or git hook.
 
-#### `dendritic` template
+#### [`dendritic`](templates/dendritic) template
 
 A template for dendritic setups; includes `flakeModules.dendritic`.
 
-#### `parts` template
+#### [`parts`](templates/parts) template
 
 A template that uses `lib.flakeModules.flake-parts-builder`.
+
+#### [`unflake`](templates/unflake) template
+
+Uses [goldstein/unflake](https://codeberg.org/goldstein/unflake) to pin and fetch inputs that were defined as options for non-flakes stable Nix environments.
 
 ---
 

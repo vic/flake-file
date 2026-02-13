@@ -23,6 +23,8 @@ jobs:
     strategy:
       matrix:
         template: ${{ fromJSON(needs.find-templates.outputs.templates) }}
+        exclude:
+          - template: "unflake"
     steps:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: cachix/install-nix-action@v31
@@ -44,6 +46,20 @@ jobs:
           nix flake metadata
           nix run .#write-flake -L --show-trace
           nix flake check -L --show-trace
+  unflake:
+    name: Check unflake
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: cachix/install-nix-action@v31
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: |
+          set -e -o pipefail
+          cd templates/unflake
+          sed -i 's/# flake-file = import/flake-file = import/' default.nix
+          echo "{ inputs, ... }: { unflake.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
+          nix-shell . -A unflake.env --run 'write-unflake --verbose'
   dev:
     name: Check flake dev
     runs-on: ubuntu-latest
