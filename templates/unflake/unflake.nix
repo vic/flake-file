@@ -5,9 +5,9 @@ let
       type = "github";
       owner = "vic";
       repo = "flake-file";
-      rev = "1515b77c3c1dd08ab394e840603fc152e059d13e";
-      lastModified = 1770893152;
-      narHash = "sha256-DuZHf9EaQQ2iiUloYj4374VCsfDQ7kGuWC7037BDSpE=";
+      rev = "982bec8f58dc56360df4dbb246f9d3b846e89dfa";
+      lastModified = 1771017115;
+      narHash = "sha256-2Cef4MEBKL8YWe0ZEuEV5U/x4aWz9IM8hrxxiD8X3f4=";
     };
     unflake_github_vic_import-tree = builtins.fetchTree {
       type = "github";
