@@ -13,7 +13,7 @@
 
 > `flake-file` and [vic](https://bsky.app/profile/oeiuwq.bsky.social)'s [dendritic libs](https://vic.github.io/dendrix/Dendritic-Ecosystem.html#vics-dendritic-libraries) made for you with Love++ and AI--. If you like my work, consider [sponsoring](https://github.com/sponsors/vic)
 
-**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options. It works on both flakes and non-flakes environments.
+**flake-file** lets you generate a clean, maintainable `flake.nix` from modular options. Use the *real* Nix language to define your inputs.
 
 It makes your flake configuration modular and based on the Nix module system. This means you can use
 `lib.mkDefault` or anything you normally do with Nix modules, and have them reflected in flake schema values.
