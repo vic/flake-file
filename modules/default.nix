@@ -6,8 +6,14 @@ let
       nix-auto-follow
       dendritic
       import-tree
+      unflake
       ;
   };
+
+  unflake.imports = [
+    ./options
+    ./unflake.nix
+  ];
 
   default.imports = [
     ./options
@@ -34,6 +40,11 @@ let
   templates.default = {
     description = "default template";
     path = ./../templates/default;
+  };
+
+  templates.unflake = {
+    description = "unflake template";
+    path = ./../templates/unflake;
   };
 
   templates.dendritic = {
