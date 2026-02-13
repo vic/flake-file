@@ -23,6 +23,7 @@ let
     name = "write-inputs";
     text = ''
       cp ${inputsFile} "''${1:-inputs.nix}"
+      ${lib.getExe pkgs.nixfmt} "''${1:-inputs.nix}"
     '';
   };
 
