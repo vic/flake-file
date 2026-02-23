@@ -13,7 +13,6 @@
     flake-file.url = "github:vic/flake-file";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
-    systems.url = "github:nix-systems/default";
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 

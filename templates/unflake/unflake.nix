@@ -21,7 +21,7 @@ let
       type = "tarball";
       url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
       lastModified = 1770843696;
-      narHash = "sha256-9SFCZkVcpDOV6unH5hVEy4+dB0rxMuUoBnDAO6vshac=";
+      narHash = "sha256-V/p5M4cAMbu/MJBDn5YABy5QJgCFpsgrnXVVc2Uo5+k=";
     };
   };
   universe = rec {
