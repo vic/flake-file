@@ -64,7 +64,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 
 - Nix users who want to keep their `flake.nix` modular and maintainable
 - Anyone using Nix modules and looking to automate or simplify flake input management
-- Teams or individuals who want to share and reuse flake modules across projects
+- Teams or individuals who want to share and reuse flake modules **across projects** even if some use flakes and others npins.
 
 ---
 
