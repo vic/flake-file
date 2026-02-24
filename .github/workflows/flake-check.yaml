@@ -39,13 +39,13 @@ jobs:
           EOF
           mkdir templated; cd templated
           nix flake init -t github:$GITHUB_REPOSITORY/$GITHUB_SHA#${{ matrix.template }}
-          nix run .#write-flake -L --show-trace
+          nix run .#write-flake -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
           if test -d ./modules; then cp ../forced.nix ./modules/; fi;
           if test -d ./flake-parts; then cp ../forced.nix ./flake-parts/; fi;
-          nix run .#write-flake -L --show-trace
+          nix run .#write-flake -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
           nix flake metadata
-          nix run .#write-flake -L --show-trace
-          nix flake check -L --show-trace
+          nix run .#write-flake -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
+          nix flake check -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
   unflake:
     name: Check unflake
     runs-on: ubuntu-latest
