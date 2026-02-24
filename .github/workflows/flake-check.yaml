@@ -46,6 +46,20 @@ jobs:
           nix flake metadata
           nix run .#write-flake -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
           nix flake check -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
+  npins:
+    name: Check npins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: cachix/install-nix-action@v31
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: |
+          set -e -o pipefail
+          cd templates/npins
+          sed -i 's/# flake-file = import/flake-file = import/' default.nix
+          echo "{ inputs, ... }: { npins.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
+          nix-shell . -A npins.env --run write-npins
   unflake:
     name: Check unflake
     runs-on: ubuntu-latest

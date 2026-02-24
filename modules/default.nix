@@ -6,9 +6,15 @@ let
       nix-auto-follow
       dendritic
       import-tree
+      npins
       unflake
       ;
   };
+
+  npins.imports = [
+    ./options
+    ./npins.nix
+  ];
 
   unflake.imports = [
     ./options
@@ -40,6 +46,11 @@ let
   templates.default = {
     description = "default template";
     path = ./../templates/default;
+  };
+
+  templates.npins = {
+    description = "npins template";
+    path = ./../templates/npins;
   };
 
   templates.unflake = {
