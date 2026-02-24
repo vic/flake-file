@@ -5,22 +5,22 @@ let
       type = "github";
       owner = "vic";
       repo = "flake-file";
-      rev = "982bec8f58dc56360df4dbb246f9d3b846e89dfa";
-      lastModified = 1771017115;
-      narHash = "sha256-2Cef4MEBKL8YWe0ZEuEV5U/x4aWz9IM8hrxxiD8X3f4=";
+      rev = "9d89918faacdbd2ce26d0aa7298da0fecad8b437";
+      lastModified = 1771017549;
+      narHash = "sha256-n68HeYEQJ67hMH2LPI0cERD2pkpNe5dyeOGg11uZ7rc=";
     };
     unflake_github_vic_import-tree = builtins.fetchTree {
       type = "github";
       owner = "vic";
       repo = "import-tree";
-      rev = "3c23749d8013ec6daa1d7255057590e9ca726646";
-      lastModified = 1763762820;
-      narHash = "sha256-ZvYKbFib3AEwiNMLsejb/CWs/OL/srFQ8AogkebEPF0=";
+      rev = "c968d3b54d12cf5d9c13f16f7c545a06c9d1fde6";
+      lastModified = 1771045967;
+      narHash = "sha256-oYO4poyw0Sb/db2PigqugMlDwsvwLg6CSpFrMUWxA3Q=";
     };
     unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz = builtins.fetchTree {
       type = "tarball";
       url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
-      lastModified = 1770843696;
+      lastModified = 1771423170;
       narHash = "sha256-V/p5M4cAMbu/MJBDn5YABy5QJgCFpsgrnXVVc2Uo5+k=";
     };
   };
