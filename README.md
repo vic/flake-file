@@ -18,7 +18,7 @@
 It makes your flake configuration modular and based on the Nix module system. This means you can use
 `lib.mkDefault` or anything you normally do with Nix modules, and have them reflected in flake schema values.
 
-> Despite the original flake-oriented name, it NOW also works on _stable Nix_, [_non flakes_](templates/unflake) environments.
+> Despite the original flake-oriented name, it NOW also works on _stable Nix_, non-flakes environments via [npins](templates/npins) or [unflake](templates/unflake).
 
 <table><tr><td>
 
@@ -34,7 +34,7 @@ It makes your flake configuration modular and based on the Nix module system. Th
 - Incrementally add [flake-parts-builder](#parts_templates) templates.
 - Pick flakeModules for different feature sets.
 - [Dendritic](https://vic.github.io/dendrix/Dendritic.html) flake template.
-- Works on stable Nix, [unflake](templates/unflake) environments.
+- Works on stable Nix, [npins](templates/npins) and [unflake](templates/unflake) environments.
 
 </td><td>
 
@@ -151,6 +151,15 @@ The following is a complete example from our [`templates/dendritic`](https://git
 
 > Previously, this module included `flake-aspects` and `den` as dependencies. It now provides a pure flake-parts Dendritic setup. If you need the complete [den](https://github.com/vic/den) functionality, use den's `flakeModules.dendritic` instead.
 
+#### [`flakeModules.npins`](https://github.com/vic/flake-file/tree/main/modules/npins.nix)
+
+- Defines `flake-file` options for [npins](https://github.com/andir/npins)-based dependency pinning.
+- Exposes `write-npins` to generate/update the `npins/` directory from declared inputs.
+- Supports `github`, `gitlab`, `channel`, `tarball`, and `git` URL schemes.
+- Respects `follows` for transitive dependency deduplication.
+- Prunes stale pins automatically.
+- See [templates/npins](templates/npins) for usage.
+
 #### [`flakeModules.unflake`](https://github.com/vic/flake-file/tree/main/modules/unflake.nix)
 
 - Defines `flake-file` options.
@@ -192,6 +201,10 @@ A template for dendritic setups; includes `flakeModules.dendritic`.
 #### [`parts`](templates/parts) template
 
 A template that uses `lib.flakeModules.flake-parts-builder`.
+
+#### [`npins`](templates/npins) template
+
+Uses [npins](https://github.com/andir/npins) to pin and fetch inputs defined as options for non-flakes stable Nix environments. Supports channels, GitHub, GitLab, tarballs, and git repos. Recommended for new non-flake projects.
 
 #### [`unflake`](templates/unflake) template
 

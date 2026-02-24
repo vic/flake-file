@@ -20,39 +20,59 @@ let
     unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz = builtins.fetchTree {
       type = "tarball";
       url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
-      lastModified = 1771423170;
-      narHash = "sha256-V/p5M4cAMbu/MJBDn5YABy5QJgCFpsgrnXVVc2Uo5+k=";
+      lastModified = 1771482645;
+      narHash = "sha256-5xZ8rQTzV4cSAPMvIZpVpF05p5iwUnEuONeelwseA4g=";
     };
   };
   universe = rec {
-    unflake_github_vic_flake-file = ((import "${deps.unflake_github_vic_flake-file.outPath}/flake.nix").outputs {
-      self = unflake_github_vic_flake-file;
-    }) // deps.unflake_github_vic_flake-file // {
-      _flake = true;
-      outPath = "${deps.unflake_github_vic_flake-file.outPath}";
-      sourceInfo = deps.unflake_github_vic_flake-file;
-    };
-    unflake_github_vic_import-tree = ((import "${deps.unflake_github_vic_import-tree.outPath}/flake.nix").outputs {
-      self = unflake_github_vic_import-tree;
-    }) // deps.unflake_github_vic_import-tree // {
-      _flake = true;
-      outPath = "${deps.unflake_github_vic_import-tree.outPath}";
-      sourceInfo = deps.unflake_github_vic_import-tree;
-    };
-    unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz = ((import "${deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz.outPath}/flake.nix").outputs {
-      self = unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz;
-    }) // deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz // {
-      _flake = true;
-      outPath = "${deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz.outPath}";
-      sourceInfo = deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz;
-    };
+    unflake_github_vic_flake-file =
+      ((import "${deps.unflake_github_vic_flake-file.outPath}/flake.nix").outputs {
+        self = unflake_github_vic_flake-file;
+      })
+      // deps.unflake_github_vic_flake-file
+      // {
+        _flake = true;
+        outPath = "${deps.unflake_github_vic_flake-file.outPath}";
+        sourceInfo = deps.unflake_github_vic_flake-file;
+      };
+    unflake_github_vic_import-tree =
+      ((import "${deps.unflake_github_vic_import-tree.outPath}/flake.nix").outputs {
+        self = unflake_github_vic_import-tree;
+      })
+      // deps.unflake_github_vic_import-tree
+      // {
+        _flake = true;
+        outPath = "${deps.unflake_github_vic_import-tree.outPath}";
+        sourceInfo = deps.unflake_github_vic_import-tree;
+      };
+    unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz =
+      (
+        (import "${deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz.outPath}/flake.nix")
+        .outputs
+        {
+          self = unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz;
+        }
+      )
+      // deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz
+      // {
+        _flake = true;
+        outPath = "${deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz.outPath
+        }";
+        sourceInfo = deps.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz;
+      };
   };
   inputs = {
     flake-file = universe.unflake_github_vic_flake-file;
     import-tree = universe.unflake_github_vic_import-tree;
     nixpkgs = universe.unflake_tarball_https---channels-nixos-org-nixpkgs-unstable-nixexprs-tar-xz;
     self = throw "to use inputs.self, write `import ./unflake.nix (inputs: ...)`";
-    withInputs = outputs: let self = outputs (inputs // { inherit self; }); in self;
+    withInputs =
+      outputs:
+      let
+        self = outputs (inputs // { inherit self; });
+      in
+      self;
     __functor = self: self.withInputs;
   };
-in inputs
+in
+inputs

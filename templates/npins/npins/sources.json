@@ -1,0 +1,36 @@
+{
+  "pins": {
+    "flake-file": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "vic",
+        "repo": "flake-file"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "619d2212482c104fd3bbc815d80c6227b1b01338",
+      "url": "https://github.com/vic/flake-file/archive/619d2212482c104fd3bbc815d80c6227b1b01338.tar.gz",
+      "hash": "sha256-SQhPQRbs35fQ8ZE7tbfHsf2eu5r+oICyZL1SpGIPvGg="
+    },
+    "import-tree": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "vic",
+        "repo": "import-tree"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "c968d3b54d12cf5d9c13f16f7c545a06c9d1fde6",
+      "url": "https://github.com/vic/import-tree/archive/c968d3b54d12cf5d9c13f16f7c545a06c9d1fde6.tar.gz",
+      "hash": "sha256-oYO4poyw0Sb/db2PigqugMlDwsvwLg6CSpFrMUWxA3Q="
+    },
+    "nixpkgs": {
+      "type": "Tarball",
+      "url": "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz",
+      "hash": "sha256-5xZ8rQTzV4cSAPMvIZpVpF05p5iwUnEuONeelwseA4g="
+    }
+  },
+  "version": 7
+}
