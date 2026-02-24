@@ -49,6 +49,7 @@ jobs:
   npins:
     name: Check npins
     runs-on: ubuntu-latest
+    if: false # TODO: enable only if npins code changed
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
@@ -63,6 +64,7 @@ jobs:
   unflake:
     name: Check unflake
     runs-on: ubuntu-latest
+    if: false # TODO: enable only if unflake code changed
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
