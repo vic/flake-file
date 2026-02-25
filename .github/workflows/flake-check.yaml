@@ -49,7 +49,7 @@ jobs:
   npins:
     name: Check npins
     runs-on: ubuntu-latest
-    if: false # TODO: enable only if npins code changed
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'npins') }}
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
@@ -64,7 +64,7 @@ jobs:
   unflake:
     name: Check unflake
     runs-on: ubuntu-latest
-    if: false # TODO: enable only if unflake code changed
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'unflake') }}
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
