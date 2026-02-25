@@ -10,7 +10,7 @@ It uses npins to pin and fetch inputs defined as options inside `./modules`.
 Update the `npins/` directory from your declared inputs:
 
 ```shell
-nix-shell . -A npins.env --run write-npins
+nix-shell . -A flake-file.sh --run write-npins
 ```
 
 This will run `npins add` for

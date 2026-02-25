@@ -16,6 +16,29 @@ jobs:
           templates=$(find templates -mindepth 2 -maxdepth 2  -name flake.nix -print0 | xargs -0 dirname | xargs -n 1 basename | jq -R | jq -sc)
           echo "$templates"
           echo "templates=$templates" >> $GITHUB_OUTPUT
+  bootstrap:
+    name: Bootstrap ${{matrix.bootstrap}}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        bootstrap: [inputs, flake, npins, unflake]
+    env:
+      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
+    steps:
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: cachix/install-nix-action@v31
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: actions/checkout@v4
+      - run: mkdir bootstrap
+      - run: cd bootstrap && nix-shell ../default.nix -A flake-file.sh --run write-${{matrix.bootstrap}} --arg modules ../modules/bootstrap.nix
+      - run: cat bootstrap/inputs.nix
+        if: ${{ matrix.bootstrap == 'inputs' }}
+      - run: cat bootstrap/flake.nix
+        if: ${{ matrix.bootstrap == 'flake' }}
+      - run: cat bootstrap/unflake.nix
+        if: ${{ matrix.bootstrap == 'unflake' }}
+      - run: cat bootstrap/npins/sources.json
+        if: ${{ matrix.bootstrap == 'npins' }}
   template:
     name: Check template ${{matrix.template}}
     needs: [find-templates]
