@@ -116,7 +116,7 @@ let
     in
     ''
       if ! jq -e --arg n ${esc name} '.pins | has($n)' npins/sources.json >/dev/null 2>&1; then
-        ${cmd}
+        ${cmd} || (printf "\ncommand FAILED:\n    ${cmd}" >&2 && exit 1)
       fi
     '';
 
