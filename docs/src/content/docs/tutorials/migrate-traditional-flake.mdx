@@ -1,0 +1,163 @@
+---
+title: With a traditional flake
+description: Migrate a traditional flake to flake-file (no flake-parts)
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+
+As always, start a new empty commit so you can always revert to safe state.
+
+Suppose you have a flake that looks like:
+
+```nix
+# flake.nix
+{
+  inputs = { # So much inputs
+    nixpkgs.url = "github:nixos/nixpkgs/unstable";
+    foo.url = "github:coolguy/foo";
+    bar.url = "github:coolguy/bar";
+  }; 
+  outputs = inputs: { ... }; # wow! very outputs
+}
+```
+
+## Boostraping flake-file
+
+First, move your `flake.nix` file as `flake-file.nix`.
+
+And now, the bootstrapping magic step: 
+
+```shell
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
+  -A flake-file.sh --run write-flake \
+  --arg modules ./flake-file.nix --argstr outputs flake-file
+```
+
+> <small>See also: all [bootstrap command args](/reference/bootstrap)</small>
+
+
+## The new `flake.nix` (static Nix)
+
+You will notice your new `flake.nix` looks like this:
+
+```diff lang="nix" "(A)" "(B)" "(C)" "(D)"
+  # flake.nix
+  # DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file. (A)
+  # Use `nix run .#write-flake` to regenerate it. (D)
+  {
+     outputs = inputs: (import ./flake-file.nix).outputs inputs; # (B)
+     inputs = {
+        # (C) all your inputs (static version)
+     };
+  }
+```
+<strong>(A)</strong> The `--arg modules ./flake-file.nix` option indicates
+the module entry-point. Your old flake is **already** a module for flake-file.
+
+<strong>(B)</strong> The `--argstr outputs flake-file` generated
+an `outputs` function that just **delegates** to the one in `flake-file.nix`.
+
+<strong>(C)</strong> Your `inputs` are now the **static** version (Nix subset)
+of the **real Nix** inputs at your `flake-file.nix` file.
+
+## Edit `flake-file.nix` (real Nix)
+
+Now that `flake-file.nix` is real Nix code, you can refactor your inputs code
+to your heart's content.
+
+```nix
+# flake-file.nix
+# Now with more and **real** Nix
+let
+  # for example purposes
+  gh = user: repo: branch: "github:${user}/${repo}/${branch}";
+
+  coolguy = repo: gh "coolguy" repo "main";
+  channel = "unstable";
+in {
+  inputs = {
+    nixpkgs.url = gh "nixos" "nixpkgs" channel;
+    foo.url = coolguy "foo";
+    bar.url = coolguy "bar";
+  };
+
+  outputs = inputs: { ... }; # keeps the same
+}
+```
+
+## Update static from dynamic Nix.
+
+Run the **same** command again, your input changes will be reflected into
+the **static** `flake.nix`.
+
+```shell
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
+  -A flake-file.sh --run write-flake \
+  --arg modules ./flake-file.nix --argstr outputs flake-file
+```
+
+<Aside title="You are done!">
+You can stop here and enjoy your dynamic inputs at `flake-file.nix`.
+
+Simply run the same bootstrap command whenever inputs change.
+</Aside>
+
+## Moving into a module-based flake.
+
+<strong>(D)</strong> You might have noticed the comment about the `.#write-flake` app.
+To include this app as part of your flake and not having use the bootstrap command
+and specify all the same options each time, you need:
+
+Use `flake-module` outputs instead of `flake-file` on the bootstrap command:
+
+```shell ins="flake-module"
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
+  -A flake-file.sh --run write-flake \
+  --arg modules ./flake-file.nix --argstr outputs flake-module
+```
+
+Add options to your `flake-file.nix` **module**. I told you it was a module already.
+
+```diff lang="nix" "resolved flake inputs" " inputs =" "flake-file.inputs option" "inputs," " outputs =" "type-checked schema" ins="flake-module"
+  # flake-file.nix
++ { inputs, lib, ... }: # resolved flake inputs as specialArgs
+  let
+    # same helper code as before
+  in
+  {
+    # same inputs code as before
+    inputs = {  # Alias option for flake-file.inputs type-checked schema!
+
+      # make sure you add flake-file dependency.
++     flake-file.url = lib.mkDefault "github:vic/flake-file";
+    };
+
+    # same outputs code as before
+    outputs = inputs: ...; # Now with **extensible** type-checked schema!
+
+    # since this IS a module it can import other modules
+    imports = [
+       # enable inside-flake and say goodbye to bootstrap
++      inputs.flake-file.flakeModule
+ 
+       # start splitting from huge monolithic code to modular nix.
+       # each input can be defined on their relevant module files.
+       # maybe move outputs function to ./outputs.nix
+    ];
+
+    # generate the same output function we used at bootstrap
++   flake-file.outputs = "flake-module";
+  }
+```
+
+
+## Your flake is flake-file enabled
+
+Commands for your daily life:
+
+```shell
+nix run .#write-flake # whenever you need to regen flake.nix
+
+nix flake check # will make sure your flake.nix is up-to-date
+```

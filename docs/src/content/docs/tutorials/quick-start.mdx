@@ -3,63 +3,50 @@ title: Quick Start
 description: Bootstrap a new project with flake-file in minutes.
 ---
 
-## Prerequisites
+import { Card, LinkButton, Aside } from '@astrojs/starlight/components';
 
-- Nix with flakes enabled.
-- An internet connection to fetch the template.
 
-## Create a new project
+This section will help you get started with `flake-file` in minutes.
 
-Use the `dendritic` template — it sets up a full [flake-parts](https://flake.parts) + [import-tree](https://github.com/vic/import-tree) environment with flake-file already wired in.
+It pretty much depends on your current Nix choices -the library adapts to you-
+and what your destination is.
 
-```shell
-nix flake init -t github:vic/flake-file#dendritic
-```
+## Choose your path
 
-## Generate flake.nix
+<Card title="Sandboxed Bootstrap" icon="nix">
+  Try flake-file in a temporary directory using your flake inputs.
 
-```shell
-nix run ".#write-flake"
-```
+  <LinkButton variant="secondary" icon="right-arrow" href="/tutorials/bootstrap">Try It Now!</LinkButton>
+</Card>
 
-This evaluates your modules, merges all `flake-file.*` options, and writes `flake.nix`.
+<Card title="Brand new project (with or without flakes)" icon="rocket">
+  We provide many `templates` providing different features.
 
-```shell
-cat flake.nix   # inspect the generated file
-```
+  <LinkButton variant="secondary" href="/guides/templates" icon="right-arrow">Pick one</LinkButton> that suits you more, and run:
 
-## Verify
+  ```shell
+  nix flake init -t github:vic/flake-file#default
+  ```
+</Card>
 
-```shell
-nix flake check
-```
+<Card title="Use with a traditional flake (no flake-parts)" icon="nix">
+  You don't need to change your loved flake structure nor adopt a module system.
 
-This confirms that `flake.nix` is up to date with the current module state. Run this in CI.
+  Even better, `flake-file` can use your **current** `flake.nix` as a module.
 
-## Add your first input
+  <LinkButton variant="secondary" icon="right-arrow" href="/tutorials/migrate-traditional-flake">Lets Do It!</LinkButton>
+</Card>
 
-Open (or create) a module under `./modules/`. Declare any dependency close to where it is used:
 
-```nix
-# modules/my-tool.nix
-{ inputs, lib, ... }: {
-  flake-file.inputs.my-tool.url = lib.mkDefault "github:owner/my-tool";
+<Card title="Use with a flake-parts flake" icon="nix">
+  Nice! You already use flake modules, just add some water and enjoy your cool-inputs.
 
-  # Use the input once it's in flake.nix
-  imports = lib.optionals (inputs ? my-tool) [
-    inputs.my-tool.flakeModule
-  ];
-}
-```
+  <LinkButton variant="secondary" icon="right-arrow" href="/tutorials/migrate-flake-parts">Lets Do It!</LinkButton>
+</Card>
 
-Then regenerate:
 
-```shell
-nix run ".#write-flake"
-```
+<Card title="Use with no flakes" icon="nix">
+  Easy as pie.
 
-## Next Steps
-
-- [Migration Guide](/tutorials/migrate) — adopt flake-file in an existing project.
-- [flakeModules](/guides/flake-modules) — explore all built-in modules.
-- [Options Reference](/reference/options) — every `flake-file.*` option explained.
+  <LinkButton variant="secondary" icon="right-arrow" href="/tutorials/migrate-no-flakes">Lets Do It!</LinkButton>
+</Card>
