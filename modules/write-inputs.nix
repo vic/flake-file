@@ -27,6 +27,7 @@ let
     pkgs.writeShellApplication {
       name = "write-inputs";
       text = ''
+        cd ${flake-file.intoPath}
         cp ${inputsFile pkgs} "''${1:-inputs.nix}"
         ${lib.getExe pkgs.nixfmt} "''${1:-inputs.nix}"
       '';
@@ -54,10 +55,18 @@ in
       description = "Attrs of (pkgs -> app) to include in shell";
     };
 
+    intoPath = lib.mkOption {
+      internal = true;
+      visible = false;
+      type = lib.types.str;
+      default = ".";
+    };
+
     inputsFile = lib.mkOption {
       type = lib.types.raw;
       readOnly = true;
       internal = true;
+      visible = false;
       default = inputsFile;
     };
 
@@ -65,6 +74,7 @@ in
       type = lib.types.raw;
       readOnly = true;
       internal = true;
+      visible = false;
       default = shell flake-file.pkgs;
     };
   };

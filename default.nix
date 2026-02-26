@@ -1,6 +1,8 @@
 {
   pkgs ? import <nixpkgs> { },
   modules ? [ ],
+  outdir ? ".",
+  bootstrap ? true,
   import-tree ? (
     pkgs.fetchFromGitHub {
       owner = "vic";
@@ -30,7 +32,10 @@ let
       ./modules/unflake.nix
       ./modules/write-inputs.nix
       ./modules/write-flake.nix
+      ./modules/flake-options.nix
+      (if bootstrap then ./modules/bootstrap.nix else { })
     ];
+    config.flake-file.intoPath = outdir;
     options = {
       lib = attrsOpt;
       templates = attrsOpt;

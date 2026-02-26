@@ -137,6 +137,7 @@ let
         pkgs.jq
       ];
       text = ''
+        cd ${flake-file.intoPath}
         npins init --bare 2>/dev/null || true
         ${addCommands}
         wanted="${pinNames}"

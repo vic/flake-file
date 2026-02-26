@@ -86,6 +86,7 @@ let
     pkgs.writeShellApplication {
       name = "write-flake";
       text = ''
+        cd ${config.flake-file.intoPath}
         cp ${formatted pkgs} flake.nix
         ${hooks}
       '';

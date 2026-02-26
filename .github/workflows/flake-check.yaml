@@ -30,7 +30,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: actions/checkout@v4
       - run: mkdir bootstrap
-      - run: cd bootstrap && nix-shell ../default.nix -A flake-file.sh --run write-${{matrix.bootstrap}} --arg modules ../modules/bootstrap.nix
+      - run: nix-shell ./default.nix -A flake-file.sh --run write-${{matrix.bootstrap}} --arg modules ./modules/bootstrap.nix --argstr outdir bootstrap
       - run: cat bootstrap/inputs.nix
         if: ${{ matrix.bootstrap == 'inputs' }}
       - run: cat bootstrap/flake.nix

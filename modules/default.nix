@@ -8,8 +8,11 @@ let
       import-tree
       npins
       unflake
+      flake-options
       ;
   };
+
+  flake-options = ./flake-options.nix;
 
   base.imports = [
     ./options
