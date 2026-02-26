@@ -1,6 +1,8 @@
 {
   flake-file.inputs = {
-    impor-tree.url = "github:vic/import-tree";
+    import-tree.url = "github:vic/import-tree";
     flake-file.url = "github:vic/flake-file";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
   };
 }
