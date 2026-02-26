@@ -1,0 +1,51 @@
+---
+title: Lock Flattening
+description: Automatically flatten flake.lock to reduce dependency duplication.
+---
+
+## The Problem
+
+Nix flakes fetch every input's own lock file, which can result in many copies of the same package set (e.g. multiple `nixpkgs` versions) being downloaded and stored. Flattening forces all inputs to share common dependencies.
+
+## Built-in Modules
+
+flake-file ships support for two established flattening tools:
+
+### allfollow
+
+[spikespaz/allfollow](https://github.com/spikespaz/allfollow) automatically adds `follows` entries for all transitive inputs.
+
+```nix
+{ inputs, ... }: {
+  imports = [ inputs.flake-file.flakeModules.allfollow ];
+}
+```
+
+Source: [`modules/prune-lock/allfollow.nix`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/allfollow.nix)
+
+### nix-auto-follow
+
+[fzakaria/nix-auto-follow](https://github.com/fzakaria/nix-auto-follow) detects duplicate inputs and injects `follows` for them.
+
+```nix
+{ inputs, ... }: {
+  imports = [ inputs.flake-file.flakeModules.nix-auto-follow ];
+}
+```
+
+Source: [`modules/prune-lock/nix-auto-follow.nix`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/nix-auto-follow.nix)
+
+## How it integrates
+
+Both modules configure `flake-file.prune-lock` options, which instruct `write-flake` to run the flattener after writing `flake.nix`. You can also use the raw options for a custom tool:
+
+```nix
+{ pkgs, ... }: {
+  flake-file.prune-lock = {
+    enable = true;
+    program = pkgs: pkgs.my-flattener;
+  };
+}
+```
+
+See the [Options Reference](/reference/options) for the full `prune-lock` schema.

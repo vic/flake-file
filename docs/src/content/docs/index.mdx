@@ -1,0 +1,61 @@
+---
+title: flake-file
+description: Generate flake.nix/unflake.nix/npins from modular Nix options.
+template: splash
+hero:
+  tagline: |
+      Your flake.nix, made modular and maintainable.<br />
+      Use the <strong>real</strong> Nix language to define your inputs.
+  image:
+    html: |
+      <img width="400" height="400" alt="ouroboros" src="https://github.com/user-attachments/assets/2c0b2208-2f65-4fb3-b9df-5cf78dcad0e7" />
+  actions:
+    - text: Quick Start
+      link: /tutorials/quick-start
+      icon: right-arrow
+    - text: What is flake-file?
+      link: /explanation/what-is-flake-file
+      variant: minimal
+    - text: Overview
+      link: /overview
+      variant: minimal
+    - text: Source Code
+      link: https://github.com/vic/flake-file
+      icon: github
+      variant: secondary
+---
+
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+
+**flake-file** lets you generate a clean, maintainable `flake.nix` from modular Nix options.
+
+Define inputs close to where they are used — in any Nix module — then with a single command, write `flake.nix` or `unflake.nix` or `npins`.
+
+
+<Aside type="tip" title="With or without flakes.">
+Despite the original flake-oriented name, `flake-file` now **also** works without flakes on stable Nix.
+</Aside>
+
+<Aside title="Use the real Nix language on your inputs">
+Ever wanted to interpolate a string just to discover inputs are **NOT REAL** Nix expressions?
+
+**Q**: What language is flake.nix written in? [nix#4945](https://github.com/NixOS/nix/issues/4945)
+
+**A**: It's a subset of Nix that doesn't allow computation in the flake metadata attributes.
+</Aside>
+
+<CardGrid>
+  <Card title="Modular Inputs" icon="puzzle">
+    Define `flake.nix` inputs in separate modules using the Nix module system and the **real** Nix language features. Use `lib.mkDefault` or interpolate Nix expressions, etc.
+  </Card>
+  <Card title="Single Command Regeneration" icon="rocket">
+    Run `nix run .#write-flake` to regenerate `flake.nix` from your options. A flake check enforces that files stay in sync.
+    Also provides `nix-shell` commands for stable Nix world.
+  </Card>
+  <Card title="Lock Flattening" icon="list-format">
+    Built-in support for automatic `flake.lock` flattening via `allfollow` or `nix-auto-follow`.
+  </Card>
+  <Card title="Multiple Backends" icon="setting">
+    Generate `flake.nix`, `unflake.nix`, or `npins/` from the same module options. Switch backends without rewriting your modules.
+  </Card>
+</CardGrid>

@@ -1,0 +1,60 @@
+---
+title: The outputs Function
+description: How flake-file.outputs works and best practices for using it.
+---
+
+## What is flake-file.outputs?
+
+The `flake-file.outputs` option is a **literal Nix string** that is placed verbatim as the `outputs` attribute in the generated `flake.nix`:
+
+```nix
+# generated flake.nix (simplified)
+{
+  outputs = <your flake-file.outputs value here>;
+}
+```
+
+## The Default
+
+The default value is:
+
+```nix
+inputs: import ./outputs.nix inputs
+```
+
+This is deliberately minimal — it delegates all logic to `outputs.nix`, keeping `flake.nix` as a pure dependency manifest.
+
+## Why Keep the Default?
+
+`flake.nix` is a generated file. If you embed complex Nix logic in `flake-file.outputs`, you are putting business logic in a string option, which is hard to read, impossible to type-check, and easy to break.
+
+The recommended split:
+
+- **`flake.nix`** — generated, declares inputs and nixConfig only.
+- **`outputs.nix`** — hand-written, contains all your Nix logic.
+
+## Overriding for a One-liner
+
+The only reasonable case for overriding `outputs` is a legitimate one-liner — for example, the `dendritic` module sets:
+
+```nix
+flake-file.outputs = "inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)";
+```
+
+This is still a single expression with no embedded logic.
+
+## What You Cannot Do
+
+You cannot assign a Nix function value to `flake-file.outputs`. A Nix function cannot be serialised to a string. This option exists *only* for a literal code string.
+
+```nix
+# WRONG — this will fail
+flake-file.outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } { };
+```
+
+Always set it to a string:
+
+```nix
+# Correct
+flake-file.outputs = ''inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } { }'';
+```

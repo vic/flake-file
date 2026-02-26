@@ -1,0 +1,65 @@
+---
+title: Templates
+description: Ready-made project templates for flake-file.
+---
+
+flake-file ships several Nix flake templates. Initialise any of them with:
+
+```shell
+nix flake init -t github:vic/flake-file#<template>
+```
+
+## `default`
+
+A minimal, explicit setup without extra framework dependencies.
+
+```nix
+# flake-parts module — see templates/default
+{ inputs, ... }: {
+  imports = [ inputs.flake-file.flakeModules.default ];
+
+  flake-file.inputs = {
+    flake-file.url = "github:vic/flake-file";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  };
+
+  systems = inputs.nixpkgs.lib.systems.flakeExposed;
+}
+```
+
+> Run `nix run .#write-flake` to generate `flake.nix`.
+
+## `dendritic`
+
+Includes `flakeModules.dendritic` — the recommended starting point for new [Dendritic](https://vic.github.io/dendrix/Dendritic.html) projects. Comes with import-tree, flake-parts, and sensible defaults.
+
+```shell
+nix flake init -t github:vic/flake-file#dendritic
+nix run ".#write-flake"
+nix flake check
+```
+
+## `parts`
+
+Uses `lib.flakeModules.flake-parts-builder` for projects that manage their flake-parts modules with [flake-parts-builder](https://github.com/tsandrini/flake-parts-builder).
+
+## `npins`
+
+For **non-flake** (stable Nix) environments. Uses [npins](https://github.com/andir/npins) to pin inputs. Supports channels, GitHub, GitLab, tarballs, and git repos. Recommended for new non-flake projects.
+
+```shell
+nix flake init -t github:vic/flake-file#npins
+```
+
+## `unflake`
+
+For **non-flake** (stable Nix) environments. Uses [goldstein/unflake](https://codeberg.org/goldstein/unflake) to pin inputs.
+
+```shell
+nix flake init -t github:vic/flake-file#unflake
+```
+
+## Tips
+
+> **Tip:** You can use the `write-flake` app as part of a devshell command or a git pre-commit hook to keep `flake.nix` always up to date.

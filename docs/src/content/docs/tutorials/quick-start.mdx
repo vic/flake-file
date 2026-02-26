@@ -1,0 +1,65 @@
+---
+title: Quick Start
+description: Bootstrap a new project with flake-file in minutes.
+---
+
+## Prerequisites
+
+- Nix with flakes enabled.
+- An internet connection to fetch the template.
+
+## Create a new project
+
+Use the `dendritic` template — it sets up a full [flake-parts](https://flake.parts) + [import-tree](https://github.com/vic/import-tree) environment with flake-file already wired in.
+
+```shell
+nix flake init -t github:vic/flake-file#dendritic
+```
+
+## Generate flake.nix
+
+```shell
+nix run ".#write-flake"
+```
+
+This evaluates your modules, merges all `flake-file.*` options, and writes `flake.nix`.
+
+```shell
+cat flake.nix   # inspect the generated file
+```
+
+## Verify
+
+```shell
+nix flake check
+```
+
+This confirms that `flake.nix` is up to date with the current module state. Run this in CI.
+
+## Add your first input
+
+Open (or create) a module under `./modules/`. Declare any dependency close to where it is used:
+
+```nix
+# modules/my-tool.nix
+{ inputs, lib, ... }: {
+  flake-file.inputs.my-tool.url = lib.mkDefault "github:owner/my-tool";
+
+  # Use the input once it's in flake.nix
+  imports = lib.optionals (inputs ? my-tool) [
+    inputs.my-tool.flakeModule
+  ];
+}
+```
+
+Then regenerate:
+
+```shell
+nix run ".#write-flake"
+```
+
+## Next Steps
+
+- [Migration Guide](/tutorials/migrate) — adopt flake-file in an existing project.
+- [flakeModules](/guides/flake-modules) — explore all built-in modules.
+- [Options Reference](/reference/options) — every `flake-file.*` option explained.

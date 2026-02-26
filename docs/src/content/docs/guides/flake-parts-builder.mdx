@@ -1,0 +1,47 @@
+---
+title: flake-parts-builder
+description: Incrementally add and remove flake-parts templates with flake-parts-builder.
+---
+
+## What is flake-parts-builder?
+
+[flake-parts-builder](https://github.com/tsandrini/flake-parts-builder) lets you add or remove templated flake-parts modules (called *parts*) at any time — not just at project initialisation.
+
+flake-file integrates with it so that each part can also declare its own `flake-file` inputs via a `_meta/` file.
+
+## Setup
+
+```nix
+{ inputs, ... }: {
+  imports = [
+    (inputs.flake-file.lib.flakeModules.flake-parts-builder ./flake-parts)
+  ];
+}
+```
+
+This:
+
+1. Bootstraps flake-parts-builder from `./flake-parts`.
+2. Auto-loads Nix modules from `./flake-parts`.
+3. Reads each part's `./flake-parts/<part>/_meta/` directory as flake-file config.
+
+## Adding parts
+
+```shell
+nix run github:vic/flake-parts-builder/write-meta -- add --write-meta --parts systems,treefmt $PWD
+```
+
+> **Important:** Use `github:vic/flake-parts-builder/write-meta` until [flake-parts-builder#60](https://github.com/tsandrini/flake-parts-builder/pull/60) is merged. This branch writes each part's `_meta/` file so that flake-file can manage inputs declared by the part.
+
+> **Warning:** Only use the `add` subcommand. The `init` subcommand overwrites `flake.nix`, which is managed by flake-file.
+
+## Regenerate after adding parts
+
+```shell
+nix run ".#write-flake"
+nix flake check
+```
+
+## How _meta/ works
+
+Each part directory may contain a `_meta/` subdirectory with Nix files that set `flake-file.*` options. When the `flake-parts-builder` module is imported, these files are automatically included in the module evaluation, so the part's dependencies are declared alongside the part itself.
