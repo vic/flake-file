@@ -1,0 +1,78 @@
+---
+title: The reason for flake-file
+description: Who it's for, the problem it solves, and what makes it different.
+---
+
+## Your flake.nix is not real Nix
+
+Have you ever tried to use a let expression or interpolate some common string into an `input.url` ?
+You will be happy to discover that your [flake.nix file is a subset of Nix](https://github.com/NixOS/nix/issues/4945).
+The only real Nix on it is the content of the `outputs` function.
+
+
+## Flake examples are monolithic.
+
+Isn't it weird to you that almost all examples of Nix Flakes that newcomers can find in the wild
+are big monolithic files?
+
+It is like teaching Node people to use package.json to write the full application on it.
+
+`flake.nix` is a distribution asset. And should be used as such: as a **dependencies manifest**.
+
+Make yourself a favor right now -this guide will wait for you to be back-:
+move your outputs function into `outputs.nix` and use something like:
+
+```nix
+# flake.nix
+{
+   inputs = { };
+   outputs = inputs: import ./outputs.nix inputs;
+}
+```
+
+
+## Sharing input requirements across stable/unstable Nix.
+
+Even if some people use unstable flakes, others should not be forced out of stable Nix.
+
+Each module defines inputs and flake-file can extract to whatever input-locking backend you need.
+Be it `flake.nix`, `unflake.nix`, `npins`.
+
+## Everybody `.follows`
+
+Even when Flakes inputs are locked for reproducibility, most people override their transitive
+dependencies because otherwise you end up downloading zillion different nixpkgs revisions.
+The build guarantee is broken because upstream flake author did not expected a new 
+possibly-incompatible version of its dependencies.
+
+Instead of using `.follows` which is external to the Nix language, flake-file uses
+the Nix module system, that already solves this class of problems for NixOS configurations —
+flake-file brings the same `lib.mkDefault`/`lib.mkForce` approach to `flake.nix` itself.
+
+## How flake-file Helps
+
+Instead of editing `flake.nix` directly, you declare inputs as **module options** — in any Nix module, close to where the dependency is used. flake-file then generates a clean, up-to-date `flake.nix` from those declarations.
+
+```nix
+# modules/my-tool.nix
+{ lib, ... }: {
+  flake-file.inputs.my-tool.url = lib.mkDefault "github:owner/my-tool";
+}
+```
+
+Running `nix run .#write-flake` materialises all declared inputs into `flake.nix`. A flake check enforces the file stays in sync with the modules.
+
+## Key Properties
+
+- **Modular:** Each module declares only its own dependencies.
+- **Composable:** Modules can be shared across projects — including their input declarations.
+- **Backend-agnostic:** The same module options generate `flake.nix`, `unflake.nix`, or `npins/` depending on the chosen backend.
+- **Standard Nix:** Uses the Nix module system — `lib.mkDefault`, priority overrides, conditional inputs — all work as expected.
+
+## Real-world Usage
+
+Many Dendritic Nix layouts use flake-file because it helps with localization of concerns.
+Inputs are declared near where they are used, frequently in the same module.
+Decomissining the module also removes the inputs.
+
+Even when flake-file was born for flakes, its author [vic/vix](https://github.com/vic/vix) uses flake-file without flakes. The [`dev/`](https://github.com/vic/flake-file/blob/main/dev) directory in this repo eats its own cooking. [More examples on GitHub](https://github.com/search?q=%22vic%2Fflake-file%22+language%3ANix&type=code).

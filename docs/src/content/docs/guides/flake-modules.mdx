@@ -1,0 +1,87 @@
+---
+title: flakeModules
+description: All built-in flakeModules provided by flake-file.
+---
+
+flake-file ships several flakeModules. Import only what you need.
+
+## `flakeModules.default`
+
+The base module. Provides all `flake-file.*` options, the `write-flake` app, and flake checks.
+
+```nix
+{ inputs, ... }: {
+  imports = [ inputs.flake-file.flakeModules.default ];
+}
+```
+
+Source: [`modules/default.nix`](https://github.com/vic/flake-file/tree/main/modules/default.nix)
+
+## `flakeModules.import-tree`
+
+Adds [import-tree](https://github.com/vic/import-tree) — auto-import all `.nix` files from a directory.
+
+Source: [`modules/import-tree.nix`](https://github.com/vic/flake-file/tree/main/modules/import-tree.nix)
+
+## `flakeModules.dendritic`
+
+A batteries-included setup for [Dendritic](https://vic.github.io/dendrix/Dendritic.html) projects. Includes:
+
+- `flakeModules.default`
+- `flakeModules.import-tree`
+- [flake-parts](https://github.com/hercules-ci/flake-parts)
+- Default `outputs` set to `inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)`
+
+```nix
+{ inputs, lib, ... }: {
+  imports = [ inputs.flake-file.flakeModules.dendritic ];
+
+  flake-file = {
+    description = "My Awesome Flake";
+    inputs.nixpkgs.url = lib.mkDefault "github:NixOS/nixpkgs/nixpkgs-unstable";
+    inputs.nixpkgs-lib.follows = "nixpkgs";
+  };
+}
+```
+
+Source: [`modules/dendritic/default.nix`](https://github.com/vic/flake-file/tree/main/modules/dendritic/default.nix)
+
+## `lib.flakeModules.flake-parts-builder`
+
+Integrates [flake-parts-builder](https://github.com/tsandrini/flake-parts-builder). Loads parts from a directory and reads each part's `_meta/` as flake-file configs.
+
+```nix
+{ inputs, ... }: {
+  imports = [
+    (inputs.flake-file.lib.flakeModules.flake-parts-builder ./flake-parts)
+  ];
+}
+```
+
+See [flake-parts-builder guide](/guides/flake-parts-builder) for details.
+
+Source: [`modules/flake-parts-builder/default.nix`](https://github.com/vic/flake-file/tree/main/modules/flake-parts-builder/default.nix)
+
+## `flakeModules.allfollow`
+
+Enables automatic `flake.lock` flattening using [spikespaz/allfollow](https://github.com/spikespaz/allfollow).
+
+Source: [`modules/prune-lock/allfollow.nix`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/allfollow.nix)
+
+## `flakeModules.nix-auto-follow`
+
+Enables automatic `flake.lock` flattening using [fzakaria/nix-auto-follow](https://github.com/fzakaria/nix-auto-follow).
+
+Source: [`modules/prune-lock/nix-auto-follow.nix`](https://github.com/vic/flake-file/tree/main/modules/prune-lock/nix-auto-follow.nix)
+
+## `flakeModules.npins`
+
+Defines `flake-file` options for [npins](https://github.com/andir/npins)-based environments. Exposes `write-npins`. Supports `github`, `gitlab`, `channel`, `tarball`, and `git` schemes. Respects `follows` for deduplication. Prunes stale pins automatically.
+
+Source: [`modules/npins.nix`](https://github.com/vic/flake-file/tree/main/modules/npins.nix)
+
+## `flakeModules.unflake`
+
+Defines `flake-file` options for [unflake](https://codeberg.org/goldstein/unflake)-based environments. Exposes `write-unflake`.
+
+Source: [`modules/unflake.nix`](https://github.com/vic/flake-file/tree/main/modules/unflake.nix)

@@ -1,0 +1,38 @@
+---
+title: Bootstrapping
+description: Generate a first flake.nix without any existing flake.
+---
+
+## The Bootstrap Command
+
+You can create a `flake.nix` from scratch — without running inside an existing flake — using a one-shot bootstrap command:
+
+```shell
+# Write a minimal bootstrap module
+echo '{ flake-file.inputs.flake-file.url = "github:vic/flake-file"; }' > bootstrap.nix
+
+# Generate flake.nix
+nix-shell https://github.com/vic/flake-file/archive/refs/heads/main.zip \
+  -A flake-file.sh \
+  --run write-flake \
+  --arg modules ./bootstrap.nix
+```
+
+Replace `write-flake` with `write-inputs`, `write-unflake`, or `write-npins` to target a different backend.
+
+## Using a modules directory
+
+`bootstrap.nix` can also be a directory. All `.nix` files in it will be auto-imported:
+
+```shell
+nix-shell https://github.com/vic/flake-file/archive/refs/heads/main.zip \
+  -A flake-file.sh \
+  --run write-flake \
+  --arg modules ./modules
+```
+
+This is useful when you already have module files and just need the initial `flake.nix` to be generated before Nix can evaluate the flake itself.
+
+## Next Steps
+
+After generating `flake.nix`, continue with the standard [Quick Start](/tutorials/quick-start) flow.

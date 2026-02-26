@@ -1,0 +1,52 @@
+---
+title: Hooks
+description: Run commands after writing flake.nix or during flake check.
+---
+
+## Overview
+
+flake-file provides two hook lists:
+
+- **`flake-file.write-hooks`** — commands executed after `write-flake` writes `flake.nix`.
+- **`flake-file.check-hooks`** — commands executed during `nix flake check`.
+
+Each hook is an attrset with an `index` (for ordering) and a command.
+
+## write-hooks
+
+Use write-hooks to trigger follow-up actions whenever `flake.nix` is regenerated — for example, updating a lock file or reformatting.
+
+```nix
+{ pkgs, ... }: {
+  flake-file.write-hooks = [
+    {
+      index = 10;
+      exec = "${pkgs.nix}/bin/nix flake update";
+    }
+  ];
+}
+```
+
+Hooks run in ascending `index` order, so you can coordinate between modules without knowing the full list.
+
+## check-hooks
+
+Use check-hooks to add extra validation during `nix flake check` — for example, checking that a derived file is up to date.
+
+```nix
+{ pkgs, ... }: {
+  flake-file.check-hooks = [
+    {
+      index = 10;
+      exec = "${pkgs.my-linter}/bin/my-linter --check .";
+    }
+  ];
+}
+```
+
+## Practical uses
+
+- Run `nix flake update` automatically after regeneration.
+- Reformat `flake.nix` with a formatter (see `flake-file.formatter`).
+- Validate generated files in CI via check-hooks.
+- Trigger [allfollow or nix-auto-follow](/guides/lock-flattening) to flatten the lock file.

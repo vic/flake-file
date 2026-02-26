@@ -1,0 +1,85 @@
+---
+title: Migration Guide
+description: Adopt flake-file in an existing flake-parts project.
+---
+
+## Prerequisites
+
+Your project must already use [flake-parts](https://flake.parts). If it doesn't, migrate to flake-parts first.
+
+## Steps
+
+### 1. Add the flake-file input
+
+In your current `flake.nix`, add:
+
+```nix
+flake-file.url = "github:vic/flake-file";
+```
+
+### 2. Move outputs to outputs.nix
+
+Copy the body of your `outputs` function into a new file `./outputs.nix`:
+
+```nix
+# outputs.nix
+inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+  imports = [
+    ./modules/inputs.nix
+    # Add more modules here as you split things up.
+  ];
+}
+```
+
+### 3. Create inputs.nix
+
+Copy your current `flake.nix` input declarations into a flake-parts module:
+
+```nix
+# modules/inputs.nix
+{ inputs, ... }: {
+  imports = [
+    inputs.flake-file.flakeModules.default
+  ];
+
+  flake-file = {
+    description = "Your flake description";
+    inputs = {
+      flake-file.url = "github:vic/flake-file";
+      # ... all your original inputs here
+    };
+    nixConfig = { }; # if you had any
+  };
+}
+```
+
+> **Important:** Run `git add` so that the new files are visible to Nix.
+
+### 4. Back up and regenerate
+
+```shell
+cp flake.nix flake.nix.bak
+nix run .#write-flake
+```
+
+### 5. Verify
+
+```shell
+cat flake.nix            # inspect the generated file
+nix flake check          # verify everything is in sync
+rm flake.nix.bak         # clean up if happy
+```
+
+## Splitting inputs across modules
+
+Once migrated, you can distribute input declarations to the modules that use them:
+
+```nix
+# modules/my-tool.nix
+{ inputs, lib, ... }: {
+  flake-file.inputs.my-tool.url = lib.mkDefault "github:owner/my-tool";
+  imports = lib.optionals (inputs ? my-tool) [ inputs.my-tool.flakeModule ];
+}
+```
+
+Remove the entry from `modules/inputs.nix` and regenerate. The result is the same `flake.nix`, but each module is self-contained.

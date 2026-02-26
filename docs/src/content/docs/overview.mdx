@@ -1,0 +1,76 @@
+---
+title: Overview
+description: Everything flake-file.
+---
+
+import { Card, CardGrid, LinkButton } from '@astrojs/starlight/components';
+
+## Core Idea
+
+flake-file treats `flake.nix` as a generated artifact. You declare inputs and settings as Nix module options, then regenerate the file whenever those declarations change.
+
+<CardGrid>
+  <Card title="What is flake-file?" icon="open-book">
+    Understand the problem it solves, who it's for, and how it compares to a plain `flake.nix`.
+    <LinkButton href="/explanation/what-is-flake-file" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="How it Works" icon="setting">
+    The module system, option schema, the `write-flake` app, and the `outputs` function.
+    <LinkButton href="/explanation/how-it-works" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+</CardGrid>
+
+## Getting Started
+
+<CardGrid>
+  <Card title="Quick Start" icon="rocket">
+    Bootstrap a new project with the `dendritic` template and generate your first `flake.nix` in minutes.
+    <LinkButton href="/tutorials/quick-start" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Migration Guide" icon="pencil">
+    Step-by-step guide for adopting flake-file in an existing flake-parts project.
+    <LinkButton href="/tutorials/migrate" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Bootstrapping" icon="add-document">
+    Generate a first `flake.nix` without any existing flake using a one-shot bootstrap command.
+    <LinkButton href="/tutorials/bootstrap" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+</CardGrid>
+
+## Guides
+
+<CardGrid>
+  <Card title="flakeModules" icon="puzzle">
+    All built-in flakeModules: `default`, `dendritic`, `import-tree`, `npins`, `unflake`, `allfollow`, `nix-auto-follow`, and `flake-parts-builder`.
+    <LinkButton href="/guides/flake-modules" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Templates" icon="document">
+    Ready-made project templates: `default`, `dendritic`, `parts`, `npins`, and `unflake`.
+    <LinkButton href="/guides/templates" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Outputs Function" icon="seti:config">
+    How `flake-file.outputs` works and why you should keep it as the default one-liner.
+    <LinkButton href="/guides/outputs" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Hooks" icon="list-format">
+    Run commands after writing or during check with `write-hooks` and `check-hooks`.
+    <LinkButton href="/guides/hooks" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Lock Flattening" icon="random">
+    Automatically flatten `flake.lock` with `allfollow` or `nix-auto-follow`.
+    <LinkButton href="/guides/lock-flattening" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="flake-parts-builder" icon="add-document">
+    Incrementally add and remove flake-parts templates with flake-parts-builder integration.
+    <LinkButton href="/guides/flake-parts-builder" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+</CardGrid>
+
+## Reference
+
+<CardGrid>
+  <Card title="All Options" icon="document">
+    Complete reference for every `flake-file.*` module option.
+    <LinkButton href="/reference/options" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+</CardGrid>

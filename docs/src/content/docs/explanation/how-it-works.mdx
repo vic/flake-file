@@ -1,0 +1,75 @@
+---
+title: How it Works
+description: The module system, option schema, write-flake, and the outputs function.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+
+flake-file integrates input definition as part of your Nix modules.
+
+It provides a set of module options under the `flake-file` namespace that describe the contents of `flake.nix`. 
+
+<Aside title="Schema based inputs!">
+Unlike unstable-nix flakes, flake-file inputs DO have a **typed** schema, one that
+mirrors Nix Flakes but actually implemented using the Nix module system.
+</Aside>
+
+When you run `nix run .#write-flake`, it evaluates those options and writes the file.
+
+
+```
+edit modules/*.nix     # declare flake-file options
+  ↓
+nix run .#write-flake  # extracts inputs and serializes
+  ↓ 
+flake.nix              # updated and locked
+```
+
+## The Module System
+
+Any Nix module can set `flake-file.*` options. Because this is the standard Nix module system, all the usual tools apply:
+
+- `lib.mkDefault` — set a value that can be overridden by other modules.
+- `lib.mkForce` — force a value regardless of what other modules set.
+- `lib.mkIf` — conditionally define an input.
+- Attribute merging — multiple files contribute to the same input set.
+
+```nix
+{ inputs, lib, ... }: {
+  flake-file.inputs.nixpkgs.url = lib.mkDefault "github:NixOS/nixpkgs/nixpkgs-unstable";
+  flake-file.inputs.nixpkgs-lib.follows = "nixpkgs";
+}
+```
+
+## The Option Schema
+
+Options mirror the flake schema and extend it further:
+
+| Namespace | Purpose |
+|---|---|
+| `flake-file.description` | Flake description string |
+| `flake-file.nixConfig` | Nix binary cache and substituter config |
+| `flake-file.inputs.<name>.*` | Input declarations (url, follows, flake, ref, …) |
+| `flake-file.outputs` | Literal Nix expression for the outputs function |
+| `flake-file.write-hooks` | Commands run after writing |
+| `flake-file.check-hooks` | Commands run during check |
+| `flake-file.prune-lock.*` | Automatic lock flattening |
+
+See the [Options Reference](/reference/options) for the complete table.
+
+## Apps: write-flake and flake check
+
+**`nix run .#write-flake`** collects inputs, serialises the merged options to valid Nix syntax, and writes `flake.nix`. It also runs any configured `write-hooks`.
+
+**`nix flake check`** verifies that `flake.nix` is up to date with the current module state. If it is stale, the check fails. Add this to CI.
+
+## The outputs Function
+
+`flake-file.outputs` is a *literal Nix string* that becomes the body of the `outputs` function in `flake.nix`. It defaults to:
+
+```nix
+inputs: import ./outputs.nix inputs
+```
+
+This keeps `flake.nix` as a pure dependency manifest. All Nix logic lives in `outputs.nix`. See the [Outputs guide](/guides/outputs) for details.
