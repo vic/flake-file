@@ -11,19 +11,25 @@ let
       ;
   };
 
-  npins.imports = [
+  base.imports = [
     ./options
+    ./write-inputs.nix
+  ];
+
+  npins.imports = [
+    base
     ./npins.nix
   ];
 
   unflake.imports = [
-    ./options
+    base
     ./unflake.nix
   ];
 
   default.imports = [
-    ./options
+    base
     ./write-flake.nix
+    ./flake-parts.nix
   ];
 
   allfollow.imports = [ ./prune-lock/allfollow.nix ];

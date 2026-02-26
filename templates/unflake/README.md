@@ -11,13 +11,13 @@ first producing a temporary `inputs.nix` from your config and then
 running unflake on it.
 
 ```shell
-nix-shell . -A unflake.env --run write-unflake
+nix-shell . -A flake-file.sh --run write-unflake
 ```
 
 You can also pass any unflake option:
 
 ```shell
-nix-shell . -A unflake.env --run 'write-unflake --verbose --backend nix'
+nix-shell . -A flake-file.sh --run 'write-unflake --verbose --backend nix'
 ```
 
 If you need to see the file that is being passed as `--inputs inputs.nix`
@@ -25,7 +25,7 @@ to the unflake command, you can generate it with:
 
 ```shell
 # (only recommended for debugging)
-nix-shell . -A unflake.env --run write-inputs
+nix-shell . -A flake-file.sh --run write-inputs
 
 # then, you can run unflake yourself:
 nix-shell https://ln-s.sh/unflake -A unflake-shell --run unflake
@@ -36,5 +36,5 @@ nix-shell https://ln-s.sh/unflake -A unflake-shell --run unflake
 Unflake has an npins backend to use it run:
 
 ```shell
-nix-shell . -A unflake.env --run 'write-unflake --backend npins'
+nix-shell . -A flake-file.sh --run 'write-unflake --backend npins'
 ```

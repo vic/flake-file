@@ -2,9 +2,8 @@
   lib,
   options,
   config,
-  inputs,
   ...
-}:
+}@top:
 let
   inherit (import ./../dev/modules/_lib lib) inputsExpr isNonEmptyString nixCode;
 
@@ -75,47 +74,50 @@ let
       '';
     };
 
-in
-{
-  config.perSystem =
-    { pkgs, ... }:
-    {
-      packages.write-flake =
-        let
-          hooks = lib.pipe config.flake-file.write-hooks [
-            (lib.sortOn (i: i.index))
-            (map (i: pkgs.lib.getExe (i.program pkgs)))
-            (lib.concatStringsSep "\n")
-          ];
-        in
-        pkgs.writeShellApplication {
-          name = "write-flake";
-          text = ''
-            cp ${formatted pkgs} flake.nix
-            ${hooks}
-          '';
-        };
-
-      checks.check-flake-file =
-        let
-          hooks = lib.pipe config.flake-file.check-hooks [
-            (lib.sortOn (i: i.index))
-            (map (i: pkgs.lib.getExe (i.program pkgs)))
-            (map (p: "${p} ${inputs.self}"))
-            (lib.concatStringsSep "\n")
-          ];
-        in
-        pkgs.runCommand "check-flake-file"
-          {
-            nativeBuildInputs = [ pkgs.diffutils ];
-          }
-          ''
-            set -e
-            diff -u ${inputs.self}/flake.nix ${formatted pkgs}
-            ${hooks}
-            touch $out
-          '';
-
+  write-flake =
+    pkgs:
+    let
+      hooks = lib.pipe config.flake-file.write-hooks [
+        (lib.sortOn (i: i.index))
+        (map (i: pkgs.lib.getExe (i.program pkgs)))
+        (lib.concatStringsSep "\n")
+      ];
+    in
+    pkgs.writeShellApplication {
+      name = "write-flake";
+      text = ''
+        cp ${formatted pkgs} flake.nix
+        ${hooks}
+      '';
     };
 
+  check-flake-file =
+    pkgs:
+    let
+      hooks = lib.pipe config.flake-file.check-hooks [
+        (lib.sortOn (i: i.index))
+        (map (i: pkgs.lib.getExe (i.program pkgs)))
+        (map (p: "${p} ${top.inputs.self}"))
+        (lib.concatStringsSep "\n")
+      ];
+    in
+    pkgs.runCommand "check-flake-file"
+      {
+        nativeBuildInputs = [ pkgs.diffutils ];
+      }
+      ''
+        set -e
+        diff -u ${top.inputs.self}/flake.nix ${formatted pkgs}
+        ${hooks}
+        touch $out
+      '';
+in
+{
+  config.flake-file.apps = { inherit write-flake; };
+  options.flake-file.check-flake-file = lib.mkOption {
+    default = check-flake-file;
+    readOnly = true;
+    visible = false;
+    internal = true;
+  };
 }

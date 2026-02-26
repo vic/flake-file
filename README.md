@@ -403,6 +403,20 @@ You are done! Now you can split dependencies from `modules/inputs.nix` into othe
 
 ---
 
+## Bootstrapping
+
+You can generate `flake.nix`, `inputs.nix`, `unflake.nix` or `npins` by using the following command:
+
+```shell
+# create a bootstrap module. add any dependencies you want
+echo '{ flake-file.inputs.flake-file.url = "github:vic/flake-file"; }' > bootstrap.nix # filename is not important
+
+# replace write-flake with: write-inputs / write-unflake / write-npins
+nix-shell https://github.com/vic/flake-file/archive/refs/heads/main.zip -A flake-file.sh --run write-flake --arg modules ./bootstrap.nix
+```
+
+`bootstrap.nix` can also be a `./modules` directory that will be auto-imported using import-tree.
+
 ## Development
 
 Use `nix develop ./dev` or with direnv: `use flake ./dev`.

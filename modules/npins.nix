@@ -1,6 +1,10 @@
 { lib, config, ... }:
 let
-  inherit (config.npins) pkgs;
+  inherit (config) flake-file;
+
+  inherit (import ./../dev/modules/_lib lib) inputsExpr;
+
+  inputs = inputsExpr flake-file.inputs;
 
   parseFlakeUrl =
     url:
@@ -101,9 +105,9 @@ let
     acc // (transitiveInputs name input)
   ) { };
 
-  pinnableInputs = lib.filterAttrs (_: v: v.url or "" != "") config.flake-file.inputs;
+  pinnableInputs = lib.filterAttrs (_: v: v.url or "" != "") inputs;
 
-  allTransitive = collectTransitive config.flake-file.inputs;
+  allTransitive = collectTransitive inputs;
 
   pinnableTransitive = lib.filterAttrs (_: v: v.url or "" != "") allTransitive;
 
@@ -124,50 +128,32 @@ let
 
   pinNames = lib.concatStringsSep " " (lib.attrNames allPins);
 
-  write-npins = pkgs.writeShellApplication {
-    name = "write-npins";
-    runtimeInputs = [
-      pkgs.npins
-      pkgs.jq
-    ];
-    text = ''
-      npins init --bare 2>/dev/null || true
-      ${addCommands}
-      wanted="${pinNames}"
-      if [ -f npins/sources.json ]; then
-        for existing in $(jq -r '.pins | keys[]' npins/sources.json); do
-          keep=false
-          for w in $wanted; do
-            if [ "$existing" = "$w" ]; then keep=true; break; fi
+  write-npins =
+    pkgs:
+    pkgs.writeShellApplication {
+      name = "write-npins";
+      runtimeInputs = [
+        pkgs.npins
+        pkgs.jq
+      ];
+      text = ''
+        npins init --bare 2>/dev/null || true
+        ${addCommands}
+        wanted="${pinNames}"
+        if [ -f npins/sources.json ]; then
+          for existing in $(jq -r '.pins | keys[]' npins/sources.json); do
+            keep=false
+            for w in $wanted; do
+              if [ "$existing" = "$w" ]; then keep=true; break; fi
+            done
+            if [ "$keep" = false ]; then
+              npins remove "$existing"
+            fi
           done
-          if [ "$keep" = false ]; then
-            npins remove "$existing"
-          fi
-        done
-      fi
-    '';
-  };
-
-  env = pkgs.mkShell {
-    buildInputs = [
-      pkgs.npins
-      write-npins
-    ];
-  };
+        fi
+      '';
+    };
 in
 {
-  options.npins = {
-    pkgs = lib.mkOption {
-      type = lib.types.raw;
-      description = "nixpkgs instance for npins generator";
-      default = import <nixpkgs> { };
-    };
-
-    env = lib.mkOption {
-      type = lib.types.raw;
-      readOnly = true;
-      internal = true;
-      default = env;
-    };
-  };
+  config.flake-file.apps = { inherit write-npins; };
 }
