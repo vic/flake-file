@@ -21,7 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        bootstrap: [inputs, flake, npins, unflake]
+        bootstrap:
+          - test-inputs
+          - test-flake
+          - test-unflake
+          - test-npins
+          - test-npins-follows
+          - test-npins-transitive
     env:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
@@ -30,23 +36,10 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: actions/checkout@v4
       - run: mkdir bootstrap
-      - run: nix-shell ./default.nix -A flake-file.sh --run write-${{matrix.bootstrap}} --arg modules ./modules/bootstrap.nix --argstr outdir bootstrap
-      - run: cat bootstrap/inputs.nix
-        if: ${{ matrix.bootstrap == 'inputs' }}
-      - run: cat bootstrap/flake.nix
-        if: ${{ matrix.bootstrap == 'flake' }}
-      - run: cat bootstrap/unflake.nix
-        if: ${{ matrix.bootstrap == 'unflake' }}
-      - run: cat bootstrap/npins/sources.json
-        if: ${{ matrix.bootstrap == 'npins' }}
-      - name: Assert bootstrap npins transitive discovery (flake-parts -> nixpkgs-lib)
-        if: ${{ matrix.bootstrap == 'npins' }}
-        run: |
-          jq -e '.pins | has("flake-parts")'  bootstrap/npins/sources.json
-          jq -e '.pins | has("nixpkgs-lib")'  bootstrap/npins/sources.json
+      - run: nix-shell ./dev/_bootstrap-tests.nix --run ${{matrix.bootstrap}} --argstr outdir bootstrap
   template:
     name: Check template ${{matrix.template}}
-    needs: [find-templates]
+    needs: [dev, find-templates]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -75,6 +68,7 @@ jobs:
           nix run .#write-flake -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
           nix flake check -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
   npins:
+    needs: [dev]
     name: Check npins
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'npins') }}
@@ -89,39 +83,8 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           echo "{ inputs, ... }: { npins.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
           nix-shell . -A npins.env --run write-npins
-  npins-transitive:
-    name: Check npins transitive discovery
-    runs-on: ubuntu-latest
-    env:
-      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: wimpysworld/nothing-but-nix@main
-      - uses: cachix/install-nix-action@v31
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: Run write-npins with neomacs (has transitive deps)
-        run: |
-          mkdir test-out
-          nix-shell ./default.nix -A flake-file.sh \
-            --run write-npins \
-            --arg modules ./modules/npins-transitive-test.nix \
-            --argstr outdir test-out
-      - name: Assert declared inputs are pinned
-        run: |
-          jq -e '.pins | has("neomacs")' test-out/npins/sources.json
-          jq -e '.pins | has("nixpkgs")' test-out/npins/sources.json
-      - name: Assert transitive deps are auto-discovered
-        run: |
-          jq -e '.pins | has("crane")'        test-out/npins/sources.json
-          jq -e '.pins | has("rust-overlay")' test-out/npins/sources.json
-          jq -e '.pins | has("nix-wpe-webkit")' test-out/npins/sources.json
-      - name: Assert dedup-by-name (nixpkgs stays as Channel, not re-pinned from neomacs dep)
-        run: |
-          jq -e '.pins.nixpkgs.type == "Channel"' test-out/npins/sources.json
-      - name: Show pinned sources
-        if: always()
-        run: cat test-out/npins/sources.json
   unflake:
+    needs: [dev]
     name: Check unflake
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'unflake') }}
@@ -137,6 +100,7 @@ jobs:
           echo "{ inputs, ... }: { unflake.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
           nix-shell . -A unflake.env --run 'write-unflake --verbose'
   dev:
+    needs: [bootstrap]
     name: Check flake dev
     runs-on: ubuntu-latest
     steps:

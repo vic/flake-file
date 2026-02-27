@@ -28,7 +28,7 @@ let
       name = "write-inputs";
       text = ''
         cd ${flake-file.intoPath}
-        cp ${inputsFile pkgs} "''${1:-inputs.nix}"
+        cat ${inputsFile pkgs} > "''${1:-inputs.nix}"
         ${lib.getExe pkgs.nixfmt} "''${1:-inputs.nix}"
       '';
     };

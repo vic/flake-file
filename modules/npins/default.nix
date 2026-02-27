@@ -1,7 +1,7 @@
 { lib, config, ... }:
 let
   inherit (config) flake-file;
-  inherit (import ./../dev/modules/_lib lib) inputsExpr;
+  inherit (import ../lib.nix lib) inputsExpr;
 
   inputs = inputsExpr flake-file.inputs;
   esc = lib.escapeShellArg;
