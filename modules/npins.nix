@@ -6,16 +6,10 @@ let
   inputs = inputsExpr flake-file.inputs;
   esc = lib.escapeShellArg;
 
-  pinnableInputs = lib.filterAttrs (_: v: v.url or "" != "") inputs;
-
-  # Seed the runtime queue with one tab-separated "name\turl" line per declared input.
-  queueSeed =
-    let
-      lines = lib.mapAttrsToList (
-        name: input: "  printf '%s\\t%s\\n' ${esc name} ${esc (input.url or "")}"
-      ) pinnableInputs;
-    in
-    "{\n" + lib.concatStringsSep "\n" lines + "\n} >> \"$QUEUE_FILE\"";
+  inherit (import ./inputs-lib.nix lib esc inputs)
+    followsSeed
+    queueSeed
+    ;
 
   write-npins =
     pkgs:
@@ -31,9 +25,10 @@ let
         cd ${flake-file.intoPath}
         npins init --bare 2>/dev/null || true
 
+        FOLLOWS_FILE=$(mktemp)
         SEEN_FILE=$(mktemp)
         QUEUE_FILE=$(mktemp)
-        trap 'rm -f "$SEEN_FILE" "$QUEUE_FILE"' EXIT
+        trap 'rm -f "$FOLLOWS_FILE" "$SEEN_FILE" "$QUEUE_FILE"' EXIT
 
         # Add a pin by its flake-style URL (github:o/r, gitlab:o/r, channel URL, etc.)
         npins_add_url() {
@@ -43,7 +38,11 @@ let
               spec="''${url#github:}" owner="''${spec%%/*}" spec="''${spec#*/}"
               repo="''${spec%%/*}" ref="''${spec#*/}"
               if [ "$ref" != "$repo" ]; then
-                npins add github --name "$name" -b "$ref" "$owner" "$repo"
+                # Explicit ref: try as branch, then as release tag, then common branches.
+                npins add github --name "$name" -b "$ref" "$owner" "$repo" 2>/dev/null \
+                  || npins add github --name "$name" "$owner" "$repo" 2>/dev/null \
+                  || npins add github --name "$name" -b main "$owner" "$repo" 2>/dev/null \
+                  || npins add github --name "$name" -b master "$owner" "$repo"
               else
                 # No explicit ref: prefer a release tag, fall back to common branches.
                 npins add github --name "$name" "$owner" "$repo" 2>/dev/null \
@@ -96,6 +95,9 @@ let
           rm -f "$flake_tmp" "$nix_tmp"
         }
 
+        # Pre-mark follows-only inputs so BFS never enqueues them.
+        ${followsSeed}
+
         # Seed the BFS queue with all declared inputs.
         ${queueSeed}
 
@@ -103,7 +105,8 @@ let
         while true; do
           name="" url=""
           while IFS=$'\t' read -r qname qurl; do
-            if ! grep -qxF "$qname" "$SEEN_FILE" 2>/dev/null; then
+            if ! grep -qxF "$qname" "$SEEN_FILE" 2>/dev/null && \
+               ! grep -qxF "$qname" "$FOLLOWS_FILE" 2>/dev/null; then
               name="$qname" url="$qurl"
               break
             fi

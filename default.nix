@@ -39,6 +39,7 @@ let
       ./modules
       ./modules/options
       ./modules/npins.nix
+      ./modules/deps.nix
       ./modules/unflake.nix
       ./modules/write-inputs.nix
       ./modules/write-flake.nix
