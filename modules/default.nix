@@ -7,7 +7,6 @@ let
       dendritic
       import-tree
       npins
-      deps
       unflake
       flake-options
       ;
@@ -23,11 +22,6 @@ let
   npins.imports = [
     base
     ./npins.nix
-  ];
-
-  deps.imports = [
-    base
-    ./deps.nix
   ];
 
   unflake.imports = [
