@@ -21,12 +21,12 @@ let
 
   npins.imports = [
     base
-    ./npins.nix
+    ./npins
   ];
 
   unflake.imports = [
     base
-    ./unflake.nix
+    ./unflake
   ];
 
   default.imports = [
