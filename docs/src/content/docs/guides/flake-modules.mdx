@@ -78,10 +78,16 @@ Source: [`modules/prune-lock/nix-auto-follow.nix`](https://github.com/vic/flake-
 
 Defines `flake-file` options for [npins](https://github.com/andir/npins)-based environments. Exposes `write-npins`. Supports `github`, `gitlab`, `channel`, `tarball`, and `git` schemes. Respects `follows` for deduplication. Prunes stale pins automatically.
 
-Source: [`modules/npins.nix`](https://github.com/vic/flake-file/tree/main/modules/npins.nix)
+Source: [`modules/npins`](https://github.com/vic/flake-file/tree/main/modules/npins)
 
 ## `flakeModules.unflake`
 
 Defines `flake-file` options for [unflake](https://codeberg.org/goldstein/unflake)-based environments. Exposes `write-unflake`.
 
-Source: [`modules/unflake.nix`](https://github.com/vic/flake-file/tree/main/modules/unflake.nix)
+Source: [`modules/unflake`](https://github.com/vic/flake-file/tree/main/modules/unflake)
+
+## `flakeModules.nixlock`
+
+Defines `flake-file` options for [nixlock](https://codeberg.org/FrdrCkII/nixlock)-based environments. Exposes `write-nixlock`.
+
+Source: [`modules/nixlock`](https://github.com/vic/flake-file/tree/main/modules/nixlock)

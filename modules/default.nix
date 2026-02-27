@@ -8,6 +8,7 @@ let
       import-tree
       npins
       unflake
+      nixlock
       flake-options
       ;
   };
@@ -27,6 +28,11 @@ let
   unflake.imports = [
     base
     ./unflake
+  ];
+
+  nixlock.imports = [
+    base
+    ./nixlock
   ];
 
   default.imports = [
@@ -65,6 +71,11 @@ let
   templates.unflake = {
     description = "unflake template";
     path = ./../templates/unflake;
+  };
+
+  templates.nixlock = {
+    description = "nixlock template";
+    path = ./../templates/nixlock;
   };
 
   templates.dendritic = {

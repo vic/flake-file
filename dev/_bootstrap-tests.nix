@@ -106,6 +106,17 @@ let
     '';
   };
 
+  test-nixlock = pkgs.writeShellApplication {
+    name = "test-nixlock";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-nixlock pkgs)
+    ];
+    text = ''
+      write-nixlock
+      grep vic/empty-flake/archive ${outdir}/nixlock.lock.nix
+    '';
+  };
+
 in
 pkgs.mkShell {
   buildInputs = [
@@ -115,5 +126,6 @@ pkgs.mkShell {
     test-npins
     test-npins-follows
     test-npins-transitive
+    test-nixlock
   ];
 }

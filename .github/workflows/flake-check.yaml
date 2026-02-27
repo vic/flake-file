@@ -25,6 +25,7 @@ jobs:
           - test-inputs
           - test-flake
           - test-unflake
+          - test-nixlock
           - test-npins
           - test-npins-follows
           - test-npins-transitive
@@ -82,12 +83,14 @@ jobs:
           cd templates/npins
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           echo "{ inputs, ... }: { npins.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
-          nix-shell . -A npins.env --run write-npins
+          nix-shell . -A flake-file.sh --run write-npins
   unflake:
     needs: [dev]
     name: Check unflake
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'unflake') }}
+    env:
+      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
       - uses: actions/checkout@v4
       - uses: wimpysworld/nothing-but-nix@main
@@ -97,8 +100,24 @@ jobs:
           set -e -o pipefail
           cd templates/unflake
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
-          echo "{ inputs, ... }: { unflake.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
-          nix-shell . -A unflake.env --run 'write-unflake --verbose'
+          nix-shell . -A flake-file.sh --run 'write-unflake --verbose'
+  nixlock:
+    needs: [dev]
+    name: Check nixlock
+    runs-on: ubuntu-latest
+    # if: ${{ contains(github.event.pull_request.labels.*.name, 'unflake') }}
+    env:
+      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: cachix/install-nix-action@v31
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: |
+          set -e -o pipefail
+          cd templates/nixlock
+          sed -i 's/# flake-file = import/flake-file = import/' default.nix
+          nix-shell . -A flake-file.sh --run write-nixlock
   dev:
     needs: [bootstrap]
     name: Check flake dev

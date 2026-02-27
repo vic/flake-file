@@ -9,7 +9,7 @@
   <a href="LICENSE"> <img src="https://img.shields.io/github/license/vic/flake-file" alt="License"/> </a>
 </p>
 
-# Generate `flake.nix`/`unflake.nix`/`npins` from inputs defined as module options.
+### Generate `flake.nix`/`unflake.nix`/`npins`/`nixlock` from inputs defined as module options.
 
 > `flake-file` and [vic](https://bsky.app/profile/oeiuwq.bsky.social)'s [dendritic libs](https://dendritic.oeiuwq.com) made for you with Love++ and AI--. If you like my work, consider [sponsoring](https://dendritic.oeiuwq.com/sponsor)
 
@@ -23,11 +23,11 @@ This means
 - Your inputs follow a **typed Input Schema**.
 - Your outputs can be defined on a **typed Output Schema**.
 
-> Despite the original flake-oriented name, it NOW also works on _stable Nix_, non-flakes environments via [npins](templates/npins) or [unflake](templates/unflake).
+> Despite the original flake-oriented name, it NOW also works on _stable Nix_, non-flakes environments via [npins](templates/npins), [unflake](templates/unflake), [nixlock](https://codeberg.org/FrdrCkII/nixlock)
 
 <table><tr><td>
 
-## Features
+### Features
 
 - Flake definition aggregated from Nix modules.
 - [Input](https://github.com/vic/flake-file/blob/main/modules/options/default.nix) and Output schemas based on Nix types.
@@ -39,7 +39,7 @@ This means
 - Incrementally add [flake-parts-builder](#parts_templates) templates.
 - Pick flakeModules for different feature sets.
 - [Dendritic](https://vic.github.io/dendrix/Dendritic.html) flake template.
-- Works on stable Nix, [npins](templates/npins) and [unflake](templates/unflake) environments.
+- Works on stable Nix, [npins](templates/npins), [unflake](templates/unflake), [nixlock](templates/nixlock) environments.
 
 </td><td>
 
