@@ -40,6 +40,7 @@ let
       ./../options
       ./../npins
       ./../unflake
+      ./../nixlock
       ./../write-inputs.nix
       ./../write-flake.nix
       ./../flake-options.nix
