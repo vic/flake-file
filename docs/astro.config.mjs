@@ -26,7 +26,7 @@ export default defineConfig({
       sidebar: [
         {
           label: "flake-file",
-          items: [{ label: "Overview", slug: "overview" }],
+          items: [{ label: "Docs Overview", slug: "overview" }],
         },
         {
           label: "Learn",
@@ -42,8 +42,16 @@ export default defineConfig({
           label: "Getting Started",
           items: [
             { label: "Quick Start", slug: "tutorials/quick-start" },
-            { label: "Migration Guide", slug: "tutorials/migrate" },
-            { label: "Bootstrapping", slug: "tutorials/bootstrap" },
+            {
+              label: "With Traditional Flake",
+              slug: "tutorials/migrate-traditional-flake",
+            },
+            {
+              label: "With Flake Parts",
+              slug: "tutorials/migrate-flake-parts",
+            },
+            { label: "With No Flakes", slug: "tutorials/migrate-no-flakes" },
+            { label: "Sandboxed Bootstrap", slug: "tutorials/bootstrap" },
           ],
         },
         {
@@ -62,7 +70,10 @@ export default defineConfig({
         },
         {
           label: "Reference",
-          items: [{ label: "All Options", slug: "reference/options" }],
+          items: [
+            { label: "All Options", slug: "reference/options" },
+            { label: "Bootstrap Options", slug: "reference/bootstrap" },
+          ],
         },
       ],
       components: {

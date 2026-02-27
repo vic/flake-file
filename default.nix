@@ -2,7 +2,8 @@
   pkgs ? import <nixpkgs> { },
   modules ? [ ],
   outdir ? ".",
-  bootstrap ? true,
+  bootstrap ? [ ],
+  outputs ? null,
   import-tree ? (
     pkgs.fetchFromGitHub {
       owner = "vic";
@@ -23,6 +24,15 @@ let
     type = lib.types.submodule { freeformType = lib.types.lazyAttrsOf lib.types.unspecified; };
   };
 
+  bootstrapInputs =
+    let
+      ins = import ./modules/bootstrap.nix { inherit lib; };
+      take = name: { flake-file.inputs.${name} = ins.flake-file.inputs.${name}; };
+      names =
+        if bootstrap == true then lib.attrNames ins.flake-file.inputs else lib.flatten [ bootstrap ];
+    in
+    map take names;
+
   module = {
     imports = [
       tree
@@ -33,7 +43,8 @@ let
       ./modules/write-inputs.nix
       ./modules/write-flake.nix
       ./modules/flake-options.nix
-      (if bootstrap then ./modules/bootstrap.nix else { })
+      { imports = bootstrapInputs; }
+      (if outputs == null then { } else { flake-file.outputs = outputs; })
     ];
     config.flake-file.intoPath = outdir;
     options = {
@@ -43,11 +54,10 @@ let
     };
   };
 
-  outputs =
-    (lib.evalModules {
-      modules = [ module ];
-      specialArgs.inputs.self.outPath = "";
-    }).config;
+  evaled = lib.evalModules {
+    modules = [ module ];
+    specialArgs.inputs.self.outPath = "";
+  };
 
 in
-outputs
+evaled.config

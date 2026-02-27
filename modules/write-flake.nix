@@ -87,7 +87,7 @@ let
       name = "write-flake";
       text = ''
         cd ${config.flake-file.intoPath}
-        cp ${formatted pkgs} flake.nix
+        cp --no-preserve=mode ${formatted pkgs} flake.nix
         ${hooks}
       '';
     };

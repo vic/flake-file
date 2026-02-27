@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Docs Overview
 description: Everything flake-file.
 ---
 
@@ -27,13 +27,25 @@ flake-file treats `flake.nix` as a generated artifact. You declare inputs and se
     Bootstrap a new project with the `dendritic` template and generate your first `flake.nix` in minutes.
     <LinkButton href="/tutorials/quick-start" variant="minimal" icon="right-arrow">Learn More</LinkButton>
   </Card>
+  <Card title="Bootstrapping" icon="add-document">
+    Generate a first `flake.nix` without any existing flake using a one-shot bootstrap command.
+    <LinkButton href="/tutorials/bootstrap" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
   <Card title="Migration Guide" icon="pencil">
     Step-by-step guide for adopting flake-file in an existing flake-parts project.
     <LinkButton href="/tutorials/migrate" variant="minimal" icon="right-arrow">Learn More</LinkButton>
   </Card>
-  <Card title="Bootstrapping" icon="add-document">
-    Generate a first `flake.nix` without any existing flake using a one-shot bootstrap command.
-    <LinkButton href="/tutorials/bootstrap" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  <Card title="Migrate a flake-parts flake" icon="pencil">
+    Adopt flake-file in a project that already uses flake-parts.
+    <LinkButton href="/tutorials/migrate-flake-parts" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Migrate a traditional flake" icon="pencil">
+    Adopt flake-file in a project with a traditional flake (no flake-parts).
+    <LinkButton href="/tutorials/migrate-traditional-flake" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Migrate without flakes" icon="pencil">
+    Adopt flake-file in a non-flake project using npins or unflake.
+    <LinkButton href="/tutorials/migrate-no-flakes" variant="minimal" icon="right-arrow">Learn More</LinkButton>
   </Card>
 </CardGrid>
 
@@ -72,5 +84,9 @@ flake-file treats `flake.nix` as a generated artifact. You declare inputs and se
   <Card title="All Options" icon="document">
     Complete reference for every `flake-file.*` module option.
     <LinkButton href="/reference/options" variant="minimal" icon="right-arrow">Learn More</LinkButton>
+  </Card>
+  <Card title="Bootstrap Command" icon="setting">
+    All arguments and apps for the one-shot bootstrap command.
+    <LinkButton href="/reference/bootstrap" variant="minimal" icon="right-arrow">Learn More</LinkButton>
   </Card>
 </CardGrid>

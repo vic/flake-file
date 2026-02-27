@@ -1,0 +1,103 @@
+---
+title: Bootstrap Command Reference
+description: All options for the flake-file bootstrap command.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The bootstrap command lets you generate `flake.nix`, `unflake.nix`, or `npins/` from scratch — without being inside an existing flake.
+
+```shell
+nix-shell https://github.com/vic/flake-file/archive/refs/heads/main.zip \
+  -A flake-file.sh --run <app> [--arg <name> <value>]...
+```
+
+## Apps
+
+The `flake-file.sh` shell provides these commands:
+
+| App | Description |
+| --- | --- |
+| `write-flake` | Generate a `flake.nix` file |
+| `write-inputs` | Generate an `inputs.nix` expression (for debugging) |
+| `write-unflake` | Generate `unflake.nix` via [unflake](https://codeberg.org/goldstein/unflake) |
+| `write-npins` | Generate/update `npins/` directory via [npins](https://github.com/andir/npins) |
+
+## Arguments
+
+All arguments are passed as `--arg <name> <value>` to `nix-shell`.
+
+### `modules`
+
+The Nix file or directory containing your flake-file module definitions. All `.nix` files in a directory are auto-imported via [import-tree](https://github.com/vic/import-tree).
+
+- **Type:** path
+- **Default:** `[]` (empty)
+
+```shell
+# Single file
+--arg modules ./flake-file.nix
+
+# Directory (all .nix files imported)
+--arg modules ./modules
+```
+
+### `bootstrap`
+
+Include predefined inputs from the built-in `bootstrap.nix`. When set to `true`, all bootstrap inputs are included. When set to a list, only the named inputs are included.
+
+- **Type:** `true` | list of input names
+- **Default:** `[]` (none)
+
+Available bootstrap inputs:
+
+| Name | Default URL |
+| --- | --- |
+| `import-tree` | `github:vic/import-tree` |
+| `flake-file` | `github:vic/flake-file` |
+| `flake-parts` | `github:hercules-ci/flake-parts` |
+| `nixpkgs` | `https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz` |
+
+```shell
+# Include all bootstrap inputs
+--arg bootstrap true
+
+# Include only specific ones
+--arg bootstrap '["flake-file" "nixpkgs"]'
+```
+
+<Aside type="tip">
+Bootstrap inputs use `lib.mkDefault`, so your modules can override any of them.
+</Aside>
+
+### `outdir`
+
+The directory where generated files are written.
+
+- **Type:** string
+- **Default:** `"."`
+
+<Aside type="caution" title="Important!">
+Always use `--argstr` since this value is a string not a Nix Path.
+</Aside>
+
+```shell
+--argstr outdir ./my-project
+```
+
+### `outputs`
+
+Override the `flake-file.outputs` expression. When not provided, the default from your modules is used.
+
+- **Type:** null | string (Nix expression)
+- **Default:** `null`
+
+```shell
+--argstr outputs 'inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules)'
+```
+
+Instead of the above, some special values are recognized: see [outputs.nix](https://github.com/vic/flake-file/blob/main/modules/options/outputs.nix)
+
+```shell
+--argstr outputs flake-parts
+```

@@ -1,0 +1,128 @@
+---
+title: With No Flakes
+description: Migrate a non-flake to flake-file
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+
+<Aside title="Fetching and locking Nix dependencies">
+flake-file is not a locking/fetching tool, we have plenty
+of tools for that in the ecosystem.
+
+flake-file has support
+for [`unflake`](https://codeberg.org/goldstein/unflake)
+and [`npins`](https://github.com/andir/npins)
+send PR for others.
+
+This guide shows npins as it is the most popular one.
+</Aside>
+
+
+Suppose you have a `default.nix` that looks like:
+
+```nix "(A)" "(B)"
+# default.nix
+let
+  sources = import ./npins;
+in
+{
+  nixosConfigurations.my-laptop = ...; # use sources
+}
+```
+
+First step is adding flake-like input definitions on it,
+or in a separate `./flake-file.nix` file.
+
+```nix
+# flake-file.nix
+{
+  flake-file.inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  };
+}
+```
+
+## Boostraping using `./flake-file.nix`
+
+<Aside type="caution" title="Backup your ./npins">
+The following bootstrap command will write `./npins` so make sure
+to rename your existing directory first.
+</Aside>
+
+And now, lets generate `./npins` from `./flake-file.nix`.
+
+```shell "./flake-file.nix" "write-npins"
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
+  -A flake-file.sh --run write-npins --arg modules ./flake-file.nix
+```
+
+> <small>See also: all [bootstrap command args](/reference/bootstrap)</small>
+
+
+Run the **same** command whenever your input changes and they
+will be reflected into your pins.
+
+<Aside title="You are done!">
+You can stop here and enjoy your dynamic inputs at `./flake-file.nix`.
+
+Simply run the same bootstrap command whenever inputs change.
+</Aside>
+
+## Enabling Modular non-flakes.
+
+Lets make use of Nix Modules in our non-flake.
+
+First, create a `./modules` directory and move
+our previous `default.nix` and `flake-file.nix` on it.
+
+```shell
+mkdir modules
+mv flake-file.nix modules/inputs.nix
+mv default.nix modules/default.nix
+```
+
+
+```diff lang="nix" "inputs" "flake."
+# modules/default.nix
++ { inputs, lib, ... }:
+  let
+-   sources = import ./npins;
+  in
+  {
++   imports = [ ./inputs.nix ];
+
+-   nixosConfigurations.my-laptop = ...; # use sources
++   nixosConfigurations.my-laptop = ...; # use inputs
+  }
+```
+
+Now create a new `defualt.nix` as follows:
+
+```nix
+# default.nix
+let
+  sources = import ./npins;
+  nixpkgs = import sources.nixpkgs { };
+  outputs = (nixpkgs.lib.evalModules {
+    modules = ./modules;
+    specialArgs = {
+      inputs = sources; # (A) NOTE: Not flake-like inputs.
+    };
+  }).config;
+in
+outputs
+```
+
+To update npins from inputs at ./modules do:
+
+```shell "./modules" "write-npins"
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
+  -A flake-file.sh --run write-npins --arg modules ./modules
+```
+
+### `(A)` flake-like inputs
+
+If you wish to have flake-like resolved inputs
+to use flakes from non-flake world, take a
+look at [with-inputs.nix](https://github.com/vic/flake-file/tree/main/templates/npins/with-inputs.nix) used by [templates/npins](https://github.com/vic/flake-file/tree/main/templates/npins/default.nix)
