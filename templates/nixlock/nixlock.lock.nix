@@ -1,8 +1,8 @@
 {
   "flake-file" = {
     "lock" = {
-      "hash" = "sha256-qIpm5BtK3EkqlGXBG0jCZ3sg3gdxyPxI10iubZwMGFk=";
-      "url" = "https://github.com/vic/flake-file/archive/8a5c8771ac5be1af11192bcd88e6a1cdabd038a5.tar.gz";
+      "hash" = "sha256-mVVAJ+QnmA/gbQmbPEi3RFtLJwWCjNslVxv1bhVRB2c=";
+      "url" = "https://github.com/vic/flake-file/archive/b0477cfb25e745dfd4e10a5a6b81ab4c4ad5c0f8.tar.gz";
     };
     "meta" = {
       "ref" = "HEAD";
@@ -12,9 +12,9 @@
   };
   "import-tree" = {
     "lock" = {
-      "hash" = "sha256-AkfVgWWxt1pa1SlfKzcL1oQpMzgP70U3fBtzXqEGOms=";
+      "hash" = "sha256-4TRO+jUycfR3g4KAbyK0wQEEJ7Xcmid2Ry+tWv4HPLw=";
       "url" =
-        "https://github.com/vic/import-tree/archive/78c35e32f2b499c25e0671e41662537a6b1edbf0.tar.gz";
+        "https://github.com/vic/import-tree/archive/205675fa599ff8a74b6c8c2cc5149cdaeac76f5f.tar.gz";
     };
     "meta" = {
       "ref" = "HEAD";
@@ -24,12 +24,24 @@
   };
   "nixpkgs" = {
     "lock" = {
-      "hash" = "sha256-OgUF+EoJ36hz3jo8qBuizb8suT0mu1n7mzmcGdeOjWE=";
+      "hash" = "sha256-BHKMR414WpfUddNyUtx2GR1VPl0R9sWGQs/opgYm9rc=";
       "url" = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     };
     "meta" = {
       "type" = "archive";
       "url" = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+    };
+  };
+  "with-inputs" = {
+    "lock" = {
+      "hash" = "sha256-5TOTPl8CYewaDoV5O7zvezQeA/NrXx3tzjstOMc2oN8=";
+      "url" =
+        "https://github.com/vic/with-inputs/archive/8eeec49f4d349ddee87aa6a60ba7f8b25781f747.tar.gz";
+    };
+    "meta" = {
+      "ref" = "HEAD";
+      "type" = "gitArchive";
+      "url" = "https://github.com/vic/with-inputs";
     };
   };
 }

@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, ... }@top:
 let
   inherit (config) flake-file;
 
@@ -46,7 +46,7 @@ in
     pkgs = lib.mkOption {
       type = lib.types.raw;
       description = "nixpkgs instance for unflake generator";
-      default = import <nixpkgs> { };
+      default = import (top.inputs.nixpkgs or <nixpkgs>) { };
     };
 
     apps = lib.mkOption {

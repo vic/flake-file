@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "619d2212482c104fd3bbc815d80c6227b1b01338",
-      "url": "https://github.com/vic/flake-file/archive/619d2212482c104fd3bbc815d80c6227b1b01338.tar.gz",
-      "hash": "sha256-SQhPQRbs35fQ8ZE7tbfHsf2eu5r+oICyZL1SpGIPvGg="
+      "revision": "b0477cfb25e745dfd4e10a5a6b81ab4c4ad5c0f8",
+      "url": "https://github.com/vic/flake-file/archive/b0477cfb25e745dfd4e10a5a6b81ab4c4ad5c0f8.tar.gz",
+      "hash": "sha256-mVVAJ+QnmA/gbQmbPEi3RFtLJwWCjNslVxv1bhVRB2c="
     },
     "import-tree": {
       "type": "Git",
@@ -22,14 +22,30 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "c968d3b54d12cf5d9c13f16f7c545a06c9d1fde6",
-      "url": "https://github.com/vic/import-tree/archive/c968d3b54d12cf5d9c13f16f7c545a06c9d1fde6.tar.gz",
-      "hash": "sha256-oYO4poyw0Sb/db2PigqugMlDwsvwLg6CSpFrMUWxA3Q="
+      "revision": "205675fa599ff8a74b6c8c2cc5149cdaeac76f5f",
+      "url": "https://github.com/vic/import-tree/archive/205675fa599ff8a74b6c8c2cc5149cdaeac76f5f.tar.gz",
+      "hash": "sha256-4TRO+jUycfR3g4KAbyK0wQEEJ7Xcmid2Ry+tWv4HPLw="
     },
     "nixpkgs": {
       "type": "Tarball",
       "url": "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz",
       "hash": "sha256-5xZ8rQTzV4cSAPMvIZpVpF05p5iwUnEuONeelwseA4g="
+    },
+    "with-inputs": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "vic",
+        "repo": "with-inputs"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v0.1.0",
+      "revision": "8eeec49f4d349ddee87aa6a60ba7f8b25781f747",
+      "url": "https://api.github.com/repos/vic/with-inputs/tarball/refs/tags/v0.1.0",
+      "hash": "sha256-5TOTPl8CYewaDoV5O7zvezQeA/NrXx3tzjstOMc2oN8="
     }
   },
   "version": 7
