@@ -12,59 +12,7 @@ let
 
   nlLibs = (import "${nixlock-source}/${flake-file.nixlock.version}").libs;
 
-  parseGithub =
-    path:
-    let
-      parts = lib.splitString "/" path;
-      owner = builtins.elemAt parts 0;
-      repo = builtins.elemAt parts 1;
-      ref = if builtins.length parts > 2 then builtins.elemAt parts 2 else "HEAD";
-    in
-    {
-      type = "gitArchive";
-      url = "https://github.com/${owner}/${repo}";
-      inherit ref;
-    };
-
-  parseGitlab =
-    path:
-    let
-      parts = lib.splitString "/" path;
-      owner = builtins.elemAt parts 0;
-      repo = builtins.elemAt parts 1;
-      ref = if builtins.length parts > 2 then builtins.elemAt parts 2 else "HEAD";
-    in
-    {
-      type = "gitArchive";
-      url = "https://gitlab.com/${owner}/${repo}";
-      inherit ref;
-    };
-
-  flakeUrlToNixlock =
-    url:
-    let
-      scheme = builtins.head (lib.splitString ":" url);
-      rest = lib.concatStringsSep ":" (builtins.tail (lib.splitString ":" url));
-    in
-    if scheme == "github" then
-      parseGithub rest
-    else if scheme == "gitlab" then
-      parseGitlab rest
-    else if lib.hasPrefix "git+" url then
-      {
-        type = "git";
-        url = lib.removePrefix "git+" url;
-        ref = "HEAD";
-      }
-    else if lib.hasPrefix "http" url then
-      {
-        type = "archive";
-        inherit url;
-      }
-    else
-      null;
-
-  toNixlockInput = _name: input: if input ? url then flakeUrlToNixlock input.url else null;
+  inherit (import ./parse.nix lib) toNixlockInput;
 
   inputsFile = lib.filterAttrs (_: v: v != null) (lib.mapAttrs toNixlockInput inputs);
 

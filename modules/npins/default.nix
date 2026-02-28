@@ -4,15 +4,30 @@ let
   inherit (import ../lib.nix lib) inputsExpr;
 
   inputs = inputsExpr flake-file.inputs;
-  esc = lib.escapeShellArg;
 
-  pinnableInputs = lib.filterAttrs (_: v: v.url or "" != "") inputs;
+  # Synthesise a canonical URL from attrset-form inputs (no url field).
+  gitHostScheme = { github = "github"; gitlab = "gitlab"; sourcehut = "sourcehut"; };
+
+  syntheticUrl = input:
+    let
+      scheme = gitHostScheme.${input.type or ""} or null;
+      ref = if input.ref or "" != "" then "/${input.ref}" else "";
+    in
+    if scheme != null && input.owner or "" != "" then
+      "${scheme}:${input.owner}/${input.repo or ""}${ref}"
+    else
+      null;
+
+  inputUrl = input:
+    if input.url or "" != "" then input.url
+    else syntheticUrl input;
+
+  pinnableInputs = lib.filterAttrs (_: input: inputUrl input != null) inputs;
 
   # Seed the runtime queue with one tab-separated "name\turl" line per declared input.
   queueSeed =
-    let
-      lines = lib.mapAttrsToList (name: input: "${name}\t${input.url or ""}") pinnableInputs;
-    in lib.concatStringsSep "\n" lines;
+    lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (name: input: "${name}\t${inputUrl input}") pinnableInputs);
 
   # Collect names of inputs that are explicitly skipped (follows = "") at any nesting level.
   collectSkipped =

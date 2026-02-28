@@ -13,29 +13,51 @@ echo "$queueSeed" > "$QUEUE_FILE"
 
 # Add a pin by its flake-style URL (github:o/r, gitlab:o/r, channel URL, etc.)
 npins_add_url() {
-    local name="$1" url="$2" spec owner repo ref channel
+    local name="$1" url="$2" spec owner repo ref channel gitbase q
+    # Strip wrapper prefixes, then re-dispatch.
     case "$url" in
+    tarball+*) npins_add_url "$name" "${url#tarball+}"; return ;;
+    file+*)    npins_add_url "$name" "${url#file+}";    return ;;
+    git+*)
+        gitbase="${url#git+}"
+        if [[ "$gitbase" == *"?"* ]]; then
+            q="${gitbase#*\?}" gitbase="${gitbase%%\?*}"
+            ref=$(printf '%s' "$q" | tr '&' '\n' | sed -n 's/^ref=//p' | head -1)
+        else
+            ref=""
+        fi
+        if [ -n "$ref" ]; then
+            npins add git --name "$name" -b "$ref" "$gitbase"
+        else
+            npins add git --name "$name" "$gitbase" 2>/dev/null \
+                || npins add git --name "$name" -b main "$gitbase" 2>/dev/null \
+                || npins add git --name "$name" -b master "$gitbase"
+        fi ;;
     github:*)
         spec="${url#github:}" owner="${spec%%/*}" spec="${spec#*/}"
         repo="${spec%%/*}" ref="${spec#*/}"
         if [ "$ref" != "$repo" ]; then
-        npins add github --name "$name" -b "$ref" "$owner" "$repo"
+            npins add github --name "$name" -b "$ref" "$owner" "$repo"
         else
-        # No explicit ref: prefer a release tag, fall back to common branches.
-        npins add github --name "$name" "$owner" "$repo" 2>/dev/null \
-            || npins add github --name "$name" -b main "$owner" "$repo" 2>/dev/null \
-            || npins add github --name "$name" -b master "$owner" "$repo"
+            npins add github --name "$name" "$owner" "$repo" 2>/dev/null \
+                || npins add github --name "$name" -b main "$owner" "$repo" 2>/dev/null \
+                || npins add github --name "$name" -b master "$owner" "$repo"
         fi ;;
     gitlab:*)
         spec="${url#gitlab:}" owner="${spec%%/*}" spec="${spec#*/}"
         repo="${spec%%/*}" ref="${spec#*/}"
         if [ "$ref" != "$repo" ]; then
-        npins add gitlab --name "$name" -b "$ref" "$owner" "$repo"
+            npins add gitlab --name "$name" -b "$ref" "$owner" "$repo"
         else
-        npins add gitlab --name "$name" "$owner" "$repo" 2>/dev/null \
-            || npins add gitlab --name "$name" -b main "$owner" "$repo" 2>/dev/null \
-            || npins add gitlab --name "$name" -b master "$owner" "$repo"
+            npins add gitlab --name "$name" "$owner" "$repo" 2>/dev/null \
+                || npins add gitlab --name "$name" -b main "$owner" "$repo" 2>/dev/null \
+                || npins add gitlab --name "$name" -b master "$owner" "$repo"
         fi ;;
+    sourcehut:*)
+        spec="${url#sourcehut:}" owner="${spec%%/*}" repo="${spec#*/}"
+        ref="${repo#*/}" repo="${repo%%/*}"
+        [ "$ref" = "$repo" ] && ref="main"
+        npins add git --name "$name" -b "$ref" "https://git.sr.ht/${owner}/${repo}" ;;
     https://channels.nixos.org/*|https://releases.nixos.org/*)
         channel=$(printf '%s' "$url" | sed 's|https://[^/]*/||;s|/.*||')
         npins add channel --name "$name" "$channel" ;;
