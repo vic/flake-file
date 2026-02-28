@@ -19,6 +19,31 @@ let
     outputs = _: { };
   };
 
+  all-inputs-schemes = bootstrap {
+    inputs.simple.url = "github:vic/empty-flake";
+    inputs.withBranch.url = "github:vic/empty-flake/main";
+    inputs.noflake = {
+      url = "github:vic/empty-flake/main";
+      flake = false;
+    };
+    inputs.gitHttps.url = "git+https://github.com/vic/empty-flake";
+    inputs.tarball.url = "https://github.com/vic/empty-flake/archive/main.tar.gz";
+    inputs.tarballPlus.url = "tarball+https://github.com/vic/empty-flake/archive/main.tar.gz";
+    inputs.fileHttps.url = "file+https://github.com/vic/empty-flake/archive/main.tar.gz";
+    inputs.attrGh = {
+      type = "github";
+      owner = "vic";
+      repo = "empty-flake";
+    };
+    inputs.attrGhRef = {
+      type = "github";
+      owner = "vic";
+      repo = "empty-flake";
+      ref = "main";
+    };
+    inputs.followsSimple.follows = "simple";
+  };
+
   flake-parts = bootstrap {
     inputs.flake-parts.url = "github:hercules-ci/flake-parts";
   };
@@ -114,6 +139,28 @@ let
     '';
   };
 
+  test-npins-schemes = pkgs.writeShellApplication {
+    name = "test-npins-schemes";
+    runtimeInputs = [
+      (all-inputs-schemes.flake-file.apps.write-npins pkgs)
+      pkgs.jq
+    ];
+    text = ''
+      write-npins
+      cat ${outdir}/npins/sources.json
+      jq -e '.pins | has("simple")'      ${outdir}/npins/sources.json
+      jq -e '.pins | has("withBranch")'  ${outdir}/npins/sources.json
+      jq -e '.pins | has("noflake")'     ${outdir}/npins/sources.json
+      jq -e '.pins | has("gitHttps")'    ${outdir}/npins/sources.json
+      jq -e '.pins | has("tarball")'     ${outdir}/npins/sources.json
+      jq -e '.pins | has("tarballPlus")' ${outdir}/npins/sources.json
+      jq -e '.pins | has("fileHttps")'   ${outdir}/npins/sources.json
+      jq -e '.pins | has("attrGh")'      ${outdir}/npins/sources.json
+      jq -e '.pins | has("attrGhRef")'   ${outdir}/npins/sources.json
+      jq -e '.pins | has("followsSimple") | not' ${outdir}/npins/sources.json
+    '';
+  };
+
   test-unflake = pkgs.writeShellApplication {
     name = "test-unflake";
     runtimeInputs = [
@@ -132,7 +179,29 @@ let
     ];
     text = ''
       write-nixlock
-      grep vic/empty-flake/archive ${outdir}/nixlock.lock.nix
+      grep empty ${outdir}/nixlock.lock.nix
+    '';
+  };
+
+  test-nixlock-schemes = pkgs.writeShellApplication {
+    name = "test-nixlock-schemes";
+    runtimeInputs = [
+      (all-inputs-schemes.flake-file.apps.write-nixlock pkgs)
+    ];
+    text = ''
+      write-nixlock
+      cat ${outdir}/nixlock.lock.nix
+      grep '"simple"' ${outdir}/nixlock.lock.nix
+      grep '"withBranch"' ${outdir}/nixlock.lock.nix
+      grep '"noflake"' ${outdir}/nixlock.lock.nix
+      grep '"gitHttps"' ${outdir}/nixlock.lock.nix
+      grep '"tarball"' ${outdir}/nixlock.lock.nix
+      grep '"tarballPlus"' ${outdir}/nixlock.lock.nix
+      grep '"fileHttps"' ${outdir}/nixlock.lock.nix
+      grep '"attrGh"' ${outdir}/nixlock.lock.nix
+      grep '"attrGhRef"' ${outdir}/nixlock.lock.nix
+      if grep '"followsSimple"' ${outdir}/nixlock.lock.nix; then exit 1; fi
+      grep vic/empty-flake ${outdir}/nixlock.lock.nix
     '';
   };
 
@@ -143,9 +212,11 @@ pkgs.mkShell {
     test-flake
     test-unflake
     test-npins
+    test-npins-schemes
     test-npins-skip
     test-npins-follows
     test-npins-transitive
     test-nixlock
+    test-nixlock-schemes
   ];
 }
