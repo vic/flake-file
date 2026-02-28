@@ -29,6 +29,11 @@ let
     inputs.flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
   };
 
+  flake-parts-skip = bootstrap {
+    inputs.flake-parts.url = "github:hercules-ci/flake-parts";
+    inputs.flake-parts.inputs.nixpkgs-lib.follows = "";
+  };
+
   test-inputs = pkgs.writeShellApplication {
     name = "test-inputs";
     runtimeInputs = [
@@ -91,7 +96,21 @@ let
       write-npins
       cat ${outdir}/npins/sources.json
       jq -e '.pins."flake-parts".url | contains("hercules-ci/flake-parts")' ${outdir}/npins/sources.json
-      echo FAIL jq -e '.pins."nixpkgs-lib".url | contains("vic/empty")' ${outdir}/npins/sources.json
+      jq -e '.pins."nixpkgs-lib".url | contains("vic/empty")' ${outdir}/npins/sources.json
+    '';
+  };
+
+  test-npins-skip = pkgs.writeShellApplication {
+    name = "test-npins-skip";
+    runtimeInputs = [
+      (flake-parts-skip.flake-file.apps.write-npins pkgs)
+      pkgs.jq
+    ];
+    text = ''
+      write-npins
+      cat ${outdir}/npins/sources.json
+      jq -e '.pins."flake-parts".url | contains("hercules-ci/flake-parts")' ${outdir}/npins/sources.json
+      jq -e '.pins | has("nixpkgs-lib") | not' ${outdir}/npins/sources.json
     '';
   };
 
@@ -124,6 +143,7 @@ pkgs.mkShell {
     test-flake
     test-unflake
     test-npins
+    test-npins-skip
     test-npins-follows
     test-npins-transitive
     test-nixlock

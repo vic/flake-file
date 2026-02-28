@@ -14,6 +14,22 @@ let
       lines = lib.mapAttrsToList (name: input: "${name}\t${input.url or ""}") pinnableInputs;
     in lib.concatStringsSep "\n" lines;
 
+  # Collect names of inputs that are explicitly skipped (follows = "") at any nesting level.
+  collectSkipped =
+    inputMap:
+    lib.concatLists (
+      lib.mapAttrsToList (
+        name: input:
+        let
+          here = lib.optional (input ? follows && input.follows == "") name;
+          nested = if input ? inputs then collectSkipped input.inputs else [ ];
+        in
+        here ++ nested
+      ) inputMap
+    );
+
+  skipSet = lib.concatStringsSep "\n" (collectSkipped inputs);
+
   write-npins =
     pkgs:
     pkgs.writeShellApplication {
@@ -26,7 +42,7 @@ let
       ];
       runtimeEnv = {
         out = flake-file.intoPath;
-        inherit queueSeed;
+        inherit queueSeed skipSet;
       };
       text = builtins.readFile ./npins.bash;
     };

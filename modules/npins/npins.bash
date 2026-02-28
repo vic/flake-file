@@ -5,6 +5,9 @@ SEEN_FILE=$(mktemp)
 QUEUE_FILE=$(mktemp)
 trap 'rm -f "$SEEN_FILE" "$QUEUE_FILE"' EXIT
 
+# Pre-mark skipped inputs (follows="") as seen so they are never pinned.
+printf '%s\n' "$skipSet" | grep -v '^$' >> "$SEEN_FILE" || true
+
 # Seed the BFS queue with all declared inputs.
 echo "$queueSeed" > "$QUEUE_FILE"
 

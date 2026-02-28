@@ -16,19 +16,25 @@ jobs:
           templates=$(find templates -mindepth 2 -maxdepth 2  -name flake.nix -print0 | xargs -0 dirname | xargs -n 1 basename | jq -R | jq -sc)
           echo "$templates"
           echo "templates=$templates" >> $GITHUB_OUTPUT
+  find-bootstrap-tests:
+    name: Find bootstrap tests
+    runs-on: ubuntu-latest
+    outputs:
+      tests: ${{ steps.tests.outputs.tests }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tests
+        run: |
+          tests=$(awk '/buildInputs = \[/{p=1} p && /test-/{print $1} /^\s*\]/{p=0}' dev/_bootstrap-tests.nix | jq -R | jq -sc)
+          echo "$tests"
+          echo "tests=$tests" >> $GITHUB_OUTPUT
   bootstrap:
     name: Bootstrap ${{matrix.bootstrap}}
+    needs: [find-bootstrap-tests]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        bootstrap:
-          - test-inputs
-          - test-flake
-          - test-unflake
-          - test-nixlock
-          - test-npins
-          - test-npins-follows
-          - test-npins-transitive
+        bootstrap: ${{ fromJSON(needs.find-bootstrap-tests.outputs.tests) }}
     env:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
