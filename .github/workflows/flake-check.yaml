@@ -16,25 +16,9 @@ jobs:
           templates=$(find templates -mindepth 2 -maxdepth 2  -name flake.nix -print0 | xargs -0 dirname | xargs -n 1 basename | jq -R | jq -sc)
           echo "$templates"
           echo "templates=$templates" >> $GITHUB_OUTPUT
-  find-bootstrap-tests:
-    name: Find bootstrap tests
-    runs-on: ubuntu-latest
-    outputs:
-      tests: ${{ steps.tests.outputs.tests }}
-    steps:
-      - uses: actions/checkout@v4
-      - id: tests
-        run: |
-          tests=$(awk '/buildInputs = \[/{p=1} p && /test-/{print $1} /^\s*\]/{p=0}' dev/_bootstrap-tests.nix | jq -R | jq -sc)
-          echo "$tests"
-          echo "tests=$tests" >> $GITHUB_OUTPUT
   bootstrap:
-    name: Bootstrap ${{matrix.bootstrap}}
-    needs: [find-bootstrap-tests]
+    name: Bootstrap
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        bootstrap: ${{ fromJSON(needs.find-bootstrap-tests.outputs.tests) }}
     env:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
@@ -42,8 +26,7 @@ jobs:
       - uses: cachix/install-nix-action@v31
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: actions/checkout@v4
-      - run: mkdir bootstrap
-      - run: nix-shell ./dev/_bootstrap-tests.nix --run ${{matrix.bootstrap}} --argstr outdir bootstrap
+      - run: nix-shell ./dev/bootstrap-tests.nix --run test-all
   template:
     name: Check template ${{matrix.template}}
     needs: [dev, find-templates]
@@ -125,7 +108,7 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           nix-shell . -A flake-file.sh --run write-nixlock
   dev:
-    needs: [bootstrap]
+    needs: [bootstrap, nix-fmt]
     name: Check flake dev
     runs-on: ubuntu-latest
     steps:

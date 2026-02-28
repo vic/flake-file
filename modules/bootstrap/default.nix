@@ -43,6 +43,7 @@ let
       ./../nixlock
       ./../write-inputs.nix
       ./../write-flake.nix
+      ./../write-lock.nix
       ./../flake-options.nix
       { imports = bootstrapInputs; }
       (if outputs == null then { } else { flake-file.outputs = outputs; })
