@@ -1,8 +1,8 @@
 {
   "flake-file" = {
     "lock" = {
-      "hash" = "sha256-mVVAJ+QnmA/gbQmbPEi3RFtLJwWCjNslVxv1bhVRB2c=";
-      "url" = "https://github.com/vic/flake-file/archive/b0477cfb25e745dfd4e10a5a6b81ab4c4ad5c0f8.tar.gz";
+      "hash" = "sha256-5FB/FQ+gCvFbEuyMxydkUHuMCe0UEgMra5jI2D6SAQU=";
+      "url" = "https://github.com/vic/flake-file/archive/cdb4abe76b3ff0b611343514f584faa2688a12af.tar.gz";
     };
     "meta" = {
       "ref" = "HEAD";
@@ -34,9 +34,9 @@
   };
   "with-inputs" = {
     "lock" = {
-      "hash" = "sha256-5TOTPl8CYewaDoV5O7zvezQeA/NrXx3tzjstOMc2oN8=";
+      "hash" = "sha256-WFCkvOrArY0rhIPLESqitQHDpl1NFBCK4/7/z6c1040=";
       "url" =
-        "https://github.com/vic/with-inputs/archive/8eeec49f4d349ddee87aa6a60ba7f8b25781f747.tar.gz";
+        "https://github.com/vic/with-inputs/archive/ca62018475be1999e57fbfa7ec14ebea7c6e483d.tar.gz";
     };
     "meta" = {
       "ref" = "HEAD";

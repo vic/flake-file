@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "b0477cfb25e745dfd4e10a5a6b81ab4c4ad5c0f8",
-      "url": "https://github.com/vic/flake-file/archive/b0477cfb25e745dfd4e10a5a6b81ab4c4ad5c0f8.tar.gz",
-      "hash": "sha256-mVVAJ+QnmA/gbQmbPEi3RFtLJwWCjNslVxv1bhVRB2c="
+      "revision": "cdb4abe76b3ff0b611343514f584faa2688a12af",
+      "url": "https://github.com/vic/flake-file/archive/cdb4abe76b3ff0b611343514f584faa2688a12af.tar.gz",
+      "hash": "sha256-5FB/FQ+gCvFbEuyMxydkUHuMCe0UEgMra5jI2D6SAQU="
     },
     "import-tree": {
       "type": "Git",

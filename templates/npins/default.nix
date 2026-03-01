@@ -1,8 +1,6 @@
 let
   sources = import ./npins;
-  with-inputs = import sources.with-inputs;
-
-  locals ={
+  with-inputs = import sources.with-inputs sources {
     # uncomment on CI for local checkout
     # flake-file = import ./../../modules;
   };
@@ -17,4 +15,4 @@ let
       };
     }).config;
 in
-with-inputs sources locals outputs
+with-inputs outputs

@@ -1,4 +1,9 @@
 let
+  sources = import ./unflake.nix;
+  with-inputs = import sources.with-inputs sources {
+    # uncomment to use local checkout on CI
+    # flake-file = import ./../../modules;
+  };
 
   outputs =
     inputs:
@@ -6,16 +11,5 @@ let
       modules = [ (inputs.import-tree ./modules) ];
       specialArgs = { inherit inputs; };
     }).config;
-
-  withInputs =
-    inputs: outputs:
-    outputs (
-      inputs
-      // {
-        # uncomment to use local checkout on CI
-        # flake-file = import ./../../modules;
-      }
-    );
-
 in
-(import ./unflake.nix withInputs) outputs
+with-inputs outputs

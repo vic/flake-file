@@ -1,9 +1,15 @@
 let
-  with-inputs = import sources.with-inputs;
-  locals = {
+  with-inputs = import sources.with-inputs sources {
     # uncomment for local checkout on CI
     # flake-file = import ./../../modules;
   };
+
+  outputs =
+    inputs:
+    (inputs.nixpkgs.lib.evalModules {
+      modules = [ (inputs.import-tree ./modules) ];
+      specialArgs = { inherit inputs; };
+    }).config;
 
   sources = builtins.mapAttrs (
     _n: v:
@@ -15,12 +21,5 @@ let
       };
     }
   ) (import ./nixlock.lock.nix);
-
-  outputs =
-    inputs:
-    (inputs.nixpkgs.lib.evalModules {
-      modules = [ (inputs.import-tree ./modules) ];
-      specialArgs = { inherit inputs; };
-    }).config;
 in
-with-inputs sources locals outputs
+with-inputs outputs
