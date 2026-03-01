@@ -18,6 +18,7 @@ let
   base.imports = [
     ./options
     ./write-inputs.nix
+    ./write-lock.nix
   ];
 
   npins.imports = [

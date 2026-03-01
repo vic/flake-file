@@ -18,6 +18,7 @@ The `flake-file.sh` shell provides these commands:
 
 | App | Description |
 | --- | --- |
+| **`write-lock`** | Detect existing lock file and delegate to one of the following as appropriate; requires a lock file __already present__ |
 | `write-flake` | Generate a `flake.nix` file |
 | `write-inputs` | Generate an `inputs.nix` expression (for debugging) |
 | `write-unflake` | Generate `unflake.nix` via [unflake](https://codeberg.org/goldstein/unflake) |

@@ -1,0 +1,41 @@
+{ lib, config, ... }:
+let
+  inherit (config) flake-file;
+  apps = flake-file.apps;
+
+  candidates = [
+    {
+      file = "flake.lock";
+      app = "write-flake";
+    }
+    {
+      file = "npins/sources.json";
+      app = "write-npins";
+    }
+    {
+      file = flake-file.nixlock.lockFileName;
+      app = "write-nixlock";
+    }
+    {
+      file = "unflake.nix";
+      app = "write-unflake";
+    }
+  ];
+
+  available = builtins.filter (d: apps ? ${d.app}) candidates;
+
+  dispatch = lib.concatMapStringsSep "\n" (
+    d: ''[ -e ${lib.escapeShellArg "${flake-file.intoPath}/${d.file}"} ] && exec ${d.app} "$@"''
+  ) available;
+
+  write-lock =
+    pkgs:
+    pkgs.writeShellApplication {
+      name = "write-lock";
+      runtimeInputs = map (d: apps.${d.app} pkgs) available;
+      text = dispatch;
+    };
+in
+{
+  config.flake-file.apps = { inherit write-lock; };
+}

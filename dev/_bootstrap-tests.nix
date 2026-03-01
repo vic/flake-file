@@ -183,6 +183,57 @@ let
     '';
   };
 
+  test-write-lock-flake = pkgs.writeShellApplication {
+    name = "test-write-lock-flake";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-lock pkgs)
+    ];
+    text = ''
+      echo "{ }" > ${outdir}/flake.lock
+      write-lock
+      [ -e ${outdir}/flake.nix ]
+      grep github:vic/empty-flake ${outdir}/flake.nix
+    '';
+  };
+
+  test-write-lock-npins = pkgs.writeShellApplication {
+    name = "test-write-lock-npins";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-lock pkgs)
+      pkgs.jq
+    ];
+    text = ''
+      mkdir -p ${outdir}/npins
+      echo '{"pins":{},"version":7}' > ${outdir}/npins/sources.json
+      write-lock
+      jq -e '.pins | has("empty")' ${outdir}/npins/sources.json
+    '';
+  };
+
+  test-write-lock-nixlock = pkgs.writeShellApplication {
+    name = "test-write-lock-nixlock";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-lock pkgs)
+    ];
+    text = ''
+      echo '{ }' > ${outdir}/nixlock.lock.nix
+      write-lock
+      grep empty ${outdir}/nixlock.lock.nix
+    '';
+  };
+
+  test-write-lock-unflake = pkgs.writeShellApplication {
+    name = "test-write-lock-unflake";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-lock pkgs)
+    ];
+    text = ''
+      echo '{ }' > ${outdir}/unflake.nix
+      write-lock --backend nix
+      grep unflake_github_vic_empty-flake ${outdir}/unflake.nix
+    '';
+  };
+
   test-nixlock-schemes = pkgs.writeShellApplication {
     name = "test-nixlock-schemes";
     runtimeInputs = [
@@ -218,5 +269,9 @@ pkgs.mkShell {
     test-npins-transitive
     test-nixlock
     test-nixlock-schemes
+    test-write-lock-flake
+    test-write-lock-npins
+    test-write-lock-nixlock
+    test-write-lock-unflake
   ];
 }
