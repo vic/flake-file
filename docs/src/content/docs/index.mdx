@@ -43,6 +43,17 @@ Ever wanted to interpolate a string just to discover inputs are **NOT REAL** Nix
 **A**: It's a subset of Nix that doesn't allow computation in the flake metadata attributes.
 </Aside>
 
+### [Single Step Adoption](https://flake-file.oeiuwq.com/tutorials/migrate-traditional-flake/)
+
+```shell
+mv flake.nix flake-file.nix
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
+  -A flake-file.sh --run write-flake \
+  --arg modules ./flake-file.nix --argstr outputs flake-file
+```
+
+### Features
+
 <CardGrid>
   <Card title="Modular Inputs" icon="puzzle">
     Define `flake.nix` inputs in separate modules using the Nix module system and the **real** Nix language features. Use `lib.mkDefault` or interpolate Nix expressions, etc.
