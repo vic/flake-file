@@ -34,8 +34,6 @@ jobs:
     strategy:
       matrix:
         template: ${{ fromJSON(needs.find-templates.outputs.templates) }}
-        exclude:
-          - template: "unflake"
     steps:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: cachix/install-nix-action@v31
@@ -94,7 +92,7 @@ jobs:
     needs: [dev]
     name: Check nixlock
     runs-on: ubuntu-latest
-    # if: ${{ contains(github.event.pull_request.labels.*.name, 'unflake') }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'nixlock') }}
     env:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
