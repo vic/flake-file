@@ -6,8 +6,6 @@ description: Migrate a traditional flake to flake-file (no flake-parts)
 import { Aside } from '@astrojs/starlight/components';
 
 
-As always, start a new empty commit so you can always revert to safe state.
-
 Suppose you have a flake that looks like:
 
 ```nix
@@ -25,6 +23,10 @@ Suppose you have a flake that looks like:
 ## Boostraping flake-file
 
 First, move your `flake.nix` file as `flake-file.nix`.
+
+```shell
+mv flake.nix flake-file.nix
+```
 
 And now, the bootstrapping magic step: 
 
