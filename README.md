@@ -50,3 +50,10 @@ This means
 </td></tr></table>
 
 ## Learn more: [Documentation](https://flake-file.oeiuwq.com)
+
+## Try it Now!
+
+```shell
+mv flake.nix flake-file.nix
+nix-shell https://github.com/vic/flake-file/archive/main.zip -A flake-file.sh --run bootstrap
+```

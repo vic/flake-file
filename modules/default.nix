@@ -1,7 +1,8 @@
 let
   flakeModules = {
     inherit
-      default
+      flake # for non-flake-parts flakes
+      default # for flake-parts flakes (keep as default for compatibility)
       allfollow
       nix-auto-follow
       dendritic
@@ -12,6 +13,13 @@ let
       flake-options
       ;
   };
+
+  # A flake without flake-parts. (traditional flake)
+  flake.imports = [
+    base
+    flake-options
+    ./write-flake.nix
+  ];
 
   flake-options = ./flake-options.nix;
 
