@@ -56,14 +56,16 @@ nix-shell https://github.com/vic/flake-file/archive/main.tar.gz -A flake-file.sh
   <Card title="Modular Inputs" icon="puzzle">
     Define `flake.nix` inputs in separate modules using the Nix module system and the **real** Nix language features. Use `lib.mkDefault` or interpolate Nix expressions, etc.
   </Card>
-  <Card title="Single Command Regeneration" icon="rocket">
-    Run `nix run .#write-flake` to regenerate `flake.nix` from your options. A flake check enforces that files stay in sync.
-    Also provides `nix-shell` commands for stable Nix world.
+  <Card title="Input and Output Flake Schemas" icon="nix">
+    Not only your input definitions are checked by a typed schema, but you can also **define custom** schemas for your flake outputs.
   </Card>
   <Card title="Lock Flattening" icon="list-format">
     Built-in support for automatic `flake.lock` flattening via `allfollow` or `nix-auto-follow`.
   </Card>
   <Card title="Multiple Backends" icon="setting">
     Generate `flake.nix`, `unflake.nix`, `nixlock`, or `npins/` from the same module options. Switch backends without rewriting your modules.
-  </Card>
+   
+    Run `nix run .#write-flake` to regenerate `flake.nix` from your options. A flake check enforces that files stay in sync.
+    Also provides `nix-shell` commands for stable Nix world.  
+</Card>
 </CardGrid>
