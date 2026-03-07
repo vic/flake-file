@@ -16,11 +16,26 @@ jobs:
           templates=$(find templates -mindepth 2 -maxdepth 2  -name flake.nix -print0 | xargs -0 dirname | xargs -n 1 basename | jq -R | jq -sc)
           echo "$templates"
           echo "templates=$templates" >> $GITHUB_OUTPUT
-  bootstrap:
-    name: Bootstrap
+  bootstrap-command:
+    name: Bootstrap command
     runs-on: ubuntu-latest
     env:
-      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
+      NIX_PATH: "nixpkgs=https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz"
+    steps:
+      - uses: wimpysworld/nothing-but-nix@main
+      - uses: cachix/install-nix-action@v31
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: actions/checkout@v4
+      - run: echo '{ }' > flake.nix
+      - run: nix-shell "https://github.com/$GITHUB_REPOSITORY/archive/$GITHUB_SHA.zip" -A flake-file.sh --run bootstrap
+      - run: cat flake.nix flake-file.nix
+      - run: grep inputs.flake-file.flakeModules.flake flake.nix
+      - run: grep github:vic/flake-file flake.nix
+  bootstrap-tests:
+    name: Bootstrap apps
+    runs-on: ubuntu-latest
+    env:
+      NIX_PATH: "nixpkgs=https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz"
     steps:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: cachix/install-nix-action@v31
@@ -106,7 +121,7 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           nix-shell . -A flake-file.sh --run write-nixlock
   dev:
-    needs: [bootstrap, nix-fmt]
+    needs: [bootstrap-command, bootstrap-tests, nix-fmt]
     name: Check flake dev
     runs-on: ubuntu-latest
     steps:

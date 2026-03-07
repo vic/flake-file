@@ -1,6 +1,6 @@
 { lib, config, ... }:
 let
-  outputsOption = lib.mkOption { type = lib.type.functionTo outputsType; };
+  outputsOption = lib.mkOption { type = lib.types.functionTo outputsType; };
 
   outputsType = lib.types.submoduleWith {
     modules = [

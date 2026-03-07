@@ -43,13 +43,11 @@ Ever wanted to interpolate a string just to discover inputs are **NOT REAL** Nix
 **A**: It's a subset of Nix that doesn't allow computation in the flake metadata attributes.
 </Aside>
 
-### [Single Step Adoption](https://flake-file.oeiuwq.com/tutorials/migrate-traditional-flake/)
+#### [Try It Now!](https://flake-file.oeiuwq.com/tutorials/migrate-traditional-flake/)
 
 ```shell
 mv flake.nix flake-file.nix
-nix-shell https://github.com/vic/flake-file/archive/main.tar.gz \
-  -A flake-file.sh --run write-flake \
-  --arg modules ./flake-file.nix --argstr outputs flake-file
+nix-shell https://github.com/vic/flake-file/archive/main.tar.gz -A flake-file.sh --run bootstrap
 ```
 
 ### Features

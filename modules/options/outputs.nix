@@ -13,7 +13,7 @@ let
       inputs:
         (inputs.nixpkgs.lib.evalModules {
           specialArgs = { inherit inputs; inherit (inputs) self; };
-          modules = [ ./flake-file.nix ];
+          modules = [ inputs.flake-file.flakeModules.flake  ./flake-file.nix ];
         }).config.outputs inputs
     '';
 
