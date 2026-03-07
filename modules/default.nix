@@ -67,6 +67,11 @@ let
       ];
     };
 
+  templates.minimal = {
+    description = "minimal template";
+    path = ./../templates/minimal;
+  };
+
   templates.default = {
     description = "default template";
     path = ./../templates/default;

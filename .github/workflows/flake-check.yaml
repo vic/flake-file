@@ -16,8 +16,8 @@ jobs:
           templates=$(find templates -mindepth 2 -maxdepth 2  -name flake.nix -print0 | xargs -0 dirname | xargs -n 1 basename | jq -R | jq -sc)
           echo "$templates"
           echo "templates=$templates" >> $GITHUB_OUTPUT
-  bootstrap-command:
-    name: Bootstrap command
+  bootstrap-minimal:
+    name: Bootstrap templates/minimal
     runs-on: ubuntu-latest
     env:
       NIX_PATH: "nixpkgs=https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz"
@@ -26,11 +26,17 @@ jobs:
       - uses: cachix/install-nix-action@v31
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: actions/checkout@v4
-      - run: echo '{ }' > flake.nix
-      - run: nix-shell "https://github.com/$GITHUB_REPOSITORY/archive/$GITHUB_SHA.zip" -A flake-file.sh --run bootstrap
-      - run: cat flake.nix flake-file.nix
-      - run: grep inputs.flake-file.flakeModules.flake flake.nix
-      - run: grep github:vic/flake-file flake.nix
+      - run: |
+          cd templates/minimal
+          rm flake.nix
+          mv flake-file.nix flake.nix
+          nix-shell "https://github.com/$GITHUB_REPOSITORY/archive/$GITHUB_SHA.zip" -A flake-file.sh --run bootstrap
+          cat flake-file.nix flake.nix
+          nix flake check
+          sed -i 's#hello = "mundo"#hello = "world"#' flake-file.nix
+          if nix flake check; then exit 1; fi
+          sed -i 's#hello = "world"#hello = "monde"#' flake-file.nix
+          nix flake check
   bootstrap-tests:
     name: Bootstrap apps
     runs-on: ubuntu-latest
@@ -49,6 +55,8 @@ jobs:
     strategy:
       matrix:
         template: ${{ fromJSON(needs.find-templates.outputs.templates) }}
+        exclude:
+          - template: minimal
     steps:
       - uses: wimpysworld/nothing-but-nix@main
       - uses: cachix/install-nix-action@v31
@@ -121,7 +129,7 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           nix-shell . -A flake-file.sh --run write-nixlock
   dev:
-    needs: [bootstrap-command, bootstrap-tests, nix-fmt]
+    needs: [bootstrap-minimal, bootstrap-tests, nix-fmt]
     name: Check flake dev
     runs-on: ubuntu-latest
     steps:
