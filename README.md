@@ -9,7 +9,7 @@
   <a href="LICENSE"> <img src="https://img.shields.io/github/license/vic/flake-file" alt="License"/> </a>
 </p>
 
-### Generate `flake.nix`/`unflake.nix`/`npins`/`nixlock` from inputs defined as module options.
+# Non-static Nix on your flake inputs! Define custom Output schemas.
 
 > `flake-file` and [vic](https://bsky.app/profile/oeiuwq.bsky.social)'s [dendritic libs](https://dendritic.oeiuwq.com) made for you with Love++ and AI--. If you like my work, consider [sponsoring](https://dendritic.oeiuwq.com/sponsor)
 
@@ -21,7 +21,7 @@ This means
 
 - You can use `lib.mkDefault` or anything you normally do with the Nix language, and have them reflected in flake.nix.
 - Your inputs follow a **typed Input Schema**.
-- Your outputs can be defined on a **typed Output Schema**.
+- Your outputs can be defined on a **typed Output Schema** [example](templates/minimal/flake-file.nix).
 
 > Despite the original flake-oriented name, it NOW also works on _stable Nix_, non-flakes environments via [npins](templates/npins), [unflake](templates/unflake), [nixlock](https://codeberg.org/FrdrCkII/nixlock)
 
