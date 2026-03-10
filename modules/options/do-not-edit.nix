@@ -9,10 +9,12 @@
     type = lib.types.str;
     apply =
       value:
-      lib.pipe value [
-        (s: if lib.hasPrefix "#" s then s else "# " + s)
-        (s: if lib.hasSuffix "\n" s then s else s + "\n")
-      ];
+      lib.optionalString (value != "") (
+        lib.pipe value [
+          (s: if lib.hasPrefix "#" s then s else "# " + s)
+          (s: if lib.hasSuffix "\n" s then s else s + "\n")
+        ]
+      );
     example = lib.literalExample ''
       "DO-NOT-EDIT"
     '';
