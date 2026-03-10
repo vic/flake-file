@@ -93,30 +93,96 @@ let
         value = value;
       };
 
+  priorityComparator =
+    priority: a: b:
+    let
+      findPriority = name: lib.lists.findFirstIndex (p: p == name) (lib.length priority) priority;
+      priorityA = findPriority a;
+      priorityB = findPriority b;
+    in
+    if priorityA == priorityB then a < b else priorityA < priorityB;
+
+  priorityMapAttrsToList =
+    f: priority: attrs:
+    lib.pipe attrs [
+      lib.attrsToList
+      (lib.sort (a: b: priorityComparator priority a.name b.name))
+      (map ({ name, value }: f name value))
+    ];
+
+  styleHead =
+    styles:
+    if styles == [ ] then
+      {
+        attrSortPriority = [ ];
+        attrSep = " ";
+      }
+    else
+      lib.pipe styles [
+        lib.head
+        (
+          {
+            attrSortPriority ? [ ],
+            attrSep ? " ",
+          }:
+          {
+            inherit attrSortPriority attrSep;
+          }
+        )
+      ];
+
+  styleTail = styles: if styles == [ ] then [ ] else lib.tail styles;
+
   # expr to code
   nixCode =
-    x:
-    if lib.isStringLike x then
-      lib.strings.escapeNixString x
-    else if lib.isAttrs x then
-      lib.pipe x [
-        (lib.mapAttrsToList nixAttr)
-        (map ({ name, value }: "${name} = ${nixCode value}; "))
-        (values: "{ ${lib.concatStringsSep " " values} }")
+    {
+      expr,
+      styles ? [ ],
+    }:
+    let
+      style = styleHead styles;
+    in
+    if lib.isStringLike expr then
+      lib.strings.escapeNixString expr
+    else if lib.isAttrs expr then
+      lib.pipe expr [
+        (priorityMapAttrsToList nixAttr style.attrSortPriority)
+        (map (
+          { name, value }:
+          "${name} = ${
+            nixCode {
+              expr = value;
+              styles = styleTail styles;
+            }
+          };"
+        ))
+        (values: "{ ${lib.concatStringsSep style.attrSep values} }")
       ]
-    else if lib.isList x then
-      lib.pipe x [
-        (lib.map nixCode)
+    else if lib.isList expr then
+      lib.pipe expr [
+        (lib.map (
+          expr:
+          nixCode {
+            inherit expr;
+            styles = styleTail styles;
+          }
+        ))
         (values: "[ ${lib.concatStringsSep " " values} ]")
       ]
-    else if x == true then
+    else if expr == true then
       "true"
-    else if x == false then
+    else if expr == false then
       "false"
     else
-      toString x;
+      toString expr;
 
 in
 {
-  inherit inputsExpr isNonEmptyString nixCode;
+  inherit
+    inputsExpr
+    isNonEmptyString
+    priorityComparator
+    priorityMapAttrsToList
+    nixCode
+    ;
 }

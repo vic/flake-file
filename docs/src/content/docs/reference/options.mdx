@@ -54,6 +54,20 @@ flake-file = {
 };
 ```
 
+## Style options
+
+| Option | Type | Description |
+|---|---|---|
+| `flake-file.style.sep.flake` | `str` | The separator used between the top-level attributes of the flake |
+| `flake-file.style.sep.inputs` | `str` | The separator used between the top-level attributes of inputs |
+| `flake-file.style.sep.inputSchema` | `str` | The separator used between the top-level attributes of an input schema |
+| `flake-file.style.sep.nixConfig` | `str` | The separator used between the top-level attributes of nixConfig |
+| `flake-file.style.sortPriority.flake` | `listOf str` | When alphabetically sorting the top-level attributes of the flake, names within this list will receive a higher sort order according to its index |
+| `flake-file.style.sortPriority.inputs` | `listOf str` | When alphabetically sorting the top-level attributes of inputs, names within this list will receive a higher sort order according to its index |
+| `flake-file.style.sortPriority.inputSchema` | `listOf str` | When alphabetically sorting the top-level attributes of an input schema, names within this list will receive a higher sort order according to its index |
+| `flake-file.style.sortPriority.nixConfig` | `listOf str` | When alphabetically sorting the top-level attributes of nixConfig, names within this list will receive a higher sort order according to its index |
+
+
 ## Hook Options
 
 | Option | Type | Description |
