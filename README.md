@@ -9,7 +9,7 @@
   <a href="LICENSE"> <img src="https://img.shields.io/github/license/vic/flake-file" alt="License"/> </a>
 </p>
 
-# Non-static Nix on your flake inputs! Define custom Output schemas.
+# Non-static Nix on your flake inputs! Define custom output schemas.
 
 > `flake-file` and [vic](https://bsky.app/profile/oeiuwq.bsky.social)'s [dendritic libs](https://dendritic.oeiuwq.com) made for you with Love++ and AI--. If you like my work, consider [sponsoring](https://dendritic.oeiuwq.com/sponsor)
 
