@@ -75,7 +75,6 @@ let
         }
         {
           attrSortPriority = sortPriority.inputs;
-          attrSep = sep.inputs;
         }
       ];
     }
