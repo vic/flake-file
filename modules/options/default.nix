@@ -8,5 +8,6 @@
     ./prune-lock.nix
     ./write-hooks.nix
     ./check-hooks.nix
+    ./style.nix
   ];
 }

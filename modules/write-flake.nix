@@ -5,38 +5,38 @@
   ...
 }@top:
 let
-  inherit (import ./../dev/modules/_lib lib) inputsExpr isNonEmptyString nixCode;
+  inherit (import ./../dev/modules/_lib lib)
+    inputsExpr
+    isNonEmptyString
+    priorityMapAttrsToList
+    nixCode
+    ;
+
+  inherit (config.flake-file.style) sep sortPriority;
 
   flake-file = config.flake-file;
 
-  template = ''
-    {
-      <description>
-      <outputs>
-      <nixConfig>
-      <inputs>
-    }
-  '';
-
-  unformatted = lib.pipe template [
-    (lib.replaceString "<description>" description)
-    (lib.replaceString "<outputs>" outputs)
-    (lib.replaceString "<nixConfig>" nixConfig)
-    (lib.replaceString "<inputs>" flakeInputs)
-    addHeader
-  ];
+  unformatted =
+    let
+      filteredAttrs = lib.filterAttrs (_: v: v != null) {
+        inherit description outputs nixConfig;
+        inputs = flakeInputs;
+      };
+      exprs = priorityMapAttrsToList (_: v: v) sortPriority.flake filteredAttrs;
+    in
+    addHeader ''
+      {
+        ${lib.concatStringsSep sep.flake exprs} 
+      }
+    '';
 
   description =
     if isNonEmptyString flake-file.description then
-      ''
-        description = ${nixCode flake-file.description};
-      ''
+      "description = ${nixCode { expr = flake-file.description; }};"
     else
-      "";
+      null;
 
-  outputs = ''
-    outputs = ${flake-file.outputs};
-  '';
+  outputs = "outputs = ${flake-file.outputs};";
 
   nixConfig =
     let
@@ -47,15 +47,39 @@ let
       ) flake-file.nixConfig;
     in
     if filteredConfig != { } then
-      ''
-        nixConfig = ${nixCode filteredConfig};
-      ''
+      "nixConfig = ${
+        nixCode {
+          expr = filteredConfig;
+          styles = [
+            {
+              attrSortPriority = sortPriority.nixConfig;
+              attrSep = sep.nixConfig;
+            }
+          ];
+        }
+      };"
     else
-      "";
+      null;
 
-  flakeInputs = ''
-    inputs = ${nixCode (inputsExpr flake-file.inputs)};
-  '';
+  flakeInputs = "inputs = ${
+    nixCode {
+      expr = inputsExpr flake-file.inputs;
+      styles = [
+        {
+          attrSortPriority = sortPriority.inputs;
+          attrSep = sep.inputs;
+        }
+        {
+          attrSortPriority = sortPriority.inputSchema;
+          attrSep = sep.inputSchema;
+        }
+        {
+          attrSortPriority = sortPriority.inputs;
+          attrSep = sep.inputs;
+        }
+      ];
+    }
+  };";
 
   addHeader =
     code: if isNonEmptyString flake-file.do-not-edit then flake-file.do-not-edit + code else code;
