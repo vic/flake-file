@@ -8,7 +8,7 @@ let
         lib.splitString "&" (lib.last (lib.splitString "?" urlWithParams))
       );
     in
-    if pairs != [ ] then lib.removePrefix "ref=" (builtins.head pairs) else "HEAD";
+    if pairs != [ ] then lib.removePrefix "ref=" (builtins.head pairs) else null;
 
   baseUrl = urlWithParams: builtins.head (lib.splitString "?" urlWithParams);
 
@@ -18,7 +18,7 @@ let
       parts = lib.splitString "/" path;
       owner = builtins.elemAt parts 0;
       repo = builtins.elemAt parts 1;
-      ref = if builtins.length parts > 2 then builtins.elemAt parts 2 else "HEAD";
+      ref = if builtins.length parts > 2 then builtins.elemAt parts 2 else null;
     in
     {
       type = "gitArchive";
@@ -51,13 +51,13 @@ let
       {
         type = "gitArchive";
         url = "${mgithost}/${input.owner}/${input.repo}";
-        ref = input.ref or "HEAD";
+        ref = input.ref or null;
       }
     else if input.type == "git" then
       {
         type = "git";
         url = input.url;
-        ref = input.ref or "HEAD";
+        ref = input.ref or null;
       }
     else if
       lib.elem input.type [
