@@ -172,6 +172,32 @@ let
     '';
   };
 
+  test-nixlock-update = pkgs.writeShellApplication {
+    name = "test-nixlock-update";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-nixlock pkgs)
+    ];
+    text = ''
+      write-nixlock lock
+      grep empty ${outdir}/nixlock.lock.nix
+      write-nixlock update
+      grep empty ${outdir}/nixlock.lock.nix
+    '';
+  };
+
+  test-nixlock-update-one = pkgs.writeShellApplication {
+    name = "test-nixlock-update-one";
+    runtimeInputs = [
+      (empty.flake-file.apps.write-nixlock pkgs)
+    ];
+    text = ''
+      write-nixlock lock
+      write-nixlock update empty
+      grep empty ${outdir}/nixlock.lock.nix
+      if write-nixlock update nonexistent 2>/dev/null; then exit 1; fi
+    '';
+  };
+
   test-nixlock = pkgs.writeShellApplication {
     name = "test-nixlock";
     runtimeInputs = [
@@ -268,6 +294,8 @@ pkgs.mkShell {
     test-npins-follows
     test-npins-transitive
     test-nixlock
+    test-nixlock-update
+    test-nixlock-update-one
     test-nixlock-schemes
     test-write-lock-flake
     test-write-lock-npins
