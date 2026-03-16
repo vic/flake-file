@@ -3,7 +3,7 @@ let
   inherit (config) flake-file;
   inherit (import ../lib.nix lib) inputsExpr;
 
-  inputs = inputsExpr flake-file.inputs;
+  inputs = flake-file.preProcess (inputsExpr flake-file.inputs);
 
   # Synthesise a canonical URL from attrset-form inputs (no url field).
   gitHostScheme = { github = "github"; gitlab = "gitlab"; sourcehut = "sourcehut"; };

@@ -63,7 +63,7 @@ let
 
   flakeInputs = "inputs = ${
     nixCode {
-      expr = inputsExpr flake-file.inputs;
+      expr = flake-file.preProcess (inputsExpr flake-file.inputs);
       styles = [
         {
           attrSortPriority = sortPriority.inputs;

@@ -3,7 +3,7 @@ let
   inherit (config) flake-file;
   inherit (import ../lib.nix lib) inputsExpr;
 
-  inputs = flake-file.nixlock.preProcess (inputsExpr flake-file.inputs);
+  inputs = flake-file.preProcess (inputsExpr flake-file.inputs);
 
   nixlock-source = fetchTarball {
     url = flake-file.nixlock.url;
@@ -165,11 +165,6 @@ in
       type = lib.types.raw;
       description = "nixlock custom input types";
       default = { };
-    };
-    preProcess = lib.mkOption {
-      type = lib.types.functionTo lib.types.raw;
-      description = "Pre-process flake-file inputs before giving to nixlock";
-      default = lib.id;
     };
   };
 }
