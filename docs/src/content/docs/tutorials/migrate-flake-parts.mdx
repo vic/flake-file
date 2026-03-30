@@ -12,7 +12,7 @@ Suppose you have a flake-parts enabled flake that looks like:
 # flake.nix
 {
   inputs = { # (A) So much inputs
-    nixpkgs.url = "github:nixos/nixpkgs/unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     foo.url = "github:coolguy/foo";
     bar.url = "github:coolguy/bar";
@@ -98,7 +98,7 @@ Edit `./modules/inputs.nix` module to add in-flake flake-file.
 
     imports = [
        # enable inside-flake and say goodbye to bootstrap
-+      inputs.flake-file.flakeModule
++      inputs.flake-file.flakeModules.default
  
        # start splitting from inputs.nix into other files
     ];
