@@ -1,0 +1,86 @@
+{
+  "pins": {
+    "flake-file": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "vic",
+        "repo": "flake-file"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "3daadf37de2bb85b0ff34e2a7ab0d71e077c2b9e",
+      "url": "https://github.com/vic/flake-file/archive/3daadf37de2bb85b0ff34e2a7ab0d71e077c2b9e.tar.gz",
+      "hash": "sha256-w2LoQVM6DXrSdGUZBZqa1nYkMzHoB0t82DrptzZKhTs="
+    },
+    "flake-parts": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "hercules-ci",
+        "repo": "flake-parts"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "3107b77cd68437b9a76194f0f7f9c55f2329ca5b",
+      "url": "https://github.com/hercules-ci/flake-parts/archive/3107b77cd68437b9a76194f0f7f9c55f2329ca5b.tar.gz",
+      "hash": "sha256-91qqW8lhL7TLwgQWijoGBbiD4t7/q75KTi8NxjVmSmA="
+    },
+    "import-tree": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "vic",
+        "repo": "import-tree"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "c41e7d58045f9057880b0d85e1152d6a4430dbf1",
+      "url": "https://github.com/vic/import-tree/archive/c41e7d58045f9057880b0d85e1152d6a4430dbf1.tar.gz",
+      "hash": "sha256-BtZ2dtkBdSUnFPPFc+n0kcMbgaTxzFNPv2iaO326Ffg="
+    },
+    "nixpkgs": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nixos",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixpkgs-unstable",
+      "submodules": false,
+      "revision": "b0188973b4b2a5b6bdba8b65381d6cd09a533da0",
+      "url": "https://github.com/nixos/nixpkgs/archive/b0188973b4b2a5b6bdba8b65381d6cd09a533da0.tar.gz",
+      "hash": "sha256-BuTK9z1QEwWPOIakQ1gCN4pa4VwVJpfptYCviy2uOGc="
+    },
+    "nixpkgs-lib": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "2890b0f0d5edd3b5bf795294a04f9879d9d50fef",
+      "url": "https://github.com/nix-community/nixpkgs.lib/archive/2890b0f0d5edd3b5bf795294a04f9879d9d50fef.tar.gz",
+      "hash": "sha256-bK65+s0Xbt0fq5K/i9Ez02AbDv7HBSXEfdDhUlYphDg="
+    },
+    "with-inputs": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "vic",
+        "repo": "with-inputs"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v0.3.0",
+      "revision": "920b35279fb800c147017c8332e04a3daa994af4",
+      "url": "https://api.github.com/repos/vic/with-inputs/tarball/refs/tags/v0.3.0",
+      "hash": "sha256-3rNFfdLJ/nivZkgBoVi+M8tJQQpupuojaHyNig1Qzrs="
+    }
+  },
+  "version": 7
+}

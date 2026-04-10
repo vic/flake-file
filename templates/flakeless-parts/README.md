@@ -1,0 +1,18 @@
+# flakeless-parts (npins w/ flake-parts)
+
+This template is an example of using `flake-file.inputs` in a non-flakes
+project with [npins](https://github.com/andir/npins), while still using [flake-parts](https://flake.parts).
+
+It uses npins to pin and fetch inputs defined as options inside `./modules`.
+
+## Update npins
+
+Update the `npins/` directory from your declared inputs:
+
+```shell
+nix run .#write-npins
+```
+
+This will run `npins add` for
+each input declared in your modules, using the correct npins subcommand
+(`github`, `tarball`, `git`, etc.) based on the input URL scheme.
