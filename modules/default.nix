@@ -8,6 +8,7 @@ let
       dendritic
       import-tree
       npins
+      flakeless-parts
       unflake
       nixlock
       flake-options
@@ -32,6 +33,12 @@ let
   npins.imports = [
     base
     ./npins
+  ];
+
+  flakeless-parts.imports = [
+    base
+    ./npins
+    ./flakeless-parts.nix
   ];
 
   unflake.imports = [
@@ -80,6 +87,11 @@ let
   templates.npins = {
     description = "npins template";
     path = ./../templates/npins;
+  };
+
+  templates.flakeless-parts = {
+    description = "flakeless-parts template";
+    path = ./../templates/flakeless-parts;
   };
 
   templates.unflake = {

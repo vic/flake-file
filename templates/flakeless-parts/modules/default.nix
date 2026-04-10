@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  imports = [ inputs.flake-file.flakeModules.npins ];
+  imports = [ inputs.flake-file.flakeModules.flakeless-parts ];
 
   flake-file.inputs = {
     flake-file.url = "github:vic/flake-file";
