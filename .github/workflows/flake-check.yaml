@@ -94,6 +94,21 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           echo "{ inputs, ... }: { npins.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
           nix-shell . -A flake-file.sh --run write-npins
+  flakeless-parts:
+    needs: [dev]
+    name: Check flakeless-parts
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'flakeless-parts') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wimpysworld/nothing-but-nix@v10
+      - uses: cachix/install-nix-action@v31
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: |
+          set -e -o pipefail
+          cd templates/flakeless-parts
+          sed -i 's/# flake-file = import/flake-file = import/' default.nix
+          nix run .#write-npins
   unflake:
     needs: [dev]
     name: Check unflake
