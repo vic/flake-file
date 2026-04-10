@@ -56,7 +56,8 @@ jobs:
       matrix:
         template: ${{ fromJSON(needs.find-templates.outputs.templates) }}
         exclude:
-          - template: ["minimal", "flakeless-parts"]
+          - template: minimal
+          - template: flakeless-parts
     steps:
       - uses: wimpysworld/nothing-but-nix@v10
       - uses: cachix/install-nix-action@v31
