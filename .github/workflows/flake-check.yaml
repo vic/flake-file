@@ -50,7 +50,7 @@ jobs:
       - run: nix-shell ./dev/bootstrap-tests.nix --run test-all
   template:
     name: Check template ${{matrix.template}}
-    needs: [dev, find-templates]
+    needs: [nix-fmt, find-templates]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -80,7 +80,7 @@ jobs:
           nix run .#write-flake -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
           nix flake check -L --show-trace --override-input flake-file "github:$GITHUB_REPOSITORY/$GITHUB_SHA"
   npins:
-    needs: [dev]
+    needs: [nix-fmt]
     name: Check npins
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'npins') }}
@@ -96,7 +96,7 @@ jobs:
           echo "{ inputs, ... }: { npins.pkgs = import inputs.nixpkgs {}; }" | tee modules/pkgs.nix
           nix-shell . -A flake-file.sh --run write-npins
   flakeless-parts:
-    needs: [dev]
+    needs: [nix-fmt]
     name: Check flakeless-parts
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'flakeless-parts') }}
@@ -111,7 +111,7 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           nix run .#write-npins
   unflake:
-    needs: [dev]
+    needs: [nix-fmt]
     name: Check unflake
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'unflake') }}
@@ -128,7 +128,7 @@ jobs:
           sed -i 's/# flake-file = import/flake-file = import/' default.nix
           nix-shell . -A flake-file.sh --run 'write-unflake --verbose'
   nixlock:
-    needs: [dev]
+    needs: [nix-fmt]
     name: Check nixlock
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.pull_request.labels.*.name, 'nixlock') }}
