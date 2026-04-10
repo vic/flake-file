@@ -7,13 +7,7 @@ let
   };
 
   outputs =
-    inputs:
-    (inputs.nixpkgs.lib.evalModules {
-      modules = [ (inputs.import-tree ./modules) ];
-      specialArgs = {
-        inherit inputs;
-        self = inputs.self;
-      };
-    }).config;
+    inputs@{ flake-parts, import-tree, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } (import-tree ./modules);
 in
 with-inputs outputs
