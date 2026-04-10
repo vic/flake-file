@@ -7,5 +7,6 @@
     import-tree.url = "github:vic/import-tree";
     with-inputs.url = "github:vic/with-inputs";
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 }
