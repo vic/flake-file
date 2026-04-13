@@ -49,6 +49,7 @@ let
     pkgs:
     pkgs.writeShellApplication {
       name = "write-npins";
+      meta.description = "Generate/update npins/ directory via npins.";
       runtimeInputs = [
         pkgs.npins
         pkgs.jq

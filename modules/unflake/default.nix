@@ -6,6 +6,7 @@ let
     pkgs:
     pkgs.writeShellApplication {
       name = "write-unflake";
+      meta.description = "Generate unflake.nix via unflake.";
       text = ''
         cd ${flake-file.intoPath}
         nix-shell "${flake-file.unflake.url}" -A unflake-shell --run "unflake -i ${flake-file.inputsFile pkgs} $*"

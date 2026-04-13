@@ -26,6 +26,7 @@ let
     pkgs:
     pkgs.writeShellApplication {
       name = "write-inputs";
+      meta.description = "Generate an inputs.nix expression (for debugging)";
       text = ''
         cd ${flake-file.intoPath}
         cat ${inputsFile pkgs} > "''${1:-inputs.nix}"
