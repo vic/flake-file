@@ -108,6 +108,7 @@ let
     in
     pkgs.writeShellApplication {
       name = "write-flake";
+      meta.description = "Generate a flake.nix file";
       text = ''
         cd ${config.flake-file.intoPath}
         cat ${formatted pkgs} > flake.nix

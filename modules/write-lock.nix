@@ -32,6 +32,7 @@ let
     pkgs:
     pkgs.writeShellApplication {
       name = "write-lock";
+      meta.description = "Detect existing lock file and delegate to the appropriate writer.";
       runtimeInputs = map (d: apps.${d.app} pkgs) available;
       text = dispatch;
     };

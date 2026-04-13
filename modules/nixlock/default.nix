@@ -92,6 +92,7 @@ let
     in
     pkgs.writeShellApplication {
       name = "write-nixlock";
+      meta.description = "Generate nixlock.lock.nix via nixlock.";
       excludeShellChecks = [
         "SC2016"
         "SC2086"
