@@ -34,7 +34,7 @@
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
-          "nixpkgs-lib"
+          "nixpkgs"
         ]
       },
       "locked": {
@@ -156,9 +156,6 @@
         "nix-auto-follow": "nix-auto-follow",
         "nix-unit": "nix-unit",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-lib": [
-          "nixpkgs"
-        ],
         "treefmt-nix": "treefmt-nix"
       }
     },
