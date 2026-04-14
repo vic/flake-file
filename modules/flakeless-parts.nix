@@ -5,8 +5,15 @@
   perSystem =
     { pkgs, ... }:
     {
-      apps.write-npins = {
-        program = config.flake-file.apps.write-npins pkgs;
-      };
+      packages = lib.pipe config.flake-file.apps [
+        (lib.filterAttrs (
+          n: _:
+          lib.elem n [
+            "write-npins"
+            "write-lock"
+          ]
+        ))
+        (lib.mapAttrs (_: v: v pkgs))
+      ];
     };
 }
