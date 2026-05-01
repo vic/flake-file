@@ -89,6 +89,7 @@ let
       name = "flake-formatted";
       passAsFile = [ "unformatted" ];
       inherit unformatted;
+      preferLocalBuild = true;
       phases = [ "format" ];
       format = ''
         cp $unformattedPath flake.nix
@@ -126,7 +127,7 @@ let
         (lib.concatStringsSep "\n")
       ];
     in
-    pkgs.runCommand "check-flake-file"
+    pkgs.runCommandLocal "check-flake-file"
       {
         nativeBuildInputs = [ pkgs.diffutils ];
       }

@@ -20,6 +20,7 @@ let
       copy = ''
         cp $inputsStringPath $out
       '';
+      preferLocalBuild = true;
     };
 
   write-inputs =
