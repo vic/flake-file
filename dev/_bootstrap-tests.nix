@@ -15,29 +15,29 @@ let
     );
 
   empty = bootstrap {
-    inputs.empty.url = "github:vic/empty-flake";
+    inputs.empty.url = "github:denful/empty-flake";
     outputs = _: { };
   };
 
   all-inputs-schemes = bootstrap {
-    inputs.simple.url = "github:vic/empty-flake";
-    inputs.withBranch.url = "github:vic/empty-flake/main";
+    inputs.simple.url = "github:denful/empty-flake";
+    inputs.withBranch.url = "github:denful/empty-flake/main";
     inputs.noflake = {
-      url = "github:vic/empty-flake/main";
+      url = "github:denful/empty-flake/main";
       flake = false;
     };
-    inputs.gitHttps.url = "git+https://github.com/vic/empty-flake";
-    inputs.tarball.url = "https://github.com/vic/empty-flake/archive/main.tar.gz";
-    inputs.tarballPlus.url = "tarball+https://github.com/vic/empty-flake/archive/main.tar.gz";
-    inputs.fileHttps.url = "file+https://github.com/vic/empty-flake/archive/main.tar.gz";
+    inputs.gitHttps.url = "git+https://github.com/denful/empty-flake";
+    inputs.tarball.url = "https://github.com/denful/empty-flake/archive/main.tar.gz";
+    inputs.tarballPlus.url = "tarball+https://github.com/denful/empty-flake/archive/main.tar.gz";
+    inputs.fileHttps.url = "file+https://github.com/denful/empty-flake/archive/main.tar.gz";
     inputs.attrGh = {
       type = "github";
-      owner = "vic";
+      owner = "denful";
       repo = "empty-flake";
     };
     inputs.attrGhRef = {
       type = "github";
-      owner = "vic";
+      owner = "denful";
       repo = "empty-flake";
       ref = "main";
     };
@@ -49,7 +49,7 @@ let
   };
 
   flake-parts-follows = bootstrap {
-    inputs.nixpkgs-lib.url = "github:vic/empty-flake";
+    inputs.nixpkgs-lib.url = "github:denful/empty-flake";
     inputs.flake-parts.url = "github:hercules-ci/flake-parts";
     inputs.flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
   };
@@ -67,7 +67,7 @@ let
     text = ''
       write-inputs
       cat ${outdir}/inputs.nix
-      grep github:vic/empty-flake ${outdir}/inputs.nix
+      grep github:denful/empty-flake ${outdir}/inputs.nix
     '';
   };
 
@@ -80,7 +80,7 @@ let
     text = ''
       write-flake
       cat ${outdir}/flake.nix
-      grep github:vic/empty-flake ${outdir}/flake.nix
+      grep github:denful/empty-flake ${outdir}/flake.nix
     '';
   };
 
@@ -121,7 +121,7 @@ let
       write-npins
       cat ${outdir}/npins/sources.json
       jq -e '.pins."flake-parts".url | contains("hercules-ci/flake-parts")' ${outdir}/npins/sources.json
-      jq -e '.pins."nixpkgs-lib".url | contains("vic/empty")' ${outdir}/npins/sources.json
+      jq -e '.pins."nixpkgs-lib".url | contains("denful/empty")' ${outdir}/npins/sources.json
     '';
   };
 
@@ -218,7 +218,7 @@ let
       echo "{ }" > ${outdir}/flake.lock
       write-lock
       [ -e ${outdir}/flake.nix ]
-      grep github:vic/empty-flake ${outdir}/flake.nix
+      grep github:denful/empty-flake ${outdir}/flake.nix
     '';
   };
 
@@ -278,7 +278,7 @@ let
       grep '"attrGh"' ${outdir}/nixlock.lock.nix
       grep '"attrGhRef"' ${outdir}/nixlock.lock.nix
       if grep '"followsSimple"' ${outdir}/nixlock.lock.nix; then exit 1; fi
-      grep vic/empty-flake ${outdir}/nixlock.lock.nix
+      grep denful/empty-flake ${outdir}/nixlock.lock.nix
     '';
   };
 

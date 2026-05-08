@@ -11,7 +11,7 @@ let
     };
     unflake_github_vic_flake-file = builtins.fetchTree {
       type = "github";
-      owner = "vic";
+      owner = "denful";
       repo = "flake-file";
       rev = "cdb4abe76b3ff0b611343514f584faa2688a12af";
       lastModified = 1772337812;
@@ -19,7 +19,7 @@ let
     };
     unflake_github_vic_import-tree = builtins.fetchTree {
       type = "github";
-      owner = "vic";
+      owner = "denful";
       repo = "import-tree";
       rev = "205675fa599ff8a74b6c8c2cc5149cdaeac76f5f";
       lastModified = 1772263719;
@@ -27,7 +27,7 @@ let
     };
     unflake_github_vic_with-inputs = builtins.fetchTree {
       type = "github";
-      owner = "vic";
+      owner = "denful";
       repo = "with-inputs";
       rev = "ca62018475be1999e57fbfa7ec14ebea7c6e483d";
       lastModified = 1772342380;
