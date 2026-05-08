@@ -9,7 +9,7 @@ let
       lastModified = 1772173633;
       narHash = "sha256-MOH58F4AIbCkh6qlQcwMycyk5SWvsqnS/TCfnqDlpj4=";
     };
-    unflake_github_vic_flake-file = builtins.fetchTree {
+    unflake_github_denful_flake-file = builtins.fetchTree {
       type = "github";
       owner = "denful";
       repo = "flake-file";
@@ -17,7 +17,7 @@ let
       lastModified = 1772337812;
       narHash = "sha256-5FB/FQ+gCvFbEuyMxydkUHuMCe0UEgMra5jI2D6SAQU=";
     };
-    unflake_github_vic_import-tree = builtins.fetchTree {
+    unflake_github_denful_import-tree = builtins.fetchTree {
       type = "github";
       owner = "denful";
       repo = "import-tree";
@@ -25,7 +25,7 @@ let
       lastModified = 1772263719;
       narHash = "sha256-4TRO+jUycfR3g4KAbyK0wQEEJ7Xcmid2Ry+tWv4HPLw=";
     };
-    unflake_github_vic_with-inputs = builtins.fetchTree {
+    unflake_github_denful_with-inputs = builtins.fetchTree {
       type = "github";
       owner = "denful";
       repo = "with-inputs";
@@ -33,7 +33,7 @@ let
       lastModified = 1772342380;
       narHash = "sha256-WFCkvOrArY0rhIPLESqitQHDpl1NFBCK4/7/z6c1040=";
     };
-    unflake_github_vic_with-inputs_flake_false = unflake_github_vic_with-inputs;
+    unflake_github_denful_with-inputs_flake_false = unflake_github_denful_with-inputs;
   };
   universe = rec {
     unflake_github_nixos_nixpkgs_ref_nixpkgs-unstable = ((import "${deps.unflake_github_nixos_nixpkgs_ref_nixpkgs-unstable.outPath}/flake.nix").outputs {
@@ -43,27 +43,27 @@ let
       outPath = "${deps.unflake_github_nixos_nixpkgs_ref_nixpkgs-unstable.outPath}";
       sourceInfo = deps.unflake_github_nixos_nixpkgs_ref_nixpkgs-unstable;
     };
-    unflake_github_vic_flake-file = ((import "${deps.unflake_github_vic_flake-file.outPath}/flake.nix").outputs {
-      self = unflake_github_vic_flake-file;
-    }) // deps.unflake_github_vic_flake-file // {
+    unflake_github_denful_flake-file = ((import "${deps.unflake_github_denful_flake-file.outPath}/flake.nix").outputs {
+      self = unflake_github_denful_flake-file;
+    }) // deps.unflake_github_denful_flake-file // {
       _flake = true;
-      outPath = "${deps.unflake_github_vic_flake-file.outPath}";
-      sourceInfo = deps.unflake_github_vic_flake-file;
+      outPath = "${deps.unflake_github_denful_flake-file.outPath}";
+      sourceInfo = deps.unflake_github_denful_flake-file;
     };
-    unflake_github_vic_import-tree = ((import "${deps.unflake_github_vic_import-tree.outPath}/flake.nix").outputs {
-      self = unflake_github_vic_import-tree;
-    }) // deps.unflake_github_vic_import-tree // {
+    unflake_github_denful_import-tree = ((import "${deps.unflake_github_denful_import-tree.outPath}/flake.nix").outputs {
+      self = unflake_github_denful_import-tree;
+    }) // deps.unflake_github_denful_import-tree // {
       _flake = true;
-      outPath = "${deps.unflake_github_vic_import-tree.outPath}";
-      sourceInfo = deps.unflake_github_vic_import-tree;
+      outPath = "${deps.unflake_github_denful_import-tree.outPath}";
+      sourceInfo = deps.unflake_github_denful_import-tree;
     };
-    unflake_github_vic_with-inputs_flake_false = deps.unflake_github_vic_with-inputs_flake_false;
+    unflake_github_denful_with-inputs_flake_false = deps.unflake_github_denful_with-inputs_flake_false;
   };
   inputs = {
-    flake-file = universe.unflake_github_vic_flake-file;
-    import-tree = universe.unflake_github_vic_import-tree;
+    flake-file = universe.unflake_github_denful_flake-file;
+    import-tree = universe.unflake_github_denful_import-tree;
     nixpkgs = universe.unflake_github_nixos_nixpkgs_ref_nixpkgs-unstable;
-    with-inputs = universe.unflake_github_vic_with-inputs_flake_false;
+    with-inputs = universe.unflake_github_denful_with-inputs_flake_false;
     self = throw "to use inputs.self, write `import ./unflake.nix (inputs: ...)`";
     withInputs = outputs: let self = outputs (inputs // { inherit self; }); in self;
     __functor = self: self.withInputs;
