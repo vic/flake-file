@@ -51,6 +51,7 @@ in
         "rev"
         "ref"
         "submodules"
+        "lfs"
         "flake"
         "follows"
         "inputs"

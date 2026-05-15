@@ -52,6 +52,11 @@ let
             default = null;
             type = lib.types.nullOr lib.types.bool;
           };
+          lfs = lib.mkOption {
+            description = "Whether to checkout with git LFS support";
+            default = null;
+            type = lib.types.nullOr lib.types.bool;
+          };
           owner = lib.mkOption {
             description = "owner of the repository";
             default = "";
