@@ -53,6 +53,7 @@ let
       url = { };
       type = { };
       submodules = { };
+      lfs = { };
       owner = { };
       repo = { };
       path = { };
