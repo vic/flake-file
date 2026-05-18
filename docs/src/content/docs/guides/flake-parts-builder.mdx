@@ -28,10 +28,10 @@ This:
 ## Adding parts
 
 ```shell
-nix run github:vic/flake-parts-builder/write-meta -- add --write-meta --parts systems,treefmt $PWD
+nix run github:denful/flake-parts-builder/write-meta -- add --write-meta --parts systems,treefmt $PWD
 ```
 
-> **Important:** Use `github:vic/flake-parts-builder/write-meta` until [flake-parts-builder#60](https://github.com/tsandrini/flake-parts-builder/pull/60) is merged. This branch writes each part's `_meta/` file so that flake-file can manage inputs declared by the part.
+> **Important:** Use `github:denful/flake-parts-builder/write-meta` until [flake-parts-builder#60](https://github.com/tsandrini/flake-parts-builder/pull/60) is merged. This branch writes each part's `_meta/` file so that flake-file can manage inputs declared by the part.
 
 > **Warning:** Only use the `add` subcommand. The `init` subcommand overwrites `flake.nix`, which is managed by flake-file.
 
